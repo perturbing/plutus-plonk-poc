@@ -40,7 +40,7 @@
         # all systems.
         flake = (nixpkgs.haskell-nix.cabalProject' rec {
           src = ./.;
-          name = "plutus-1.9";
+          name = "plutus-plonk";
           compiler-nix-name = "ghc928";
 
           # CHaP input map, so we can find CHaP packages (needs to be more

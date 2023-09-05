@@ -4,13 +4,21 @@ version: 1.0.0.0
 license: Apache-2.0
 author: Thomas Vellekoop
 maintainer: thomas.vellekoop@iohk.io
-synopsis: "A basic lib of cryptographic operations on numbers"
+synopsis: "A basic library of cryptographic operations on numbers"
 build-type: Simple
 
-library
-    exposed-modules:  Plutus.Crypto.Number.ModArithmetic
-                      Plutus.Crypto.Number.Serialize
-    hs-source-dirs:   src
-    default-language: Haskell2010
-    build-depends:    base >= 4.2 && < 5
-                    , plutus-tx ^>= 1.9
+-- library
+--     exposed-modules:  Plutus.Crypto.Number.ModArithmetic
+--                       Plutus.Crypto.Number.Serialize
+--     hs-source-dirs:   src
+--     default-language: Haskell2010
+--     build-depends:    base >= 4.2 && < 5
+--                     , plutus-tx ^>= 1.9
+
+executable plutus-exe
+  hs-source-dirs: src
+  main-is: Main.hs
+  build-depends: base
+              --  , cardano-crypto-class        ^>=2.1.2.0
+               , plutus-tx ^>= 1.9
+              --  , cardano-api ^>=8.12
