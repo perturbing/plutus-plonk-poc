@@ -13,7 +13,7 @@ library
     default-language: Haskell2010
     build-depends:    base >= 4.2 && < 5
                     , plutus-tx ^>= 1.9
-                    -- , bls-utils
+                    , plutus-number
 
 executable plonk-exe
   hs-source-dirs: src
