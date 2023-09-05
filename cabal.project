@@ -13,5 +13,6 @@ index-state:
   , hackage.haskell.org 2023-09-01T00:00:00Z
   , cardano-haskell-packages 2023-09-01T00:00:00Z
 
-packages: plutus-number
+packages: bls-utils
+          plutus-number
           plutus-plonk
