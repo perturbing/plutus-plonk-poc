@@ -14,6 +14,8 @@ import PlutusTx.Prelude ( BuiltinByteString, id, (<>), lengthOfByteString, Integ
                           
 import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element (..), bls12_381_G1_compress, blake2b_256)
 import Plutus.Crypto.Number.Serialize ( i2osp, os2ip )
+import Plutus.Crypto.BlsField
+import PlutusTx.Numeric
 
 -- TODO: add interface that, given a proof, gives the transcript to make the proof non interactive.
 -- TODO: Current implementation below uses Integers, change this to Scalars (field elements, see bls-utils)
@@ -42,9 +44,9 @@ transcriptPoint :: Transcript -> Label -> BuiltinBLS12_381_G1_Element -> Transcr
 transcriptPoint ts lbl pnt = ts <> lbl <> bls12_381_G1_compress pnt
 
 {-# INLINEABLE transcriptScalar #-}
-transcriptScalar :: Transcript -> Label -> Integer -> Transcript
-transcriptScalar ts lbl scl = ts <> lbl <> i2osp scl
+transcriptScalar :: Transcript -> Label -> Scalar -> Transcript
+transcriptScalar ts lbl scl = ts <> lbl <> i2osp (unScalar scl)
 
 {-# INLINEABLE challengeScalar #-}
-challengeScalar :: Transcript -> Label -> Integer
-challengeScalar ts lbl = os2ip . blake2b_256 $ ts <> lbl
+challengeScalar :: Transcript -> Label -> Scalar 
+challengeScalar ts lbl = mkScalar . os2ip . blake2b_256 $ ts <> lbl

@@ -1,0 +1,17 @@
+cabal-version: 3.0
+name: plutus-crypto
+version: 1.0.0.0
+license: Apache-2.0
+author: Thomas Vellekoop
+maintainer: thomas.vellekoop@iohk.io
+synopsis: "A basic library of cryptographic operations"
+build-type: Simple
+
+library
+    exposed-modules:  Plutus.Crypto.Number.ModArithmetic
+                      Plutus.Crypto.Number.Serialize
+                      Plutus.Crypto.BlsField
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    build-depends:    base >= 4.2 && < 5
+                    , plutus-tx ^>= 1.9
