@@ -18,13 +18,11 @@ import Plutus.Crypto.BlsField
 import PlutusTx.Numeric
 
 -- TODO: add interface that, given a proof, gives the transcript to make the proof non interactive.
--- TODO: Current implementation below uses Integers, change this to Scalars (field elements, see bls-utils)
 
 -- General question/notes to self
 -- How much is needed of the appending of all these (large) salts? Will letters suffice?
--- The field module implementatation (a ring plus the scalar additive group)
 
--- create type synonym for type safty
+-- create type synonym for type safety
 type Transcript = BuiltinByteString
 type Label = BuiltinByteString
 
