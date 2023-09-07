@@ -7,6 +7,7 @@ module Plutus.Crypto.Plonk.Transcript (
   , transcriptNew
   , transcriptAppendMsg
   , transcriptPoint
+  , challengeScalar
 ) where
 
 import PlutusTx.Prelude ( BuiltinByteString, id, (<>), lengthOfByteString, Integer, ($), (.) )
@@ -15,14 +16,19 @@ import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element (..), bls12_381_G1_compres
 import Plutus.Crypto.Number.Serialize ( i2osp, os2ip )
 
 -- TODO: add interface that, given a proof, gives the transcript to make the proof non interactive.
+-- TODO: Current implementation below uses Integers, change this to Scalars (field elements, see bls-utils)
 
--- General question,
--- How much is needed of the appending of all these salts?
+-- General question/notes to self
+-- How much is needed of the appending of all these (large) salts? Will letters suffice?
+-- The field module implementatation (a ring plus the scalar additive group)
 
+-- create type synonym for type safty
 type Transcript = BuiltinByteString
 type Label = BuiltinByteString
 
--- This assumes that the dummy-plonk implementation appends.
+-- These salted transcripts assume that the dummy-plonk implementation appends and not prepends.
+-- see https://github.com/iquerejeta/dummy_plonk/blob/main/src/transcript.rs
+
 {-# INLINEABLE transcriptNew #-}
 transcriptNew :: Label -> Transcript
 transcriptNew lbl = "FS transcript" <> "dom-sep" <> lbl
@@ -39,6 +45,6 @@ transcriptPoint ts lbl pnt = ts <> lbl <> bls12_381_G1_compress pnt
 transcriptScalar :: Transcript -> Label -> Integer -> Transcript
 transcriptScalar ts lbl scl = ts <> lbl <> i2osp scl
 
-{-# INLINEABLE challangeScalar #-}
-challangeScalar :: Transcript -> Label -> Integer
-challangeScalar ts lbl = os2ip . blake2b_256 $ ts <> lbl
+{-# INLINEABLE challengeScalar #-}
+challengeScalar :: Transcript -> Label -> Integer
+challengeScalar ts lbl = os2ip . blake2b_256 $ ts <> lbl
