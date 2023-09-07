@@ -7,7 +7,6 @@ module Plutus.Crypto.BlsUtils.Field (
     mkScalar,
     unScalar,
     MultiplicativeGroup (..),
-
 ) where
 
 import qualified Prelude as Haskell
