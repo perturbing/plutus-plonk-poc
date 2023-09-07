@@ -26,7 +26,7 @@ bls12_381_field_prime = 52435875175126190479447740508185965837690552500527637822
 newtype Scalar = Scalar { unScalar :: Integer} deriving (Haskell.Show)
 unstableMakeIsData ''Scalar
 
--- 
+-- Exclude for safety negative integers and integers large/equal to the field prime.
 mkScalar :: Integer -> Scalar
 mkScalar n | 0 <= n && n < bls12_381_field_prime = Scalar n
            | otherwise                           = error ()
@@ -72,7 +72,6 @@ instance Module Integer Scalar where
 instance MultiplicativeGroup Scalar where
     {-# INLINABLE div #-}
     div a (Scalar 0) = error ()
-    div a b = a * scale (p-2) b  -- use Fermat little theorem
-        where p = bls12_381_field_prime
+    div a b = a * scale (bls12_381_field_prime - 2) b  -- use Fermat little theorem
     {-# INLINABLE recip #-}
     recip = div one
