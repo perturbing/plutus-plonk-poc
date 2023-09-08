@@ -27,6 +27,8 @@ newtype Scalar = Scalar { unScalar :: Integer} deriving (Haskell.Show)
 unstableMakeIsData ''Scalar
 
 -- Exclude for safety negative integers and integers large/equal to the field prime.
+-- This is the primary interface to work with onchain for security reasons (to make sure they are field elements).
+{-# INLINABLE mkScalar #-}
 mkScalar :: Integer -> Scalar
 mkScalar n | 0 <= n && n < bls12_381_field_prime = Scalar n
            | otherwise                           = error ()

@@ -15,8 +15,11 @@ library
                     , plutus-tx ^>= 1.9
                     , plutus-crypto
 
-executable plonk-exe
-  hs-source-dirs: src
+test-suite run-vector-test
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
   main-is: Main.hs
   build-depends: base 
                , plutus-tx ^>= 1.9
+               , aeson
+               , bytestring
