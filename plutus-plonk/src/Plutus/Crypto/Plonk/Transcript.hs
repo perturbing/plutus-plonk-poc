@@ -21,7 +21,7 @@ import PlutusTx.Numeric
 
 -- General question/notes to self
 -- How much is needed of the appending of all these (large) salts? Will letters suffice?
-
+t
 -- create type synonym for type safety
 type Transcript = BuiltinByteString
 type Label = BuiltinByteString
@@ -45,6 +45,7 @@ transcriptPoint ts lbl pnt = ts <> lbl <> bls12_381_G1_compress pnt
 transcriptScalar :: Transcript -> Label -> Scalar -> Transcript
 transcriptScalar ts lbl scl = ts <> lbl <> i2osp (unScalar scl)
 
+-- This function is safe because the output of blake2b hash here is 256 < 381 (the prime field size )
 {-# INLINEABLE challengeScalar #-}
 challengeScalar :: Transcript -> Label -> Scalar 
 challengeScalar ts lbl = mkScalar . os2ip . blake2b_256 $ ts <> lbl

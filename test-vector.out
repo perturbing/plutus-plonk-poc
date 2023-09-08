@@ -1,3 +1,15 @@
+
+running 11 tests
+test polynomial::tests::test_addition ... ok
+test polynomial::tests::test_division ... ok
+test polynomial::tests::eval ... ok
+test polynomial::tests::test_mult ... ok
+test polynomial::tests::test_interpolation ... ok
+test polynomial::tests::test_subtraction ... ok
+test transcript::tests::test_transcript ... ok
+test kzg10::tests::test_setup ... ok
+test kzg10::tests::test_kzg ... ok
+test prover::test::test_prover ... ok
 {
   "commitment_a": [
     160,
@@ -486,3 +498,13 @@
     2423357423282119659
   ]
 }
+beta hash: Scalar(0x004217759a1be806fd8977676fc5e265bf840e7aea16cc7c37d8f740672d5b00)
+test verifier::test::test_verifier ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

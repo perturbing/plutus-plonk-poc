@@ -21,7 +21,7 @@ import Plutus.Crypto.Number.ModArithmetic
 -- if an integer is provided that is NOT in the field.
 
 bls12_381_field_prime :: Integer
-bls12_381_field_prime = 52435875175126190479447740508185965837690552500527637822603658699938581184513
+bls12_381_field_prime = 4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787
 
 newtype Scalar = Scalar { unScalar :: Integer} deriving (Haskell.Show)
 unstableMakeIsData ''Scalar
