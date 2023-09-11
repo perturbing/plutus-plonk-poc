@@ -2,11 +2,12 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Plutus.Crypto.BlsField (
-    Scalar,
-    mkScalar,
-    unScalar,
-    MultiplicativeGroup (..),
+module Plutus.Crypto.BlsField 
+( bls12_381_field_prime
+, Scalar
+, mkScalar
+, unScalar
+, MultiplicativeGroup (..)
 ) where
 
 import qualified Prelude as Haskell
@@ -18,10 +19,11 @@ import Plutus.Crypto.Number.ModArithmetic
 -- In this module, we create a prime field for BLS12-381 as the type Scalar.
 -- Note that for safety, the Scalar constructors are not exposed.
 -- Instead, the mkScalar and unScalar suffice, which fail in a script
--- if an integer is provided that is NOT in the field.
+-- if an integer provided that is negative
 
+-- this is the order of the generator. So, g^order = id
 bls12_381_field_prime :: Integer
-bls12_381_field_prime = 4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787
+bls12_381_field_prime = 52435875175126190479447740508185965837690552500527637822603658699938581184513
 
 newtype Scalar = Scalar { unScalar :: Integer} deriving (Haskell.Show)
 unstableMakeIsData ''Scalar
@@ -31,7 +33,7 @@ unstableMakeIsData ''Scalar
 {-# INLINABLE mkScalar #-}
 mkScalar :: Integer -> Scalar
 mkScalar n | 0 <= n && n < bls12_381_field_prime = Scalar n
-           | otherwise                           = error ()
+           | otherwise                           = error () 
 
 instance Eq Scalar where
     {-# INLINABLE (==) #-}

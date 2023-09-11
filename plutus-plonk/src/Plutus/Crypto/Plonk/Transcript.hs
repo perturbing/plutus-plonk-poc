@@ -1,27 +1,22 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Plutus.Crypto.Plonk.Transcript (
-    Transcript
-  , Label
-  , transcriptNew
-  , transcriptAppendMsg
-  , transcriptPoint
-  , challengeScalar
+module Plutus.Crypto.Plonk.Transcript 
+( Transcript
+, Label
+, transcriptNew
+, transcriptAppendMsg
+, transcriptPoint
+, challengeScalar
 ) where
 
-import PlutusTx.Prelude ( BuiltinByteString, id, (<>), lengthOfByteString, Integer, ($), (.) )
+import PlutusTx.Prelude ( BuiltinByteString, id, (<>), lengthOfByteString, dropByteString, Integer, ($), (.) )
                           
 import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element (..), bls12_381_G1_compress, blake2b_256)
 import Plutus.Crypto.Number.Serialize ( i2osp, os2ip )
 import Plutus.Crypto.BlsField
 import PlutusTx.Numeric
 
--- TODO: add interface that, given a proof, gives the transcript to make the proof non interactive.
-
--- General question/notes to self
--- How much is needed of the appending of all these (large) salts? Will letters suffice?
-t
 -- create type synonym for type safety
 type Transcript = BuiltinByteString
 type Label = BuiltinByteString
@@ -45,7 +40,9 @@ transcriptPoint ts lbl pnt = ts <> lbl <> bls12_381_G1_compress pnt
 transcriptScalar :: Transcript -> Label -> Scalar -> Transcript
 transcriptScalar ts lbl scl = ts <> lbl <> i2osp (unScalar scl)
 
--- This function is safe because the output of blake2b hash here is 256 < 381 (the prime field size )
+-- Note that the digest lays in the full 256 bit domain, while a scalar
+-- is bound by the field prime. That is why we cut of the most significant byte
+-- to make this function well-defined.
 {-# INLINEABLE challengeScalar #-}
-challengeScalar :: Transcript -> Label -> Scalar 
-challengeScalar ts lbl = mkScalar . os2ip . blake2b_256 $ ts <> lbl
+challengeScalar :: Transcript -> Label -> Scalar
+challengeScalar ts lbl = mkScalar . os2ip . dropByteString 1 . blake2b_256 $ ts <> lbl

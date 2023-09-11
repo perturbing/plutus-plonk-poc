@@ -1,6 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Plutus.Crypto.Plonk.Inputs (
+module Plutus.Crypto.Plonk.Inputs 
+(
 ) where
 
 -- import PlutusTx.Prelude

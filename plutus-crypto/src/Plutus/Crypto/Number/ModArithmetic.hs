@@ -1,7 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Plutus.Crypto.Number.ModArithmetic (
-  exponentiate
+module Plutus.Crypto.Number.ModArithmetic 
+( exponentiate
 , exponentiateMod
 ) where
 

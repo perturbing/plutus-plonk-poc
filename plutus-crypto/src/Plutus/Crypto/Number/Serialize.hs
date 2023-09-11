@@ -1,7 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Plutus.Crypto.Number.Serialize (
-  i2osp
+module Plutus.Crypto.Number.Serialize 
+( i2osp
 , os2ip
 , i2ospOf
 , i2ospOf_
@@ -33,13 +33,12 @@ i2osp n
 --   This function will give an error for an empty builtin byte string
 {-# INLINABLE os2ip #-}
 os2ip :: BuiltinByteString -> Integer
-os2ip b =
-  go 0
+os2ip b = go 1
     where len = lengthOfByteString b
           go i =
-              if i >= len
+              if i > len
               then 0
-              else indexByteString b i + 256 * go (i + 1)
+              else indexByteString b (len-i) + 256 * go (i + 1)
 
 -- | Just like i2osp, but take an extra parameter for size. 
 --   if the number is too big to fit in len bytes, nothing is returned 

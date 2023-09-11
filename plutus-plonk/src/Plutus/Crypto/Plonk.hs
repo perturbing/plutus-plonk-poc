@@ -1,5 +1,5 @@
-module Plutus.Crypto.Plonk (
-    module X,
+module Plutus.Crypto.Plonk 
+( module X
 ) where
 
 import Plutus.Crypto.Plonk.Inputs as X

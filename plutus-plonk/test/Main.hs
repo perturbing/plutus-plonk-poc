@@ -46,10 +46,10 @@ main = do
         Just proof -> do let a = convertIntegerG1Point $ commitment_a proof
                          let b = convertIntegerG1Point $ commitment_b proof
                          let c = convertIntegerG1Point $ commitment_c proof
-                         let transcript0 = Plonk.transcriptNew ""
+                         let transcript0 = Plonk.transcriptNew "testing the prover"
                          let transcript1 = Plonk.transcriptPoint transcript0 "commitment a" a
                          let transcript2 = Plonk.transcriptPoint transcript1 "commitment b" b
                          let transcript3 = Plonk.transcriptPoint transcript2 "commitment c" c
-                         let beta = Plonk.challengeScalar transcript0 ""
+                         let beta = Plonk.challengeScalar transcript3 "beta"
                          print beta
         Nothing -> putStrLn "Failed to parse JSON."
