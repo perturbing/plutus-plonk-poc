@@ -6,6 +6,7 @@ module Plutus.Crypto.Plonk.Transcript
 , Label
 , transcriptNew
 , transcriptAppendMsg
+, transcriptScalar
 , transcriptPoint
 , challengeScalar
 ) where
@@ -17,12 +18,11 @@ import Plutus.Crypto.Number.Serialize ( i2osp, os2ip )
 import Plutus.Crypto.BlsField
 import PlutusTx.Numeric
 
+-- see https://github.com/iquerejeta/dummy_plonk/blob/main/src/transcript.rs
+
 -- create type synonym for type safety
 type Transcript = BuiltinByteString
 type Label = BuiltinByteString
-
--- These salted transcripts assume that the dummy-plonk implementation appends and not prepends.
--- see https://github.com/iquerejeta/dummy_plonk/blob/main/src/transcript.rs
 
 {-# INLINEABLE transcriptNew #-}
 transcriptNew :: Label -> Transcript
@@ -44,5 +44,6 @@ transcriptScalar ts lbl scl = ts <> lbl <> i2osp (unScalar scl)
 -- is bound by the field prime. That is why we cut of the most significant byte
 -- to make this function well-defined.
 {-# INLINEABLE challengeScalar #-}
-challengeScalar :: Transcript -> Label -> Scalar
-challengeScalar ts lbl = mkScalar . os2ip . dropByteString 1 . blake2b_256 $ ts <> lbl
+challengeScalar :: Transcript -> Label -> (Scalar,Transcript)
+challengeScalar ts lbl = (mkScalar . os2ip . dropByteString 1 . blake2b_256 $ newTs, newTs)
+    where newTs = ts <> lbl

@@ -12,9 +12,29 @@ module Plutus.Crypto.BlsField
 
 import qualified Prelude as Haskell
 import PlutusTx.Prelude
-import PlutusTx
+    ( otherwise,
+      Integer,
+      ($),
+      (&&),
+      error,
+      modulo,
+      Eq(..),
+      AdditiveGroup(..),
+      AdditiveMonoid(..),
+      AdditiveSemigroup(..),
+      Module(..),
+      MultiplicativeMonoid(..),
+      MultiplicativeSemigroup(..),
+      Ord((<), (<=)) )
+import PlutusTx ( unstableMakeIsData )
 import PlutusTx.Numeric
-import Plutus.Crypto.Number.ModArithmetic
+    ( AdditiveGroup(..),
+      AdditiveMonoid(..),
+      AdditiveSemigroup(..),
+      Module(..),
+      MultiplicativeMonoid(..),
+      MultiplicativeSemigroup(..) )
+import Plutus.Crypto.Number.ModArithmetic ( exponentiateMod )
 
 -- In this module, we create a prime field for BLS12-381 as the type Scalar.
 -- Note that for safety, the Scalar constructors are not exposed.

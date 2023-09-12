@@ -5,8 +5,18 @@ module Plutus.Crypto.Number.ModArithmetic
 , exponentiateMod
 ) where
 
-import PlutusTx
 import PlutusTx.Prelude
+    ( otherwise,
+      Integer,
+      (||),
+      error,
+      divide,
+      even,
+      modulo,
+      Eq((==)),
+      AdditiveGroup((-)),
+      MultiplicativeSemigroup((*)),
+      Ord((<)) )
 
 -- | Exponentiate x^n. 
 -- This function will give an error for negative integers.

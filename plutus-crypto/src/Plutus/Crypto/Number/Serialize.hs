@@ -8,10 +8,29 @@ module Plutus.Crypto.Number.Serialize
 , lengthBytes
 ) where
 
-import PlutusTx
 import PlutusTx.Prelude
+    ( otherwise,
+      Integer,
+      Maybe(..),
+      consByteString,
+      emptyByteString,
+      error,
+      indexByteString,
+      lengthOfByteString,
+      divide,
+      even,
+      modulo,
+      quotient,
+      remainder,
+      BuiltinByteString,
+      Eq((==)),
+      AdditiveGroup((-)),
+      AdditiveSemigroup((+)),
+      MultiplicativeSemigroup((*)),
+      Ord((<), (>), (>=)),
+      Semigroup((<>)) )
 
-import Plutus.Crypto.Number.ModArithmetic
+import Plutus.Crypto.Number.ModArithmetic ( exponentiate )
 
 -- | i2osp converts a positive integer into a builtin byte string
 --   Plutus version of `(Crypto.Number.Serialize.i2osp)`

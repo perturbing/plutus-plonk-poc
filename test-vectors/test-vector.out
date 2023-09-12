@@ -1,3 +1,17 @@
+
+running 12 tests
+test polynomial::tests::eval ... ok
+test polynomial::tests::test_division ... ok
+test polynomial::tests::test_addition ... ok
+test polynomial::tests::test_subtraction ... ok
+test polynomial::tests::test_mult ... ok
+MyTest Scalar(0x00cd27391bb96b7e4143f6aeeb9835e40d17bb633b8c33e7287acb80d41dc5ac)
+test transcript::tests::test_transcript ... ok
+test verifier::test::test_transcript_hash ... ok
+test polynomial::tests::test_interpolation ... ok
+test kzg10::tests::test_setup ... ok
+test kzg10::tests::test_kzg ... ok
+test prover::test::test_prover ... ok
 {
   "commitment_a": [
     179,
@@ -486,3 +500,16 @@
     7305628931086889370
   ]
 }
+zeta: Scalar(0x000a2cee53839de0aa99a8a82afb2cd3a004b3f9b8d12b2a9b7feaecc8c63279)
+v; Scalar(0x00144c4ceeceef50ea44fa35aa0fac77e0af9b5924efefc321686b6982cefaf1)
+u: Scalar(0x002cd81e6ca2154d66d8a8293dafd1a3bc894f1a42dccfaab72fa48ae1f4be14)
+pi is: Scalar(0x5afd03cfd14eea95e94888095b5bae3bb99ef44091be06b56422abcd308082ca)
+test verifier::test::test_verifier ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
