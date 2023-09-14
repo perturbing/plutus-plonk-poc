@@ -41,7 +41,7 @@ transcriptScalar :: Transcript -> Label -> Scalar -> Transcript
 transcriptScalar ts lbl scl = ts <> lbl <> i2osp (unScalar scl)
 
 -- Note that the digest lays in the full 256 bit domain, while a scalar
--- is bound by the field prime. That is why we cut of the most significant byte
+-- is bound by the 255 bit field prime. That is why we cut of the most significant byte
 -- to make this function well-defined.
 {-# INLINEABLE challengeScalar #-}
 challengeScalar :: Transcript -> Label -> (Scalar,Transcript)
