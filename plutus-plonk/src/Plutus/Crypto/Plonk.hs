@@ -3,8 +3,6 @@ module Plutus.Crypto.Plonk
 ) where
 
 import Plutus.Crypto.Plonk.Inputs as X ( Proof(..), PreInputs(..) )
-import Plutus.Crypto.Plonk.Polynomial as X
-    ( Polynomial, evaluatePolynomial )
 import Plutus.Crypto.Plonk.Transcript as X
     ( Label,
       Transcript,
@@ -12,5 +10,7 @@ import Plutus.Crypto.Plonk.Transcript as X
       transcriptAppendMsg,
       transcriptPoint,
       transcriptScalar,
+      getTranscript,
       challengeScalar )
-import Plutus.Crypto.Plonk.Verifier as X ()
+import Plutus.Crypto.Plonk.Verifier as X
+    ( verifyPlonk ) 
