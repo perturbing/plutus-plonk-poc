@@ -18,7 +18,7 @@ import PlutusTx.Prelude
       MultiplicativeSemigroup((*)),
       Ord((<)) )
 
--- | Exponentiate x^n. 
+-- Exponentiate x^n. 
 -- This function will give an error for negative integers.
 {-# INLINABLE exponentiate #-}
 exponentiate :: Integer -> Integer -> Integer
@@ -29,7 +29,7 @@ exponentiate x n
     | even n            = exponentiate x (n `divide` 2) * exponentiate x (n `divide` 2)
     | otherwise         = x * exponentiate x ((n - 1) `divide` 2) * exponentiate x ((n - 1) `divide` 2)
 
--- | Exponentiate b^e mod m.
+-- Exponentiate b^e mod m.
 -- This function will give an error for negative integers.
 {-# INLINABLE exponentiateMod #-}
 exponentiateMod :: Integer -> Integer -> Integer -> Integer

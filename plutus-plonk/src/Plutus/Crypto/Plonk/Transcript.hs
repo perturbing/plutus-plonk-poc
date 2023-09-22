@@ -15,9 +15,9 @@ module Plutus.Crypto.Plonk.Transcript
 import PlutusTx.Prelude ( BuiltinByteString, id, (<>), lengthOfByteString, dropByteString, Integer, ($), (.) )
 import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element (..), bls12_381_G1_compress, blake2b_256)
 import Plutus.Crypto.Number.Serialize ( i2osp, os2ip )
-import Plutus.Crypto.BlsField
-import PlutusTx.Numeric
+import Plutus.Crypto.BlsField ( mkScalar, Scalar(..) )
 
+-- For information on the particular chosen salts below,
 -- see https://github.com/iquerejeta/dummy_plonk/blob/main/src/transcript.rs
 
 -- create type synonym for type safety
@@ -40,14 +40,22 @@ transcriptPoint ts lbl pnt = ts <> lbl <> bls12_381_G1_compress pnt
 transcriptScalar :: Transcript -> Label -> Scalar -> Transcript
 transcriptScalar ts lbl scl = ts <> lbl <> i2osp (unScalar scl)
 
--- Note that the hash digest lays in the full 256 bit domain, while a scalar
--- is bound by the 255 bit field prime. That is why we cut of the most significant byte
+-- Note that the hash digest maps into the 256 bit domain, while a scalar
+-- is bound by the 255 bit field prime. 
+-- That is why we cut of the most significant byte
 -- to make this function well-defined.
 {-# INLINEABLE challengeScalar #-}
 challengeScalar :: Transcript -> Label -> (Scalar,Transcript)
 challengeScalar ts lbl = (mkScalar . os2ip . dropByteString 1 . blake2b_256 $ newTs, newTs)
     where newTs = ts <> lbl
 
+-- Given the necesary values of a proof,
+-- calcualate the transript values. These values 
+-- make the proof non interactive.
+-- 
+-- TODO: Disuss with team how we can chose
+--       these values to be more consice.
+--
 {-# INLINABLE getTranscript #-}
 getTranscript
     :: BuiltinBLS12_381_G1_Element -- commitment_a

@@ -1,6 +1,8 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE InstanceSigs #-}
 
 module Plutus.Crypto.BlsField 
 ( bls12_381_field_prime
@@ -26,7 +28,7 @@ import PlutusTx.Prelude
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..),
       Ord((<), (<=)) )
-import PlutusTx ( unstableMakeIsData )
+import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)      
 import PlutusTx.Numeric
     ( AdditiveGroup(..),
       AdditiveMonoid(..),
@@ -36,7 +38,8 @@ import PlutusTx.Numeric
       MultiplicativeSemigroup(..) )
 import Plutus.Crypto.Number.ModArithmetic ( exponentiateMod )
 
--- In this module, we create a prime field for BLS12-381 as the type Scalar.
+-- In this module, we create a prime order field for BLS12-381
+-- as the type Scalar.
 -- Note that for safety, the Scalar constructors are not exposed.
 -- Instead, the mkScalar and unScalar suffice, which fail in a script
 -- if an integer provided that is negative
@@ -46,10 +49,13 @@ bls12_381_field_prime :: Integer
 bls12_381_field_prime = 52435875175126190479447740508185965837690552500527637822603658699938581184513
 
 newtype Scalar = Scalar { unScalar :: Integer} deriving (Haskell.Show)
-unstableMakeIsData ''Scalar
+makeLift ''Scalar
+makeIsDataIndexed ''Scalar [('Scalar,0)]
 
--- Exclude for safety negative integers and integers large/equal to the field prime.
--- This is the primary interface to work with onchain for security reasons (to make sure they are field elements).
+-- Exclude for safety negative integers and integers large/equal
+-- to the field prime. This is the primary interface to work with
+-- the Scalar type onchain. This is for security reasons 
+-- (to make sure they are field elements).
 {-# INLINABLE mkScalar #-}
 mkScalar :: Integer -> Scalar
 mkScalar n | 0 <= n && n < bls12_381_field_prime = Scalar n
