@@ -4,17 +4,21 @@
 module Main (main) where
 
 import qualified PlutusTx.Prelude as P
+import qualified PlutusTx.Builtins as P
 import qualified Plutus.Crypto.Plonk.Transcript as Plonk
 import Plutus.Crypto.BlsField ( Scalar, mkScalar ) 
+import Plutus.Crypto.Plonk.Transcript (getTranscript)
+import Plutus.Crypto.Plonk.Inputs (Proof (..), PreInputs (..))
+import Plutus.Crypto.Plonk.Verifier (verifyPlonk)
 
 import Data.Aeson ( FromJSON, ToJSON, decode )
 import GHC.Generics ( Generic )
 import qualified Data.ByteString.Lazy as BL
 import Data.ByteString ( pack )
 import Data.Word ()
-import Plutus.Crypto.Plonk.Transcript (getTranscript)
--- Create a quick type for importing a test vector proof via JSON.
-data Proof = Proof 
+
+-- Create a quick type for importing a test vector Proof via JSON.
+data ProofJSON = ProofJSON 
     { commitment_a     :: [Integer]
     , commitment_b     :: [Integer]
     , commitment_c     :: [Integer]
@@ -22,8 +26,8 @@ data Proof = Proof
     , t_low            :: [Integer]
     , t_mid            :: [Integer]
     , t_high           :: [Integer]
-    , w_omega          :: [Integer]
-    , w_omega_zeta     :: [Integer]
+    , w_omega         :: [Integer]
+    , w_omega_zeta    :: [Integer]
     , a_eval           :: [Integer]
     , b_eval           :: [Integer]
     , c_eval           :: [Integer]
@@ -32,14 +36,15 @@ data Proof = Proof
     , z_omega          :: [Integer]
 } deriving (Show, Generic)
 
-instance FromJSON Proof 
-instance ToJSON Proof 
+instance FromJSON ProofJSON
+instance ToJSON ProofJSON
 
-data PreIn = PreIn 
+-- Create a quick type for importing a test vector PreInputs via JSON.
+data PreInputsJSON = PreInputsJSON 
     { n_public         :: Integer                     
-    , power            :: Integer                     
-    , k1               :: [Integer]
-    , k2               :: [Integer]
+    , pow            :: Integer                     
+    , k_1               :: [Integer]
+    , k_2               :: [Integer]
     , q_m              :: [Integer]
     , q_l              :: [Integer]
     , q_r              :: [Integer] 
@@ -48,46 +53,66 @@ data PreIn = PreIn
     , s_sig1_pre_in    :: [Integer]
     , s_sig2_pre_in    :: [Integer]
     , s_sig3_pre_in    :: [Integer]
-    , x2               :: [Integer]
-    , generator        :: [Integer] 
+    , x_2              :: [Integer]
+    , gen        :: [Integer] 
 } deriving (Show, Generic)
 
-instance FromJSON PreIn 
-instance ToJSON PreIn
+instance FromJSON PreInputsJSON 
+instance ToJSON PreInputsJSON
 
-convertIntegerG1Point :: [Integer] -> P.BuiltinBLS12_381_G1_Element
-convertIntegerG1Point n = P.bls12_381_G1_uncompress . P.toBuiltin . pack $ Prelude.map fromIntegral n
+convertIntegersByteString :: [Integer] -> P.BuiltinByteString
+convertIntegersByteString n =  P.toBuiltin . pack $ Prelude.map fromIntegral n
 
-convertMontgomery :: [Integer] -> Scalar 
-convertMontgomery [a, b, c, d] = mkScalar $ a + b * 2^64 + c * 2^128 + d * 2^192
+convertMontgomery :: [Integer] -> Integer
+convertMontgomery [a, b, c, d] = a + b * 2^64 + c * 2^128 + d * 2^192
 
--- a quick test to see if the serialisation between dummy plonk and plutus bls is the same (it is).
+convertProof :: ProofJSON -> Proof
+convertProof proof = Proof
+    { commitmentA = convertIntegersByteString $ commitment_a proof
+    , commitmentB = convertIntegersByteString $ commitment_b proof
+    , commitmentC = convertIntegersByteString $ commitment_c proof
+    , commitmentZ = convertIntegersByteString $ commitment_z proof
+    , tLow        = convertIntegersByteString $ t_low proof
+    , tMid        = convertIntegersByteString $ t_mid proof
+    , tHigh       = convertIntegersByteString $ t_high proof
+    , wOmega      = convertIntegersByteString $ w_omega proof
+    , wOmegaZeta  = convertIntegersByteString $ w_omega_zeta proof
+    , aEval       = convertMontgomery $ a_eval proof
+    , bEval       = convertMontgomery $ b_eval proof
+    , cEval       = convertMontgomery $ c_eval proof
+    , sSig1P      = convertMontgomery $ s_sig1 proof
+    , sSig2P      = convertMontgomery $ s_sig2 proof
+    , zOmega      = convertMontgomery $ z_omega proof
+}
+
+convertPreInputs :: PreInputsJSON -> PreInputs
+convertPreInputs preIn = PreInputs
+    { nPublic   = n_public preIn
+    , power     = pow preIn
+    , k1        = mkScalar . convertMontgomery $ k_1 preIn
+    , k2        = mkScalar . convertMontgomery $ k_2 preIn
+    , qM        = P.bls12_381_G1_uncompress . convertIntegersByteString $ q_m preIn
+    , qL        = P.bls12_381_G1_uncompress . convertIntegersByteString $ q_l preIn 
+    , qR        = P.bls12_381_G1_uncompress . convertIntegersByteString $ q_r preIn
+    , qO        = P.bls12_381_G1_uncompress . convertIntegersByteString $ q_o preIn
+    , qC        = P.bls12_381_G1_uncompress . convertIntegersByteString $ q_c preIn
+    , sSig1     = P.bls12_381_G1_uncompress . convertIntegersByteString $ s_sig1_pre_in preIn
+    , sSig2     = P.bls12_381_G1_uncompress . convertIntegersByteString $ s_sig2_pre_in preIn
+    , sSig3     = P.bls12_381_G1_uncompress . convertIntegersByteString $ s_sig3_pre_in preIn
+    , x2        = P.bls12_381_G2_uncompress . convertIntegersByteString $ x_2 preIn 
+    , generator = mkScalar . convertMontgomery $ gen preIn
+    }
+
 main :: IO ()
 main = do
     jsonDataProof <- BL.readFile "test-vectors/proof-test-vector.json"
     jsonDataPreIn <- BL.readFile "test-vectors/pre-in-test-vector.json"
-    let maybeProof = decode jsonDataProof :: Maybe Proof 
-    let maybePreIn = decode jsonDataPreIn :: Maybe PreIn
+    let maybeProof = decode jsonDataProof :: Maybe ProofJSON
+    let maybePreIn = decode jsonDataPreIn :: Maybe PreInputsJSON
     case maybeProof of
-        Just proof -> do let a = convertIntegerG1Point $ commitment_a proof
-                         let b = convertIntegerG1Point $ commitment_b proof
-                         let c = convertIntegerG1Point $ commitment_c proof
-                         let z = convertIntegerG1Point $ commitment_z proof
-                         let tLow = convertIntegerG1Point $ t_low proof
-                         let tMid = convertIntegerG1Point $ t_mid proof
-                         let tHigh = convertIntegerG1Point $ t_high proof
-                         let aEval = convertMontgomery $ a_eval proof
-                         let bEval = convertMontgomery $ b_eval proof
-                         let cEval = convertMontgomery $ c_eval proof
-                         let sSig1 = convertMontgomery $ s_sig1 proof
-                         let sSig2 = convertMontgomery $ s_sig2 proof
-                         let zOmega = convertMontgomery $ z_omega proof
-                         let wOmega = convertIntegerG1Point $ w_omega proof
-                         let wOmegaZeta = convertIntegerG1Point $ w_omega_zeta proof
-                         let (beta, gamma, alpha, zeta, v, u) = getTranscript a b c z tLow tMid tHigh aEval bEval cEval sSig1 sSig2 zOmega wOmega wOmegaZeta
-                         print u
-                         case maybePreIn of
-                            -- test is the generator is indeed the correct generator as in the dummy plonk implementation
-                            Just preIn -> print $ convertMontgomery (generator preIn)
-                            Nothing -> putStrLn "Failed to parse preIn JSON"
-        Nothing -> putStrLn "Failed to parse proof JSON."
+        Just proof  -> case maybePreIn of
+            Just preIn -> do let p = convertProof proof
+                             let i = convertPreInputs preIn
+                             print $ verifyPlonk i [9] p
+            Nothing -> print "Could not deserialize PreInputs test vector"
+        Nothing -> print "Could not deserialize Proof test vector"

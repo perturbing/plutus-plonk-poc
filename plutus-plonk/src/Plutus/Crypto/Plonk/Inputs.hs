@@ -18,21 +18,21 @@ import qualified Prelude as Haskell
 -- The field elements are represented as integers as they are provided 
 -- by the prover and need to be checked to be in the field.
 data Proof = Proof 
-    { commitment_a     :: BuiltinByteString -- a serialized G1 element
-    , commitment_b     :: BuiltinByteString -- a serialized G1 element
-    , commitment_c     :: BuiltinByteString -- a serialized G1 element
-    , commitment_z     :: BuiltinByteString -- a serialized G1 element
-    , t_low            :: BuiltinByteString -- a serialized G1 element
-    , t_mid            :: BuiltinByteString -- a serialized G1 element
-    , t_high           :: BuiltinByteString -- a serialized G1 element
-    , w_omega          :: BuiltinByteString -- a serialized G1 element
-    , w_omega_zeta     :: BuiltinByteString -- a serialized G1 element
-    , a_eval           :: Integer           -- Field element
-    , b_eval           :: Integer           -- Field element
-    , c_eval           :: Integer           -- Field element
-    , s_sig1           :: Integer           -- Field element
-    , s_sig2           :: Integer           -- Field element
-    , z_omega          :: Integer           -- Field element
+    { commitmentA     :: BuiltinByteString -- a serialized G1 element
+    , commitmentB     :: BuiltinByteString -- a serialized G1 element
+    , commitmentC     :: BuiltinByteString -- a serialized G1 element
+    , commitmentZ     :: BuiltinByteString -- a serialized G1 element
+    , tLow            :: BuiltinByteString -- a serialized G1 element
+    , tMid            :: BuiltinByteString -- a serialized G1 element
+    , tHigh           :: BuiltinByteString -- a serialized G1 element
+    , wOmega          :: BuiltinByteString -- a serialized G1 element
+    , wOmegaZeta      :: BuiltinByteString -- a serialized G1 element
+    , aEval           :: Integer           -- Field element
+    , bEval           :: Integer           -- Field element
+    , cEval           :: Integer           -- Field element
+    , sSig1P          :: Integer           -- Field element
+    , sSig2P          :: Integer           -- Field element
+    , zOmega          :: Integer           -- Field element
     } deriving (Haskell.Show)
 
 makeLift ''Proof
