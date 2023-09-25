@@ -4,7 +4,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE InstanceSigs #-}
 
-module Plutus.Crypto.BlsField 
+module Plutus.Crypto.BlsField
 ( bls12_381_field_prime
 , Scalar
 , mkScalar
@@ -27,8 +27,8 @@ import PlutusTx.Prelude
       Module(..),
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..),
-      Ord((<), (<=)) )
-import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)      
+      Ord((<), (<=)), bls12_381_G1_equals, BuiltinBLS12_381_G1_Element, bls12_381_G1_add, bls12_381_G1_zero, bls12_381_G1_neg, bls12_381_G1_scalarMul, BuiltinBLS12_381_G2_Element, bls12_381_G2_add, bls12_381_G2_zero, bls12_381_G2_neg )
+import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
 import PlutusTx.Numeric
     ( AdditiveGroup(..),
       AdditiveMonoid(..),
@@ -37,6 +37,7 @@ import PlutusTx.Numeric
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..) )
 import Plutus.Crypto.Number.ModArithmetic ( exponentiateMod )
+import PlutusTx.Builtins (bls12_381_G2_scalarMul)
 
 -- In this module, we create a prime order field for BLS12-381
 -- as the type Scalar.
@@ -59,7 +60,7 @@ makeIsDataIndexed ''Scalar [('Scalar,0)]
 {-# INLINABLE mkScalar #-}
 mkScalar :: Integer -> Scalar
 mkScalar n | 0 <= n && n < bls12_381_field_prime = Scalar n
-           | otherwise                           = error () 
+           | otherwise                           = error ()
 
 instance Eq Scalar where
     {-# INLINABLE (==) #-}
@@ -105,3 +106,35 @@ instance MultiplicativeGroup Scalar where
     div a b = a * scale (bls12_381_field_prime - 2) b  -- use Fermat little theorem
     {-# INLINABLE recip #-}
     recip = div one
+
+instance AdditiveSemigroup BuiltinBLS12_381_G1_Element where
+    {-# INLINABLE (+) #-}
+    (+) = bls12_381_G1_add
+
+instance AdditiveMonoid BuiltinBLS12_381_G1_Element where
+    {-# INLINABLE zero #-}
+    zero = bls12_381_G1_zero
+
+instance AdditiveGroup BuiltinBLS12_381_G1_Element where
+    {-# INLINABLE (-) #-}
+    (-) a b = a + bls12_381_G1_neg b
+
+instance Module Integer BuiltinBLS12_381_G1_Element where
+    {-# INLINABLE scale #-}
+    scale = bls12_381_G1_scalarMul
+
+instance AdditiveSemigroup BuiltinBLS12_381_G2_Element where
+    {-# INLINABLE (+) #-}
+    (+) = bls12_381_G2_add
+
+instance AdditiveMonoid BuiltinBLS12_381_G2_Element where
+    {-# INLINABLE zero #-}
+    zero = bls12_381_G2_zero
+
+instance AdditiveGroup BuiltinBLS12_381_G2_Element where
+    {-# INLINABLE (-) #-}
+    (-) a b = a + bls12_381_G2_neg b
+
+instance Module Integer BuiltinBLS12_381_G2_Element where
+    {-# INLINABLE scale #-}
+    scale = bls12_381_G2_scalarMul
