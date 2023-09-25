@@ -27,7 +27,7 @@ import PlutusTx.Prelude
       Module(..),
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..),
-      Ord((<), (<=)), bls12_381_G1_equals, BuiltinBLS12_381_G1_Element, bls12_381_G1_add, bls12_381_G1_zero, bls12_381_G1_neg, bls12_381_G1_scalarMul, BuiltinBLS12_381_G2_Element, bls12_381_G2_add, bls12_381_G2_zero, bls12_381_G2_neg )
+      Ord((<), (<=)), bls12_381_G1_equals, BuiltinBLS12_381_G1_Element, bls12_381_G1_add, bls12_381_G1_zero, bls12_381_G1_neg, bls12_381_G1_scalarMul, BuiltinBLS12_381_G2_Element, bls12_381_G2_add, bls12_381_G2_scalarMul, bls12_381_G2_neg, bls12_381_G2_zero )
 import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
 import PlutusTx.Numeric
     ( AdditiveGroup(..),
@@ -37,7 +37,6 @@ import PlutusTx.Numeric
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..) )
 import Plutus.Crypto.Number.ModArithmetic ( exponentiateMod )
-import PlutusTx.Builtins (bls12_381_G2_scalarMul)
 
 -- In this module, we create a prime order field for BLS12-381
 -- as the type Scalar.
@@ -107,6 +106,8 @@ instance MultiplicativeGroup Scalar where
     {-# INLINABLE recip #-}
     recip = div one
 
+-- Add instance to make G1 and G2 a AdditiveGroup + scale function
+
 instance AdditiveSemigroup BuiltinBLS12_381_G1_Element where
     {-# INLINABLE (+) #-}
     (+) = bls12_381_G1_add
@@ -119,9 +120,9 @@ instance AdditiveGroup BuiltinBLS12_381_G1_Element where
     {-# INLINABLE (-) #-}
     (-) a b = a + bls12_381_G1_neg b
 
-instance Module Integer BuiltinBLS12_381_G1_Element where
+instance Module Scalar BuiltinBLS12_381_G1_Element where
     {-# INLINABLE scale #-}
-    scale = bls12_381_G1_scalarMul
+    scale (Scalar a) = bls12_381_G1_scalarMul a
 
 instance AdditiveSemigroup BuiltinBLS12_381_G2_Element where
     {-# INLINABLE (+) #-}
@@ -135,6 +136,6 @@ instance AdditiveGroup BuiltinBLS12_381_G2_Element where
     {-# INLINABLE (-) #-}
     (-) a b = a + bls12_381_G2_neg b
 
-instance Module Integer BuiltinBLS12_381_G2_Element where
+instance Module Scalar BuiltinBLS12_381_G2_Element where
     {-# INLINABLE scale #-}
-    scale = bls12_381_G2_scalarMul
+    scale (Scalar a) = bls12_381_G2_scalarMul a
