@@ -21,7 +21,7 @@ import Plutus.Crypto.Number.ModArithmetic (exponentiate)
 -- That is, all provided inputs have to be parsed, upon
 -- incorrect parsing, the script will fail.
 {-# INLINEABLE verifyPlonk #-}
-verifyPlonk :: PreInputs -> [Integer] -> Proof -> [Scalar]--Bool
+verifyPlonk :: PreInputs -> [Integer] -> Proof -> Bool
 verifyPlonk preInputs pubInputs proof@(Proof ca cb cc cz ctl ctm cth cwo cwz ea eb ec es1 es2 ez)
     | (bls12_381_G1_uncompress -> commA) <- ca
     , (bls12_381_G1_uncompress -> commB) <- cb
@@ -47,15 +47,15 @@ verifyPlonk preInputs pubInputs proof@(Proof ca cb cc cz ctl ctm cth cwo cwz ea 
         -- get the transcrip variables
         (beta, gamma, alpha, zeta, v, u) = getTranscript commA commB commC commZ commTLow commTMid commTHigh evalA evalB evalC evalS1 evalS2 evalZOmega commWOmega commWOmegaZeta
         -- this is Z_H(zeta) in the plonk paper
-        zeroPoly = scale n zeta  
+        zeroPoly = scale n zeta - one
         -- this is L_1(zeta) and the higher order L_i 
         (lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i w * (scale n zeta - one)) * recip (mkScalar n * (zeta - scale i w))) [1.. nPublic preInputs ]
         -- this is PI(zeta) in the plonk paper
         piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs) 
         -- r0 = 
     in
-    -- bls12_381_G1_scalarMul (unScalar evalA) commA == bls12_381_G1_generator
-    lagrangePolyXs
+    bls12_381_G1_scalarMul (unScalar evalA) commA == bls12_381_G1_generator
+    -- lagrangePolyXs
 
     -- todo :
     -- 1) change above function to output pi(zeta)
