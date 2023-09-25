@@ -5,7 +5,6 @@ module Main (main) where
 
 import qualified PlutusTx.Prelude as P
 import qualified PlutusTx.Builtins as P
-import qualified Plutus.Crypto.Plonk.Transcript as Plonk
 import Plutus.Crypto.BlsField ( Scalar, mkScalar ) 
 import Plutus.Crypto.Plonk.Transcript (getTranscript)
 import Plutus.Crypto.Plonk.Inputs (Proof (..), PreInputs (..))
@@ -19,21 +18,21 @@ import Data.Word ()
 
 -- Create a quick type for importing a test vector Proof via JSON.
 data ProofJSON = ProofJSON 
-    { commitment_a     :: [Integer]
-    , commitment_b     :: [Integer]
-    , commitment_c     :: [Integer]
-    , commitment_z     :: [Integer]
-    , t_low            :: [Integer]
-    , t_mid            :: [Integer]
-    , t_high           :: [Integer]
-    , w_omega         :: [Integer]
-    , w_omega_zeta    :: [Integer]
-    , a_eval           :: [Integer]
-    , b_eval           :: [Integer]
-    , c_eval           :: [Integer]
-    , s_sig1           :: [Integer]
-    , s_sig2           :: [Integer]
-    , z_omega          :: [Integer]
+    { commitment_a :: [Integer]
+    , commitment_b :: [Integer]
+    , commitment_c :: [Integer]
+    , commitment_z :: [Integer]
+    , t_low        :: [Integer]
+    , t_mid        :: [Integer]
+    , t_high       :: [Integer]
+    , w_omega      :: [Integer]
+    , w_omega_zeta :: [Integer]
+    , a_eval       :: [Integer]
+    , b_eval       :: [Integer]
+    , c_eval       :: [Integer]
+    , s_sig1       :: [Integer]
+    , s_sig2       :: [Integer]
+    , z_omega      :: [Integer]
 } deriving (Show, Generic)
 
 instance FromJSON ProofJSON
@@ -41,20 +40,20 @@ instance ToJSON ProofJSON
 
 -- Create a quick type for importing a test vector PreInputs via JSON.
 data PreInputsJSON = PreInputsJSON 
-    { n_public         :: Integer                     
-    , pow            :: Integer                     
-    , k_1               :: [Integer]
-    , k_2               :: [Integer]
-    , q_m              :: [Integer]
-    , q_l              :: [Integer]
-    , q_r              :: [Integer] 
-    , q_o              :: [Integer]
-    , q_c              :: [Integer]
-    , s_sig1_pre_in    :: [Integer]
-    , s_sig2_pre_in    :: [Integer]
-    , s_sig3_pre_in    :: [Integer]
-    , x_2              :: [Integer]
-    , gen        :: [Integer] 
+    { n_public      :: Integer                     
+    , pow           :: Integer                     
+    , k_1           :: [Integer]
+    , k_2           :: [Integer]
+    , q_m           :: [Integer]
+    , q_l           :: [Integer]
+    , q_r           :: [Integer] 
+    , q_o           :: [Integer]
+    , q_c           :: [Integer]
+    , s_sig1_pre_in :: [Integer]
+    , s_sig2_pre_in :: [Integer]
+    , s_sig3_pre_in :: [Integer]
+    , x_2           :: [Integer]
+    , gen           :: [Integer] 
 } deriving (Show, Generic)
 
 instance FromJSON PreInputsJSON 

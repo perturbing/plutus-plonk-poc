@@ -6,14 +6,15 @@ module Plutus.Crypto.Plonk.Verifier
 ) where
 
 import Plutus.Crypto.Plonk.Inputs (PreInputs (..), Proof (..))
-import PlutusTx.Prelude (Integer, Bool (..), bls12_381_G1_uncompress, bls12_381_G1_scalarMul, bls12_381_G1_generator, BuiltinBLS12_381_G1_Element, sum)
 import Plutus.Crypto.BlsField (mkScalar, Scalar (unScalar), MultiplicativeGroup (..))
-import PlutusTx.Numeric (one, zero, scale, (*), (+), AdditiveGroup (..))
+import Plutus.Crypto.Plonk.Transcript (challengeScalar, transcriptPoint, transcriptScalar, transcriptNew, getTranscript)
+import Plutus.Crypto.Number.ModArithmetic (exponentiate)
+
+import PlutusTx.Prelude (Integer, Bool (..), bls12_381_G1_uncompress, bls12_381_G1_scalarMul, bls12_381_G1_generator, BuiltinBLS12_381_G1_Element, sum)
+import PlutusTx.Numeric (one, zero, scale, (*), (+), AdditiveGroup (..), negate)
 import PlutusTx.Eq (Eq (..))
 import PlutusTx.List (map, zipWith)
-import Plutus.Crypto.Plonk.Transcript (challengeScalar, transcriptPoint, transcriptScalar, transcriptNew, getTranscript)
 import PlutusTx.ErrorCodes (predOrderingBadArgumentError)
-import Plutus.Crypto.Number.ModArithmetic (exponentiate)
 
 -- a general vanilla plonk verifier. 
 -- Note that the viewpattern match in the inputs of this function
@@ -52,10 +53,10 @@ verifyPlonk preInputs pubInputs proof@(Proof ca cb cc cz ctl ctm cth cwo cwz ea 
         (lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i w * zeroPoly) * recip (mkScalar n * (zeta - scale i w))) [1.. nPublic preInputs ]
         -- this is PI(zeta) in the plonk paper
         piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs) 
-        -- r0 = 
+        -- this is r_0 in the plonk paper
+        r0 = negate piZeta - lagrangePoly1 * alpha * alpha - alpha * (evalA + beta*evalS1 + gamma) * (evalB + beta*evalS2 + gamma) * (evalC + gamma) * evalZOmega
     in
-    -- bls12_381_G1_scalarMul (unScalar evalA) commA == bls12_381_G1_generator
-    piZeta
+    r0
 
     -- Also todo:
     -- write interface for reading snarkjs outputs (preinputs/proof/public inputs)
