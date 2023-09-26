@@ -15,11 +15,11 @@ library
     hs-source-dirs:   src
     default-language: Haskell2010
     build-depends:    base >= 4.2 && < 5
-                    -- , plutus-tx ^>= 1.9
-                    , plutus-tx
-                    , plutus-core
+                    , plutus-tx ^>= 1.9
+                    -- , plutus-tx
+                    -- , plutus-core
                     , plutus-crypto
-                    -- , plutus-core ^>= 1.9
+                    , plutus-core ^>= 1.9
 
 test-suite run-vector-test
   type: exitcode-stdio-1.0
@@ -27,11 +27,26 @@ test-suite run-vector-test
   default-language: Haskell2010
   main-is: Main.hs
   build-depends: base 
-              --  , plutus-tx ^>= 1.9
-               , plutus-tx
-               , plutus-core
-              --  , plutus-core ^>= 1.9
+               , plutus-tx ^>= 1.9
+              --  , plutus-tx
+              --  , plutus-core
+               , plutus-core ^>= 1.9
                , plutus-plonk
                , plutus-crypto
                , aeson
+               , bytestring
+
+benchmark run-bench
+  type: exitcode-stdio-1.0
+  hs-source-dirs: bench
+  default-language: Haskell2010
+  main-is: Main.hs
+  build-depends: base 
+               , plutus-tx ^>= 1.9
+           --  , plutus-tx
+               , plutus-ledger-api
+               , cardano-api
+           --  , plutus-core
+               , plutus-core ^>= 1.9
+               , plutus-plonk
                , bytestring
