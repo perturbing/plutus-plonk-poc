@@ -53,14 +53,12 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x
     =
         -- this step could be done offchain?
     let n = exponentiate 2 p
-        -- this is the generator of H (\omega in the paper)
-        w = generator preInputs
         -- get the transcript variables
         (beta, gamma, alpha, zeta, v, u) = getTranscript commA commB commC commZ commTLow commTMid commTHigh evalA evalB evalC evalS1 evalS2 evalZOmega commWOmega commWOmegaZeta
         -- this is Z_H(zeta) in the plonk paper
         zeroPoly = scale n zeta - one
         -- this is L_1(zeta) and the higher order L_i 
-        (lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i w * zeroPoly) * recip (mkScalar n * (zeta - scale i w))) [1.. nPub ]
+        (lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i gen * zeroPoly) * recip (mkScalar n * (zeta - scale i gen))) [1.. nPub ]
         -- this is PI(zeta) in the plonk paper
         piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
         -- this is r_0 in the plonk paper
@@ -80,11 +78,12 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x
         groupEncodedBatchEval = scale (negate r0 + v * (evalA + v * (evalB + v * (evalC + v * (evalS1 + v * evalS2)))) + u*evalZOmega ) bls12_381_G1_generator
     in
     bls12_381_finalVerify (bls12_381_millerLoop (commWOmega + scale u commWOmegaZeta) x2) (bls12_381_millerLoop (scale zeta commWOmega + scale (u*zeta*gen) commWOmegaZeta + batchPolyCommitFull - groupEncodedBatchEval) bls12_381_G2_generator)
+
     -- Also todo:
     -- write interface for reading snarkjs outputs (preinputs/proof/public inputs)
     -- extract from snarkjs how they do their transcript
     -- make a full dapp
 
     -- random remarks: the thing with deconding the snark js verification key is
-    -- that the G2 point is in some montgomery form. TODO: find the serialisation
+    -- that the G2 point is in some projective form. TODO: find the serialisation
     -- of that point
