@@ -19,6 +19,8 @@ packages: plutus-crypto
 tests: True
 benchmarks: True
 
+-- this is the a plutus version that has Keccak256 hash function for interopability
+-- with the snarkjs ecosystem.
 --source-repository-package
 --  type: git
 --  location: https://github.com/input-output-hk/plutus
