@@ -17,6 +17,3 @@ import PlutusLedgerApi.V3 (serialiseCompiledCode, SerialisedScript)
 
 verifyPlonkCode :: CompiledCode (PreInputs -> [Integer] -> Proof -> Bool)
 verifyPlonkCode = $$(compile [|| verifyPlonk ||])
-
-plonkPlutus :: SerialisedScript
-plonkPlutus = serialiseCompiledCode verifyPlonkCode

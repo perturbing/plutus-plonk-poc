@@ -108,6 +108,13 @@ convertPreInputs preIn = PreInputs
     , generator = mkScalar . convertMontgomery $ gen preIn
     }
 
+-- This reads the test vectors and applies them to the compiled plonk verifier script.
+-- This applied verifier is written to disk in the flat format.
+-- use: nix shell nixpkgs#flamegraph github:input-output-hk/plutus#x86_64-linux.plutus.library.plutus-project-924.hsPkgs.plutus-core.components.exes.traceToStacks github:input-output-hk/plutus#x86_64-linux.plutus.library.plutus-project-924.hsPkgs.plutus-core.components.exes.uplc
+-- and: uplc evaluate -t -i scripts-1.flat --if flat-namedDeBruijn --trace-mode LogsWithBudgets -o logs
+-- to log the CPU/MEM consumption
+-- for more info see https://hydra.family/head-protocol/benchmarks/profiling/
+-- and https://plutus.readthedocs.io/en/latest/howtos/profiling-scripts.html
 main :: IO ()
 main = do
     jsonDataProof <- BL.readFile "test-vectors/proof-test-vector.json"
