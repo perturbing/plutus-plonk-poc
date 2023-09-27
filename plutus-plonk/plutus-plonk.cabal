@@ -50,7 +50,8 @@ benchmark run-bench
               --  , plutus-tx
               --  , plutus-core
                , bytestring
-              --  , cardano-api
+               , aeson
+               , flat
                , plutus-plonk
                , plutus-crypto
   ghc-options: -Wall -fobject-code -fno-ignore-interface-pragmas
