@@ -64,6 +64,7 @@ convertIntegersByteString n =  P.toBuiltin . pack $ Prelude.map fromIntegral n
 
 convertMontgomery :: [Integer] -> Integer
 convertMontgomery [a, b, c, d] = a + b * 2^64 + c * 2^128 + d * 2^192
+convertMontgomery _ = 0
 
 convertProof :: ProofJSON -> Proof
 convertProof proof = Proof
