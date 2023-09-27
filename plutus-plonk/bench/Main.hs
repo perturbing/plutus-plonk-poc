@@ -1,10 +1,7 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# OPTIONS_GHC -fplugin-opt PlutusTx.Plugin:profile-all #-}
-{-# OPTIONS_GHC -fplugin-opt PlutusTx.Plugin:conservative-optimisation #-}
-
 module Main (main) where
 
-import qualified Prelude as Haskell
+import Script (plonkPlutus)
 
-main :: Haskell.IO ()
-main = Haskell.print "Test"
+main :: IO ()
+main = print plonkPlutus
+

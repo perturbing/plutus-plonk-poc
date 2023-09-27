@@ -10,7 +10,9 @@ import Plutus.Crypto.BlsField (mkScalar, Scalar (unScalar), MultiplicativeGroup 
 import Plutus.Crypto.Plonk.Transcript (challengeScalar, transcriptPoint, transcriptScalar, transcriptNew, getTranscript)
 import Plutus.Crypto.Number.ModArithmetic (exponentiate)
 
-import PlutusTx.Prelude (Integer, Bool (..), bls12_381_G1_uncompress, bls12_381_G1_scalarMul, bls12_381_G1_generator, BuiltinBLS12_381_G1_Element, sum, BuiltinBLS12_381_G2_Element, bls12_381_finalVerify, bls12_381_G2_generator, bls12_381_millerLoop)
+import PlutusTx.Prelude (Integer, Bool (..), bls12_381_G1_uncompress, bls12_381_G1_scalarMul, bls12_381_G1_generator 
+                        ,BuiltinBLS12_381_G1_Element, sum, BuiltinBLS12_381_G2_Element, bls12_381_finalVerify
+                        ,bls12_381_G2_generator, bls12_381_millerLoop, (>), otherwise)
 import PlutusTx.Eq (Eq (..))
 import PlutusTx.List (map, zipWith)
 import PlutusTx.ErrorCodes (predOrderingBadArgumentError)
@@ -22,7 +24,15 @@ import PlutusTx.Numeric
       MultiplicativeMonoid(one),
       MultiplicativeSemigroup((*)),
       negate )
-import PlutusTx.Builtins (bls12_381_G1_add, bls12_381_G1_zero, bls12_381_G1_neg, bls12_381_G2_add, bls12_381_G2_zero, bls12_381_G2_neg, bls12_381_G2_scalarMul)
+import PlutusTx.Builtins (bls12_381_G1_add, bls12_381_G1_zero, bls12_381_G1_neg, bls12_381_G2_add
+                         ,bls12_381_G2_zero, bls12_381_G2_neg, bls12_381_G2_scalarMul)
+
+{-# INLINABLE listToN #-}
+listToN :: Integer -> [Integer]
+listToN n = go 1
+  where
+    go x | x > n     = []
+         | otherwise = x : go (x+1)
 
 -- a general vanilla plonk verifier. 
 -- Note that the viewpattern match in the inputs of this function
@@ -58,7 +68,7 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x
         -- this is Z_H(zeta) in the plonk paper
         zeroPoly = scale n zeta - one
         -- this is L_1(zeta) and the higher order L_i 
-        (lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i gen * zeroPoly) * recip (mkScalar n * (zeta - scale i gen))) [1.. nPub ]
+        (lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i gen * zeroPoly) * recip (mkScalar n * (zeta - scale i gen))) (listToN nPub)
         -- this is PI(zeta) in the plonk paper
         piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
         -- this is r_0 in the plonk paper

@@ -27,7 +27,9 @@ import PlutusTx.Prelude
       Module(..),
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..),
-      Ord((<), (<=)), bls12_381_G1_equals, BuiltinBLS12_381_G1_Element, bls12_381_G1_add, bls12_381_G1_zero, bls12_381_G1_neg, bls12_381_G1_scalarMul, BuiltinBLS12_381_G2_Element, bls12_381_G2_add, bls12_381_G2_scalarMul, bls12_381_G2_neg, bls12_381_G2_zero )
+      Ord((<), (<=)), bls12_381_G1_equals, BuiltinBLS12_381_G1_Element,
+      bls12_381_G1_add, bls12_381_G1_zero, bls12_381_G1_neg, bls12_381_G1_scalarMul, 
+      BuiltinBLS12_381_G2_Element, bls12_381_G2_add, bls12_381_G2_scalarMul, bls12_381_G2_neg, bls12_381_G2_zero )
 import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
 import PlutusTx.Numeric
     ( AdditiveGroup(..),
@@ -97,12 +99,13 @@ class MultiplicativeMonoid a => MultiplicativeGroup a where
 -- In math this is b^a mod p, where b is of type scalar and a any integer
 instance Module Integer Scalar where
     {-# INLINABLE scale #-}
+    scale :: Integer -> Scalar -> Scalar
     scale a (Scalar b) = Scalar (exponentiateMod b a bls12_381_field_prime)
 
 instance MultiplicativeGroup Scalar where
     {-# INLINABLE div #-}
-    div a (Scalar 0) = error ()
-    div a b = a * scale (bls12_381_field_prime - 2) b  -- use Fermat little theorem
+    div a b | b == Scalar 0 = error ()
+            | otherwise     = a * scale (bls12_381_field_prime - 2) b -- use Fermat little theorem
     {-# INLINABLE recip #-}
     recip = div one
 

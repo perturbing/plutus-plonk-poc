@@ -38,15 +38,22 @@ test-suite run-vector-test
 
 benchmark run-bench
   type: exitcode-stdio-1.0
-  hs-source-dirs: bench
-  default-language: Haskell2010
   main-is: Main.hs
+  hs-source-dirs: bench
+  other-modules: Script
+  default-language: Haskell2010
   build-depends: base 
+               , plutus-tx-plugin
+               , plutus-ledger-api
                , plutus-tx ^>= 1.9
                , plutus-core ^>= 1.9
-           --  , plutus-tx
-           --  , plutus-core
-               , plutus-ledger-api
-               , cardano-api
-               , plutus-plonk
+              --  , plutus-tx
+              --  , plutus-core
                , bytestring
+              --  , cardano-api
+               , plutus-plonk
+               , plutus-crypto
+  ghc-options: -Wall -fobject-code -fno-ignore-interface-pragmas
+                 -fno-omit-interface-pragmas -fno-strictness 
+                 -fno-spec-constr -fno-specialise -fexpose-all-unfoldings
+                 -fplugin-opt PlutusTx.Plugin:defer-errors
