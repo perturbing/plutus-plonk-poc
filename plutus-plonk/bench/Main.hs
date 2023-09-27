@@ -4,8 +4,10 @@
 
 module Main (main) where
 
+import qualified PlutusTx as P
 import qualified PlutusTx.Prelude as P
 import qualified PlutusLedgerApi.V3 as PlutusV3
+import UntypedPlutusCore (UnrestrictedProgram (..))
 
 import Script (verifyPlonkCode)
 import Plutus.Crypto.BlsField ( mkScalar ) 
@@ -116,7 +118,7 @@ main = do
         Just proof  -> case maybePreIn of
             Just preIn -> do let p = convertProof proof
                              let i = convertPreInputs preIn
-                             BS.writeFile "appliedPlonkScript.flat" . flat . PlutusV3.serialiseCompiledCode $ verifyPlonkCode
+                             BS.writeFile "appliedPlonkScript.flat" . flat . UnrestrictedProgram <$> P.getPlcNoAnn $ verifyPlonkCode
                                 `Tx.unsafeApplyCode` Tx.liftCodeDef i
                                 `Tx.unsafeApplyCode` Tx.liftCodeDef [9]
                                 `Tx.unsafeApplyCode` Tx.liftCodeDef p
