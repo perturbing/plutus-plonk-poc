@@ -6,9 +6,10 @@ module Main (main) where
 import qualified PlutusTx.Prelude as P
 import qualified PlutusTx.Builtins as P
 import Plutus.Crypto.BlsField ( Scalar, mkScalar ) 
-import Plutus.Crypto.Plonk.Transcript (getTranscript)
+import Plutus.Crypto.Plonk.Transcript
 import Plutus.Crypto.Plonk.Inputs (Proof (..), PreInputs (..))
 import Plutus.Crypto.Plonk.Verifier (verifyPlonk)
+
 
 import Data.Aeson ( FromJSON, ToJSON, decode )
 import GHC.Generics ( Generic )

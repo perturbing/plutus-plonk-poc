@@ -12,8 +12,8 @@ module Plutus.Crypto.Plonk.Transcript
 , getTranscript
 ) where
 
-import PlutusTx.Prelude ( BuiltinByteString, id, (<>), lengthOfByteString, dropByteString, Integer, ($), (.) )
-import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element (..), bls12_381_G1_compress, blake2b_256, byteStringToInteger)
+import PlutusTx.Prelude ( BuiltinByteString, id, (<>), lengthOfByteString, takeByteString, Integer, ($), (.) )
+import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element (..), bls12_381_G1_compress, blake2b_256, byteStringToInteger, integerToByteString)
 import Plutus.Crypto.Number.Serialize ( i2osp, os2ip )
 import Plutus.Crypto.BlsField ( mkScalar, Scalar(..) )
 
@@ -30,7 +30,7 @@ transcriptNew lbl = "FS transcript" <> "dom-sep" <> lbl
 
 {-# INLINEABLE transcriptAppendMsg #-}
 transcriptAppendMsg :: Transcript -> Label -> BuiltinByteString -> Transcript
-transcriptAppendMsg ts lbl msg = ts <> lbl <> i2osp (lengthOfByteString msg) <> msg
+transcriptAppendMsg ts lbl msg = ts <> lbl <> integerToByteString (lengthOfByteString msg) <> msg
 
 {-# INLINEABLE transcriptPoint #-}
 transcriptPoint :: Transcript -> Label -> BuiltinBLS12_381_G1_Element -> Transcript
@@ -38,7 +38,7 @@ transcriptPoint ts lbl pnt = ts <> lbl <> bls12_381_G1_compress pnt
 
 {-# INLINEABLE transcriptScalar #-}
 transcriptScalar :: Transcript -> Label -> Scalar -> Transcript
-transcriptScalar ts lbl scl = ts <> lbl <> i2osp (unScalar scl)
+transcriptScalar ts lbl scl = ts <> lbl <> integerToByteString (unScalar scl)
 
 -- Note that the hash digest maps into the 256 bit domain, while a scalar
 -- is bound by the 255 bit field prime. 
@@ -46,7 +46,7 @@ transcriptScalar ts lbl scl = ts <> lbl <> i2osp (unScalar scl)
 -- to make this function well-defined.
 {-# INLINEABLE challengeScalar #-}
 challengeScalar :: Transcript -> Label -> (Scalar,Transcript)
-challengeScalar ts lbl = (mkScalar . os2ip . dropByteString 1 . blake2b_256 $ newTs, newTs)
+challengeScalar ts lbl = (mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ newTs, newTs)
     where newTs = ts <> lbl
 
 -- Given the necesary values of a proof,
