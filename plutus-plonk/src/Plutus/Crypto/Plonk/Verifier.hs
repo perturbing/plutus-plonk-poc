@@ -1,6 +1,6 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ViewPatterns      #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE ViewPatterns       #-}
 
 module Plutus.Crypto.Plonk.Verifier
 ( verifyPlonk
@@ -11,13 +11,11 @@ import Plutus.Crypto.Plonk.Inputs (PreInputs (..), Proof (..), PreInputsFast (..
 import Plutus.Crypto.BlsField (mkScalar, Scalar (unScalar), MultiplicativeGroup (..))
 import Plutus.Crypto.Plonk.Transcript (challengeScalar, transcriptPoint, transcriptScalar, transcriptNew, getTranscript)
 import Plutus.Crypto.Number.ModArithmetic (exponentiate)
-
 import PlutusTx.Prelude (Integer, Bool (..), bls12_381_G1_uncompress, bls12_381_G1_scalarMul, bls12_381_G1_generator
                         ,BuiltinBLS12_381_G1_Element, sum, BuiltinBLS12_381_G2_Element, bls12_381_finalVerify
                         ,bls12_381_G2_generator, bls12_381_millerLoop, (>), otherwise, enumFromTo, (.), (&&))
 import PlutusTx.Eq (Eq (..))
 import PlutusTx.List (map, zipWith, foldr, head, and)
-import PlutusTx.ErrorCodes (predOrderingBadArgumentError)
 import PlutusTx.Numeric
     ( AdditiveGroup(..),
       AdditiveMonoid(..),
@@ -26,8 +24,6 @@ import PlutusTx.Numeric
       MultiplicativeMonoid(one),
       MultiplicativeSemigroup((*)),
       negate )
-import PlutusTx.Builtins (bls12_381_G1_add, bls12_381_G1_zero, bls12_381_G1_neg, bls12_381_G2_add
-                         ,bls12_381_G2_zero, bls12_381_G2_neg, bls12_381_G2_scalarMul)
 
 -- a general vanilla plonk verifier. 
 -- Note that the viewpattern match in the inputs of this function

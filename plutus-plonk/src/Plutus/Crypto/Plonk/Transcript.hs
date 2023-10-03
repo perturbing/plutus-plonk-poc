@@ -1,5 +1,5 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude  #-}
+{-# LANGUAGE OverloadedStrings  #-}
 
 module Plutus.Crypto.Plonk.Transcript 
 ( Transcript
@@ -15,7 +15,7 @@ module Plutus.Crypto.Plonk.Transcript
 import PlutusTx.Prelude ( BuiltinByteString, id, (<>), lengthOfByteString, takeByteString, Integer, ($), (.) )
 import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element (..), bls12_381_G1_compress, blake2b_256, byteStringToInteger, integerToByteString)
 import Plutus.Crypto.Number.Serialize ( i2osp, os2ip )
-import Plutus.Crypto.BlsField ( mkScalar, Scalar(..) )
+import Plutus.Crypto.BlsField ( mkScalar, Scalar (unScalar) )
 
 -- For information on the particular chosen salts below,
 -- see https://github.com/iquerejeta/dummy_plonk/blob/main/src/transcript.rs

@@ -1,8 +1,7 @@
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE TemplateHaskell       #-}
-{-# LANGUAGE ScopedTypeVariables   #-}
-{-# LANGUAGE ViewPatterns          #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TemplateHaskell        #-}
+{-# LANGUAGE ScopedTypeVariables    #-}
+{-# LANGUAGE MultiParamTypeClasses  #-}
+{-# LANGUAGE ViewPatterns           #-}
 
 module Plutus.Crypto.Plonk.Inputs 
 ( Proof (..)
@@ -16,12 +15,12 @@ module Plutus.Crypto.Plonk.Inputs
 import Plutus.Crypto.BlsField (Scalar, recip, unScalar, mkScalar)
 import PlutusTx.Builtins (BuiltinByteString, Integer, BuiltinBLS12_381_G1_Element, BuiltinBLS12_381_G2_Element)
 import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
-import PlutusTx.Numeric
-import PlutusTx.Prelude (map, (.), ($), bls12_381_G1_uncompress, Enum (..))
+import PlutusTx.Numeric (AdditiveGroup (..), scale, (*))
+import PlutusTx.Prelude (map, (.), ($), bls12_381_G1_uncompress, enumFromTo)
 import Plutus.Crypto.Plonk.Transcript (getTranscript)
-import qualified Prelude as Haskell
 import Plutus.Crypto.Number.ModArithmetic (exponentiate)
-import GHC.Enum (Enum(enumFrom))
+
+import qualified Prelude as Haskell
 
 -- Proof is a type that wraps all necesary elements needed for a proof.
 -- Note that the G1 elements are compressed as bytestrings.
@@ -65,7 +64,7 @@ data PreInputs = PreInputs
     , sSig2           :: BuiltinBLS12_381_G1_Element -- the commited polynomial of the second wire permutation
     , sSig3           :: BuiltinBLS12_381_G1_Element -- the commited polynomial of the third wire permutation
     , x2              :: BuiltinBLS12_381_G2_Element -- the first order of the SRS over G2 (g^x where x is the toxic waste / tau in power of tau)
-    , generator       :: Scalar                       -- generator of the subgroup H
+    , generator       :: Scalar                      -- generator of the subgroup H
     } deriving (Haskell.Show)
 
 makeLift ''PreInputs

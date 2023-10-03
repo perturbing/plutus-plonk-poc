@@ -1,6 +1,5 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-type-defaults #-}
+{-# LANGUAGE DeriveGeneric          #-}
+{-# OPTIONS_GHC -Wno-type-defaults  #-}
 
 module Main (main) where
 
@@ -10,13 +9,13 @@ import UntypedPlutusCore (UnrestrictedProgram (..))
 
 import Script (verifyPlonkCode)
 import Plutus.Crypto.BlsField ( mkScalar ) 
-import Plutus.Crypto.Plonk.Inputs (Proof (..), PreInputs (..), ProofFast (..), PreInputsFast (..), convertToFastProof, convertToFastPreInputs)
+import Plutus.Crypto.Plonk.Inputs (Proof (..), PreInputs (..), convertToFastProof, convertToFastPreInputs)
 
 import Data.Aeson ( FromJSON, ToJSON, decode )
 import Flat (flat)
 import GHC.Generics ( Generic )
 import qualified Data.ByteString.Lazy as BL
-import Data.ByteString as BS
+import Data.ByteString as BS ( pack, writeFile )
 import Data.Word ()
 import qualified PlutusTx as Tx
 
@@ -111,7 +110,7 @@ convertPreInputs preIn = PreInputs
 -- This applied verifier is written to disk in the flat format.
 -- use: nix shell nixpkgs#flamegraph github:input-output-hk/plutus#x86_64-linux.plutus.library.plutus-project-92.hsPkgs.plutus-core.components.exes.traceToStacks github:input-output-hk/plutus#x86_64-linux.plutus.library.plutus-project-92.hsPkgs.plutus-core.components.exes.uplc
 -- use: nix shell nixpkgs#flamegraph github:input-output-hk/plutus/b87462e53899fca594d99d7b273780b9597e452a#x86_64-linux.plutus.library.plutus-project-92.hsPkgs.plutus-core.components.exes.traceToStacks github:input-output-hk/plutus/b87462e53899fca594d99d7b273780b9597e452a#x86_64-linux.plutus.library.plutus-project-92.hsPkgs.plutus-core.components.exes.uplc
--- and: uplc evaluate -t -i scripts-1.flat --if flat-namedDeBruijn --trace-mode LogsWithBudgets -o logs
+-- and: uplc evaluate -t -i appliedPlonkScript.flat --if flat-namedDeBruijn --trace-mode LogsWithBudgets -o logs
 -- to log the CPU/MEM consumption
 -- for more info see https://hydra.family/head-protocol/benchmarks/profiling/
 -- and https://plutus.readthedocs.io/en/latest/howtos/profiling-scripts.html
