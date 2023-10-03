@@ -12,7 +12,7 @@ import Plutus.Crypto.Number.ModArithmetic (exponentiate)
 
 import PlutusTx.Prelude (Integer, Bool (..), bls12_381_G1_uncompress, bls12_381_G1_scalarMul, bls12_381_G1_generator 
                         ,BuiltinBLS12_381_G1_Element, sum, BuiltinBLS12_381_G2_Element, bls12_381_finalVerify
-                        ,bls12_381_G2_generator, bls12_381_millerLoop, (>), otherwise, enumFromTo)
+                        ,bls12_381_G2_generator, bls12_381_millerLoop, (>), otherwise, enumFromTo, (.))
 import PlutusTx.Eq (Eq (..))
 import PlutusTx.List (map, zipWith)
 import PlutusTx.ErrorCodes (predOrderingBadArgumentError)
@@ -35,7 +35,7 @@ import PlutusTx.Builtins (bls12_381_G1_add, bls12_381_G1_zero, bls12_381_G1_neg,
 {-# INLINEABLE verifyPlonk #-}
 verifyPlonk :: PreInputs -> [Integer] -> Proof -> Bool
 verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x2 gen) 
-            pubInputs 
+            pubInputs
             proof@(Proof ca cb cc cz ctl ctm cth cwo cwz ea eb ec es1 es2 ez)
     | (bls12_381_G1_uncompress -> commA) <- ca
     , (bls12_381_G1_uncompress -> commB) <- cb
@@ -52,7 +52,7 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x
     , (mkScalar -> evalS1) <- es1
     , (mkScalar -> evalS2) <- es2
     , (mkScalar -> evalZOmega) <- ez
-    , let (w1 : wxs) = map mkScalar pubInputs
+    , let (w1 : wxs) = map (negate . mkScalar) pubInputs
     =
         -- this step could be done offchain?
     let n = exponentiate 2 p
@@ -65,7 +65,7 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x
         -- this is PI(zeta) in the plonk paper
         piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
         -- this is r_0 in the plonk paper
-        r0 = negate piZeta - lagrangePoly1 * alpha * alpha - alpha * (evalA + beta*evalS1 + gamma) * (evalB + beta*evalS2 + gamma) * (evalC + gamma) * evalZOmega
+        r0 = piZeta - lagrangePoly1 * alpha * alpha - alpha * (evalA + beta*evalS1 + gamma) * (evalB + beta*evalS2 + gamma) * (evalC + gamma) * evalZOmega
         -- this is [D]_1 in the plonk paper
         batchPolyCommitG1 = scale (evalA*evalB) qM
                           + scale evalA qL
