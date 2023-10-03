@@ -11,9 +11,8 @@ module Script where
 import PlutusTx.Prelude ( Integer, Bool (..))
 import PlutusTx (compile, CompiledCode)
 
-import Plutus.Crypto.Plonk.Inputs ( PreInputs, Proof )
-import Plutus.Crypto.Plonk.Verifier ( verifyPlonk )
-import PlutusLedgerApi.V3 (serialiseCompiledCode, SerialisedScript)
+import Plutus.Crypto.Plonk.Inputs ( PreInputsFast, ProofFast )
+import Plutus.Crypto.Plonk.Verifier ( verifyPlonkFast )
 
-verifyPlonkCode :: CompiledCode (PreInputs -> [Integer] -> Proof -> Bool)
-verifyPlonkCode = $$(compile [|| verifyPlonk ||])
+verifyPlonkCode :: CompiledCode (PreInputsFast -> [Integer] -> ProofFast -> Bool)
+verifyPlonkCode = $$(compile [|| verifyPlonkFast ||])

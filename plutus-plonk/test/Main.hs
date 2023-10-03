@@ -7,8 +7,8 @@ import qualified PlutusTx.Prelude as P
 import qualified PlutusTx.Builtins as P
 import Plutus.Crypto.BlsField ( Scalar, mkScalar ) 
 import Plutus.Crypto.Plonk.Transcript
-import Plutus.Crypto.Plonk.Inputs (Proof (..), PreInputs (..))
-import Plutus.Crypto.Plonk.Verifier (verifyPlonk)
+import Plutus.Crypto.Plonk.Inputs (Proof (..), PreInputs (..), ProofFast (..), PreInputsFast (..), convertToFastProof, convertToFastPreInputs)
+import Plutus.Crypto.Plonk.Verifier (verifyPlonk, verifyPlonkFast)
 
 
 import Data.Aeson ( FromJSON, ToJSON, decode )
@@ -114,6 +114,9 @@ main = do
         Just proof  -> case maybePreIn of
             Just preIn -> do let p = convertProof proof
                              let i = convertPreInputs preIn
+                             let iFast = convertToFastPreInputs i
+                             let pFast = convertToFastProof iFast p
                              print $ verifyPlonk i [9] p
+                             print $ verifyPlonkFast iFast [9] pFast
             Nothing -> print "Could not deserialize PreInputs test vector"
         Nothing -> print "Could not deserialize Proof test vector"
