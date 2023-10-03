@@ -105,7 +105,7 @@ convertPreInputs preIn = PreInputs
     , sSig2     = P.bls12_381_G1_uncompress . convertIntegersByteString $ s_sig2_pre_in preIn
     , sSig3     = P.bls12_381_G1_uncompress . convertIntegersByteString $ s_sig3_pre_in preIn
     , x2        = P.bls12_381_G2_uncompress . convertIntegersByteString $ x_2 preIn 
-    , generator = mkScalar . convertMontgomery $ gen preIn
+    , generator = mkScalar . convertMontgomery $ gen preIn -- NOte to self: add roundtrip (os2ip . i2osp) to test strict eval of script inputs.
     }
 
 -- This reads the test vectors and applies them to the compiled plonk verifier script.

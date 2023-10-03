@@ -46,7 +46,7 @@ transcriptScalar ts lbl scl = ts <> lbl <> i2osp (unScalar scl)
 -- to make this function well-defined.
 {-# INLINEABLE challengeScalar #-}
 challengeScalar :: Transcript -> Label -> (Scalar,Transcript)
-challengeScalar ts lbl = (mkScalar . byteStringToInteger . dropByteString 1 . blake2b_256 $ newTs, newTs)
+challengeScalar ts lbl = (mkScalar . os2ip . dropByteString 1 . blake2b_256 $ newTs, newTs)
     where newTs = ts <> lbl
 
 -- Given the necesary values of a proof,
@@ -73,7 +73,7 @@ getTranscript
     -> Scalar                      -- z_omega
     -> BuiltinBLS12_381_G1_Element -- w_omega
     -> BuiltinBLS12_381_G1_Element -- w_omega_zeta
-    -> (Scalar,Scalar,Scalar,Scalar,Scalar,Scalar) -- (beta, gamma, alpha, zeta, v, u
+    -> (Scalar,Scalar,Scalar,Scalar,Scalar,Scalar) -- (beta, gamma, alpha, zeta, v, u)
 getTranscript commA commB commC commZ commTLow commTMid commTHigh evalA evalB evalC evalS1 evalS2 evalZOmega commWOmega commWOmegaZeta =
     let
         (beta, transcript1) = challengeScalar (transcriptPoint (transcriptPoint (transcriptPoint (transcriptNew "testing the prover") "commitment a" commA) "commitment b" commB) "commitment c" commC) "beta"
