@@ -9,7 +9,7 @@ import UntypedPlutusCore (UnrestrictedProgram (..))
 
 import Script (verifyPlonkCode)
 import Plutus.Crypto.BlsField ( mkScalar ) 
-import Plutus.Crypto.Plonk.Inputs (Proof (..), PreInputs (..), convertToFastProof, convertToFastPreInputs)
+import Plutus.Crypto.Plonk (Proof (..), PreInputs (..), convertToFastProof, convertToFastPreInputs)
 
 import Data.Aeson ( FromJSON, ToJSON, decode )
 import Flat (flat)

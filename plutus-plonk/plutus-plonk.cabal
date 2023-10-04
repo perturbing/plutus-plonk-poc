@@ -9,7 +9,7 @@ build-type: Simple
 
 library
     exposed-modules:  Plutus.Crypto.Plonk
-                      Plutus.Crypto.Plonk.Transcript
+    other-modules:    Plutus.Crypto.Plonk.Transcript
                       Plutus.Crypto.Plonk.Verifier
                       Plutus.Crypto.Plonk.Inputs
     hs-source-dirs:   src

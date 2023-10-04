@@ -10,8 +10,7 @@ module Script where
 import PlutusTx.Prelude ( Integer, Bool (..))
 import PlutusTx (compile, CompiledCode)
 
-import Plutus.Crypto.Plonk.Inputs ( PreInputsFast, ProofFast )
-import Plutus.Crypto.Plonk.Verifier ( verifyPlonkFast )
+import Plutus.Crypto.Plonk (PreInputsFast, ProofFast, verifyPlonkFast )
 
 verifyPlonkCode :: CompiledCode (PreInputsFast -> [Integer] -> ProofFast -> Bool)
 verifyPlonkCode = $$(compile [|| verifyPlonkFast ||])

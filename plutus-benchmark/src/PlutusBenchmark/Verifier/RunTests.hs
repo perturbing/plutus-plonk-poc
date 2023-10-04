@@ -1,14 +1,19 @@
-{-# LANGUAGE DeriveGeneric      #-}
-{-# LANGUAGE OverloadedStrings  #-}
+module PlutusBenchmark.Verifier.RunTests
+( runVerifier
+) where
 
-module Main (main) where
+import PlutusBenchmark.Verifier.Scripts (verifyPlonkFastScript)
+import Plutus.Crypto.Plonk (PreInputsFast, ProofFast, Proof (..), PreInputs (..)
+                           , convertToFastProof, convertToFastPreInputs)
+import Plutus.Crypto.BlsField (mkScalar)
+
+import PlutusBenchmark.Common
 
 import qualified PlutusTx.Prelude as P
 import qualified PlutusTx.Builtins as P
-import Plutus.Crypto.BlsField ( Scalar, mkScalar ) 
-import Plutus.Crypto.Plonk (Proof (..), PreInputs (..), ProofFast (..)
-                           , PreInputsFast (..), convertToFastProof
-                           , convertToFastPreInputs, verifyPlonk, verifyPlonkFast)
+
+import System.IO (Handle)
+import Text.Printf (hPrintf)
 
 import Data.Aeson ( FromJSON, ToJSON, decode )
 import GHC.Generics ( Generic )
@@ -16,6 +21,31 @@ import GHC.Generics ( Generic )
 import qualified Data.ByteString.Lazy as BL
 import Data.ByteString ( pack )
 import Data.Word ()
+
+printCostsVerifierPlonkFast :: Handle -> PreInputsFast -> [Integer] -> ProofFast -> IO ()
+printCostsVerifierPlonkFast h preIn pub proof =
+    let script = verifyPlonkFastScript preIn pub proof
+    in printSizeStatistics h NoSize script
+
+runVerifier :: Handle -> IO ()
+runVerifier h = do
+    jsonDataProof <- BL.readFile "test-vectors/proof-test-vector.json"
+    jsonDataPreIn <- BL.readFile "test-vectors/pre-in-test-vector.json"
+    let maybeProof = decode jsonDataProof :: Maybe ProofJSON
+    let maybePreIn = decode jsonDataPreIn :: Maybe PreInputsJSON
+    case maybeProof of
+        Just proof  -> case maybePreIn of
+            Just preIn -> do let p = convertProof proof
+                             let i = convertPreInputs preIn
+                             let iFast = convertToFastPreInputs i
+                             let pFast = convertToFastProof iFast p
+                             hPrintf h "\n\n"
+                             hPrintf h "Run fast vanilla plonk verifier\n\n"
+                             printHeader h
+                             printCostsVerifierPlonkFast h iFast [9] pFast
+                             hPrintf h "\n\n"
+            Nothing -> print "Could not deserialize PreInputs test vector"
+        Nothing -> print "Could not deserialize Proof test vector"
 
 -- Create a quick type for importing a test vector Proof via JSON.
 data ProofJSON = ProofJSON 
@@ -103,20 +133,3 @@ convertPreInputs preIn = PreInputs
     , x2        = P.bls12_381_G2_uncompress . convertIntegersByteString $ x_2 preIn 
     , generator = mkScalar . convertMontgomery $ gen preIn
     }
-
-main :: IO ()
-main = do
-    jsonDataProof <- BL.readFile "test-vectors/proof-test-vector.json"
-    jsonDataPreIn <- BL.readFile "test-vectors/pre-in-test-vector.json"
-    let maybeProof = decode jsonDataProof :: Maybe ProofJSON
-    let maybePreIn = decode jsonDataPreIn :: Maybe PreInputsJSON
-    case maybeProof of
-        Just proof  -> case maybePreIn of
-            Just preIn -> do let p = convertProof proof
-                             let i = convertPreInputs preIn
-                             let iFast = convertToFastPreInputs i
-                             let pFast = convertToFastProof iFast p
-                             print $ verifyPlonk i [9] p
-                             print $ verifyPlonkFast iFast [9] pFast
-            Nothing -> print "Could not deserialize PreInputs test vector"
-        Nothing -> print "Could not deserialize Proof test vector"
