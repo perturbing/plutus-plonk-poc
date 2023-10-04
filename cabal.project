@@ -15,6 +15,7 @@ index-state:
 
 packages: plutus-crypto
           plutus-plonk
+          plutus-benchmark
 
 tests: True
 benchmarks: True
