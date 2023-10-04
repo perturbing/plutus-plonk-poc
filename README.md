@@ -8,4 +8,4 @@ This repository can be run via nix, to enter a dev shell use `nix develop`. In p
 
 1. `nix run .#plutus-plonk:test:run-vector-test`  to check the implementations against the test vectors.
 2. `nix run .#plutus-plonk:bench:run-bench` to compile the fast implementation to UPLC (`.flat`) for further processing.
-3. `nix run .#plutus-benchmark:exe:verifier-tests-exe` to calculate the cpu/mem units of the tests in the plutus-benchmark package.
+3. `nix run .#plutus-benchmark:exe:bench-exe` to calculate the cpu/mem units of the tests in the plutus-benchmark package.
