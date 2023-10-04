@@ -1,4 +1,7 @@
-module PlutusBenchmark.Verifier.RunTests
+{-# LANGUAGE DeriveGeneric      #-}
+{-# OPTIONS_GHC -Wno-missing-deriving-strategies #-}
+{-# OPTIONS_GHC -Wno-type-defaults #-}
+module PlutusBenchmark.Verifier.RunVerifier
 ( runVerifier
 ) where
 
@@ -7,10 +10,9 @@ import Plutus.Crypto.Plonk (PreInputsFast, ProofFast, Proof (..), PreInputs (..)
                            , convertToFastProof, convertToFastPreInputs)
 import Plutus.Crypto.BlsField (mkScalar)
 
-import PlutusBenchmark.Common
+import PlutusBenchmark.Common ( printHeader, printSizeStatistics, TestSize(NoSize) )
 
 import qualified PlutusTx.Prelude as P
-import qualified PlutusTx.Builtins as P
 
 import System.IO (Handle)
 import Text.Printf (hPrintf)

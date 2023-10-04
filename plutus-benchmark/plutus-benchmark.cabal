@@ -66,8 +66,10 @@ library verifier-tests-lib
   import: lang
   ghc-options: -Wno-unused-packages
   hs-source-dirs: src
-  exposed-modules: PlutusBenchmark.Verifier.RunTests
+  exposed-modules: PlutusBenchmark.Verifier.RunVerifier
                    PlutusBenchmark.Verifier.Scripts
+                   PlutusBenchmark.BlsField.RunBlsField
+                   PlutusBenchmark.BlsField.Scripts
   build-depends:
     , base                     >=4.9     && <5
     , plutus-tx                
@@ -77,6 +79,7 @@ library verifier-tests-lib
     , plutus-crypto
     , bytestring
     , aeson
+    , hedgehog
     , plutus-benchmark-common
 
 executable verifier-tests-exe
