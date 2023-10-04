@@ -10,7 +10,7 @@ module PlutusBenchmark.BlsField.Scripts
 
 import PlutusTx (compile, unsafeApplyCode, liftCodeDef, getPlcNoAnn)
 import PlutusTx.Prelude (Integer, ($), (.), foldr, (*))
-import PlutusTx.Numeric ((+), zero)
+import PlutusTx.Numeric ((+), zero, one)
 
 import PlutusCore (DefaultFun, DefaultUni)
 import UntypedPlutusCore qualified as UPLC
@@ -34,7 +34,7 @@ blsFieldAddScalarsScript xs =
 
 {-# INLINABLE mulScalars #-}
 mulScalars :: [Scalar] -> Scalar
-mulScalars = foldr (*) zero
+mulScalars = foldr (*) one
 
 blsFieldMulScalarsScript :: [Scalar] -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
 blsFieldMulScalarsScript xs =
