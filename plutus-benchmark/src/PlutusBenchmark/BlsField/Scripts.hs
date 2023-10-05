@@ -6,22 +6,23 @@ module PlutusBenchmark.BlsField.Scripts
 ( blsFieldAddScalarsScript
 , blsFieldMulScalarsScript
 , listOfSizedByteStrings
+, modularExponentiationScalarScript
 ) where
 
 import PlutusTx (compile, unsafeApplyCode, liftCodeDef, getPlcNoAnn)
-import PlutusTx.Prelude (Integer, ($), (.), foldr, (*))
+import PlutusTx.Prelude (Integer, ($), (.), foldr, (*), BuiltinByteString, popCountByteString, (==), otherwise)
 import PlutusTx.Numeric ((+), zero, one)
 
 import PlutusCore (DefaultFun, DefaultUni)
 import UntypedPlutusCore qualified as UPLC
-
-import Plutus.Crypto.BlsField (Scalar)
 
 import Prelude qualified as Haskell
 import Hedgehog.Internal.Gen qualified as G
 import Hedgehog.Internal.Range qualified as R
 import System.IO.Unsafe (unsafePerformIO)
 import Data.ByteString (ByteString)
+import PlutusTx.Builtins ( testBitByteString, shiftByteString )
+import Plutus.Crypto.BlsField (Scalar)
 
 {-# INLINABLE addScalars #-}
 addScalars :: [Scalar] -> Scalar
@@ -46,3 +47,16 @@ listOfSizedByteStrings :: Integer -> Integer -> [ByteString]
 listOfSizedByteStrings n l = unsafePerformIO . G.sample $
                              G.list (R.singleton $ Haskell.fromIntegral n)
                                   (G.bytes (R.singleton $ Haskell.fromIntegral l))
+
+{-# NOINLINE modularExponentiationScalar #-}
+modularExponentiationScalar :: Scalar -> BuiltinByteString -> Scalar
+modularExponentiationScalar b e
+    | popCountByteString e == 0  = one
+    | otherwise = t * modularExponentiationScalar (b*b) (shiftByteString e 1)
+        where t = if testBitByteString e 0 then b else one
+
+modularExponentiationScalarScript :: Scalar -> BuiltinByteString -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
+modularExponentiationScalarScript b e =
+    getPlcNoAnn $ $$(compile [|| modularExponentiationScalar ||])
+        `unsafeApplyCode` liftCodeDef b
+        `unsafeApplyCode` liftCodeDef e

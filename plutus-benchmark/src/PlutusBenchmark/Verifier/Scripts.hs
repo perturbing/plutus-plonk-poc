@@ -14,8 +14,6 @@ import UntypedPlutusCore qualified as UPLC
 
 import Plutus.Crypto.Plonk (verifyPlonkFast, PreInputsFast, ProofFast)
 
-import Prelude qualified as Haskell
-
 verifyPlonkFastScript :: PreInputsFast -> [Integer] -> ProofFast -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
 verifyPlonkFastScript preIn pub proof = 
     getPlcNoAnn $ $$(compile [|| verifyPlonkFast ||]) 
