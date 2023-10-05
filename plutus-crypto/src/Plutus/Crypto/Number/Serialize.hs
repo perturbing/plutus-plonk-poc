@@ -6,6 +6,7 @@ module Plutus.Crypto.Number.Serialize
 , i2ospOf
 , i2ospOf_
 , lengthBytes
+, nullPadding
 ) where
 
 import PlutusTx.Prelude

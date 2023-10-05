@@ -10,6 +10,7 @@ module Plutus.Crypto.BlsField
 , mkScalar
 , unScalar
 , MultiplicativeGroup (..)
+, modularExponentiationScalar
 ) where
 
 import qualified Prelude as Haskell
@@ -27,9 +28,7 @@ import PlutusTx.Prelude
       Module(..),
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..),
-      Ord((<), (<=)), bls12_381_G1_equals, BuiltinBLS12_381_G1_Element,
-      bls12_381_G1_add, bls12_381_G1_zero, bls12_381_G1_neg, bls12_381_G1_scalarMul, 
-      BuiltinBLS12_381_G2_Element, bls12_381_G2_add, bls12_381_G2_scalarMul, bls12_381_G2_neg, bls12_381_G2_zero )
+      Ord((<), (<=)) )
 import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
 import PlutusTx.Numeric
     ( AdditiveGroup(..),
@@ -39,6 +38,25 @@ import PlutusTx.Numeric
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..) )
 import Plutus.Crypto.Number.ModArithmetic ( exponentiateMod )
+import PlutusTx.Builtins
+    ( popCountByteString,
+      bls12_381_G1_equals,
+      BuiltinBLS12_381_G1_Element,
+      bls12_381_G1_add,
+      bls12_381_G1_zero,
+      bls12_381_G1_neg,
+      bls12_381_G1_scalarMul,
+      BuiltinBLS12_381_G2_Element,
+      bls12_381_G2_add,
+      bls12_381_G2_scalarMul,
+      bls12_381_G2_neg,
+      bls12_381_G2_zero,
+      BuiltinByteString,
+      shiftByteString,
+      testBitByteString,
+      lengthOfByteString )
+
+
 
 -- In this module, we create a prime order field for BLS12-381
 -- as the type Scalar.
@@ -94,6 +112,13 @@ instance MultiplicativeMonoid Scalar where
 class MultiplicativeMonoid a => MultiplicativeGroup a where
     div :: a -> a -> a
     recip :: a -> a
+
+{-# NOINLINE modularExponentiationScalar #-}
+modularExponentiationScalar :: Scalar -> BuiltinByteString -> Scalar
+modularExponentiationScalar b e
+    | popCountByteString e == 0  = one
+    | otherwise = t * modularExponentiationScalar (b*b) (shiftByteString e 1)
+                where t = if testBitByteString e 0 then b else one
 
 -- this is just a wrapped exponentiateMod for the field elements
 -- In math this is b^a mod p, where b is of type scalar and a any integer
