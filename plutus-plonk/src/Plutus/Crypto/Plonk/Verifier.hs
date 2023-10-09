@@ -10,10 +10,9 @@ module Plutus.Crypto.Plonk.Verifier
 import Plutus.Crypto.Plonk.Inputs (PreInputs (..), Proof (..), PreInputsFast (..), ProofFast (..))
 import Plutus.Crypto.BlsField (mkScalar, Scalar (unScalar), MultiplicativeGroup (..), powerOfTwoExponentiation)
 import Plutus.Crypto.Plonk.Transcript (challengeScalar, transcriptPoint, transcriptScalar, transcriptNew, getTranscript)
-import Plutus.Crypto.Number.ModArithmetic (exponentiate)
 import PlutusTx.Prelude (Integer, Bool (..), bls12_381_G1_uncompress, bls12_381_G1_scalarMul, bls12_381_G1_generator
                         ,BuiltinBLS12_381_G1_Element, sum, BuiltinBLS12_381_G2_Element, bls12_381_finalVerify
-                        ,bls12_381_G2_generator, bls12_381_millerLoop, (>), otherwise, enumFromTo, (.), (&&))
+                        ,bls12_381_G2_generator, bls12_381_millerLoop, (>), otherwise, enumFromTo, (.), (&&), divide, error, (<), (||), even)
 import PlutusTx.Eq (Eq (..))
 import PlutusTx.List (map, zipWith, foldr, head, and)
 import PlutusTx.Numeric
@@ -24,6 +23,15 @@ import PlutusTx.Numeric
       MultiplicativeMonoid(one),
       MultiplicativeSemigroup((*)),
       negate )
+
+{-# INLINABLE exponentiate #-}
+exponentiate :: Integer -> Integer -> Integer
+exponentiate x n
+    | n < 0 || x < 0    = error ()
+    | n == 0            = 1
+    | x == 0            = 0
+    | even n            = exponentiate x (n `divide` 2) * exponentiate x (n `divide` 2)
+    | otherwise         = x * exponentiate x ((n - 1) `divide` 2) * exponentiate x ((n - 1) `divide` 2)
 
 -- a general vanilla plonk verifier. 
 -- Note that the viewpattern match in the inputs of this function

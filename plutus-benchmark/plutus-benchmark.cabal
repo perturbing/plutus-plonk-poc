@@ -76,7 +76,7 @@ library bench-lib
     , plutus-core             
     , plutus-tx-plugin
     , plutus-plonk
-    , plutus-crypto
+    -- , plutus-crypto
     , bytestring
     , aeson
     , hedgehog

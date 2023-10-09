@@ -40,7 +40,6 @@ import PlutusTx.Numeric
       Module(..),
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..) )
--- import Plutus.Crypto.Number.ModArithmetic ( exponentiateMod )
 import PlutusTx.Builtins
     ( popCountByteString,
       bls12_381_G1_equals,
@@ -62,8 +61,6 @@ import PlutusTx.Builtins
       consByteString,
       emptyByteString,
       indexByteString )
-
-
 
 -- In this module, we create a prime order field for BLS12-381
 -- as the type Scalar.

@@ -9,6 +9,7 @@ build-type: Simple
 
 library
     exposed-modules:  Plutus.Crypto.Plonk
+                      Plutus.Crypto.BlsField
     other-modules:    Plutus.Crypto.Plonk.Transcript
                       Plutus.Crypto.Plonk.Verifier
                       Plutus.Crypto.Plonk.Inputs
@@ -19,7 +20,7 @@ library
                     -- , plutus-core ^>= 1.9
                     , plutus-tx
                     , plutus-core
-                    , plutus-crypto
+                    -- , plutus-crypto
 
 test-suite run-vector-test
   type: exitcode-stdio-1.0
@@ -32,7 +33,7 @@ test-suite run-vector-test
                , plutus-tx
                , plutus-core
                , plutus-plonk
-               , plutus-crypto
+              --  , plutus-crypto
                , aeson
                , bytestring
 
@@ -53,7 +54,7 @@ benchmark run-bench
                , aeson
                , flat
                , plutus-plonk
-               , plutus-crypto
+              --  , plutus-crypto
   ghc-options: -Wall -fobject-code -fno-ignore-interface-pragmas
                  -fno-omit-interface-pragmas -fno-strictness 
                  -fno-spec-constr -fno-specialise -fexpose-all-unfoldings

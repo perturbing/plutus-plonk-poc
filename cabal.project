@@ -13,8 +13,7 @@ index-state:
   , hackage.haskell.org 2023-09-27T00:00:00Z
   , cardano-haskell-packages 2023-09-27T00:00:00Z
 
-packages: plutus-crypto
-          plutus-plonk
+packages: plutus-plonk
           plutus-benchmark
 
 tests: True

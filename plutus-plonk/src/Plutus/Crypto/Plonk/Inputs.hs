@@ -18,7 +18,6 @@ import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
 import PlutusTx.Numeric (AdditiveGroup (..), scale, (*))
 import PlutusTx.Prelude (map, (.), ($), bls12_381_G1_uncompress, enumFromTo)
 import Plutus.Crypto.Plonk.Transcript (getTranscript)
-import Plutus.Crypto.Number.ModArithmetic (exponentiate)
 
 import qualified Prelude as Haskell
 
@@ -122,7 +121,7 @@ makeIsDataIndexed ''ProofFast [('ProofFast,0)]
 convertToFastPreInputs :: PreInputs -> PreInputsFast
 convertToFastPreInputs preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x2 gen ) 
     = PreInputsFast
-    { n'            = exponentiate 2 p
+    { n'            = 2 Haskell.^ p
     , pow'          = p
     , k1'           = k1
     , k2'           = k2
