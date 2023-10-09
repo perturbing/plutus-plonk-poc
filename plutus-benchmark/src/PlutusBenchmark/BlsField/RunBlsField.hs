@@ -47,12 +47,12 @@ runBlsField h = do
     mapM_ (printCostsBlsMulScalarsField h) [0, 400..4000]
     hPrintf h "\n\n"
 
-    hPrintf h "mod exp scalar with shifts\n\n"
+    hPrintf h "n scalar exponentiation with random exponents\n\n"
     printHeader h
-    mapM_ (printCostsModExpScalar h) [0, 4..32]
+    mapM_ (printCostsModExpScalar h) [0, 20..100]
     hPrintf h "\n\n"
 
-    hPrintf h "mod exp scalar if n = 2^k \n\n"
+    hPrintf h "n scalar exponents a^e if e = 2^n \n\n"
     printHeader h
-    mapM_ (printCostsModExpScalar2 h) [0, 4..32]
+    mapM_ (printCostsModExpScalar2 h) [0, 20..100]
     hPrintf h "\n\n"
