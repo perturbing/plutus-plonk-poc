@@ -3,6 +3,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE InstanceSigs #-}
+{-# OPTIONS_GHC -fno-specialise -fno-strictness -fno-spec-constr #-}
 
 module Plutus.Crypto.BlsField
 ( bls12_381_field_prime
@@ -134,13 +135,13 @@ reverseByteString bs
     | bs == emptyByteString = bs
     | otherwise             = reverseByteString (dropByteString 1 bs) <> consByteString (indexByteString bs 0) emptyByteString
 
--- this is just a wrapped exponentiateMod for the field elements
 -- In math this is b^a mod p, where b is of type scalar and a any integer
+-- note that there is still some overhead here due to the conversion from
+-- little endian to big endian. This can be optimized in the future.
 instance Module Integer Scalar where
     {-# INLINABLE scale #-}
     scale :: Integer -> Scalar -> Scalar
-    scale a b = modularExponentiationScalar b (reverseByteString (integerToByteString a))  --Scalar (exponentiateMod b a bls12_381_field_prime)
-
+    scale a b = modularExponentiationScalar b (reverseByteString (integerToByteString a))
 instance MultiplicativeGroup Scalar where
     {-# INLINABLE div #-}
     div a b | b == Scalar 0 = error ()

@@ -8,6 +8,7 @@ module PlutusBenchmark.BlsField.Scripts
 , listOfSizedByteStrings
 , modularExponentiationScalarScript
 , modExpPow2Script
+, invertScalarsScript
 ) where
 
 import PlutusTx (compile, unsafeApplyCode, liftCodeDef, getPlcNoAnn)
@@ -22,8 +23,9 @@ import Hedgehog.Internal.Gen qualified as G
 import Hedgehog.Internal.Range qualified as R
 import System.IO.Unsafe (unsafePerformIO)
 import Data.ByteString (ByteString)
-import PlutusTx.Builtins ( testBitByteString, shiftByteString, error )
-import Plutus.Crypto.BlsField (Scalar)
+import PlutusTx.Builtins
+    ( testBitByteString, shiftByteString, error)
+import Plutus.Crypto.BlsField (Scalar, MultiplicativeGroup (..))
 
 {-# INLINABLE addScalars #-}
 addScalars :: [Scalar] -> Scalar
@@ -49,7 +51,7 @@ listOfSizedByteStrings n l = unsafePerformIO . G.sample $
                              G.list (R.singleton $ Haskell.fromIntegral n)
                                   (G.bytes (R.singleton $ Haskell.fromIntegral l))
 
-{-# NOINLINE modularExponentiationScalar #-}
+{-# INLINABLE modularExponentiationScalar #-}
 modularExponentiationScalar :: Scalar -> BuiltinByteString -> Scalar
 modularExponentiationScalar b e
     | popCountByteString e == 0  = one
@@ -62,7 +64,7 @@ modularExponentiationScalarScript b e =
         `unsafeApplyCode` liftCodeDef b
         `unsafeApplyCode` liftCodeDef e
 
-{-# NOINLINE powerOfTwoExponentiation #-}
+{-# INLINABLE powerOfTwoExponentiation #-}
 powerOfTwoExponentiation :: Scalar -> Integer -> Scalar
 powerOfTwoExponentiation x k = if k < 0 then error () else go x k
     where go x' k'
@@ -74,3 +76,12 @@ modExpPow2Script b pow =
     getPlcNoAnn $ $$(compile [|| powerOfTwoExponentiation ||])
         `unsafeApplyCode` liftCodeDef b
         `unsafeApplyCode` liftCodeDef pow
+
+{-# INLINABLE invertScalars #-}
+invertScalars :: [Scalar] -> Scalar
+invertScalars = foldr (\a b -> b + recip a) zero
+
+invertScalarsScript :: [Scalar] -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
+invertScalarsScript xs =
+    getPlcNoAnn $ $$(compile [|| invertScalars ||])
+       `unsafeApplyCode` liftCodeDef xs
