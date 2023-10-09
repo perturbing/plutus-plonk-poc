@@ -8,10 +8,12 @@ module PlutusBenchmark.BlsField.Scripts
 , listOfSizedByteStrings
 , modularExponentiationScalarScript
 , modularExponentiationScalarScript2
+, modExpPow2Script
+, modExp
 ) where
 
 import PlutusTx (compile, unsafeApplyCode, liftCodeDef, getPlcNoAnn)
-import PlutusTx.Prelude (Integer, ($), (.), foldr, (*), BuiltinByteString, popCountByteString, (==), otherwise, byteStringToInteger, integerToByteString, (<>), modulo)
+import PlutusTx.Prelude (Integer, ($), (.), foldr, (*), BuiltinByteString, popCountByteString, (==), otherwise, byteStringToInteger, integerToByteString, (<>), modulo, divide)
 import PlutusTx.Numeric ((+), zero, one)
 
 import PlutusCore (DefaultFun, DefaultUni)
@@ -22,7 +24,7 @@ import Hedgehog.Internal.Gen qualified as G
 import Hedgehog.Internal.Range qualified as R
 import System.IO.Unsafe (unsafePerformIO)
 import Data.ByteString (ByteString)
-import PlutusTx.Builtins ( testBitByteString, shiftByteString )
+import PlutusTx.Builtins ( testBitByteString, shiftByteString, error )
 import Plutus.Crypto.BlsField (Scalar (unScalar), mkScalar)
 import Plutus.Crypto.Number.Serialize (nullPadding)
 
@@ -72,5 +74,25 @@ modularExponentiationScalar2 b power
 modularExponentiationScalarScript2 :: Scalar -> Integer -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
 modularExponentiationScalarScript2 b pow =
     getPlcNoAnn $ $$(compile [|| modularExponentiationScalar2 ||])
+        `unsafeApplyCode` liftCodeDef b
+        `unsafeApplyCode` liftCodeDef pow
+
+-- calc a^n mod p where n = 2^power
+{-# NOINLINE modExp #-}
+modExp :: Scalar -> Integer -> Scalar
+modExp a power
+    | i == 0 = mkScalar b
+    | i == 1 = mkScalar (b*b `modulo` prime)
+    | i == 2 = mkScalar (b*b*b*b `modulo` prime)
+    | otherwise = error ()
+    where prime = 52435875175126190479447740508185965837690552500527637822603658699938581184513
+          k = power `divide` 3
+          i = power `modulo` 3
+          b = byteStringToInteger (nullPadding k <> integerToByteString (unScalar a)) `modulo` prime
+
+
+modExpPow2Script :: Scalar -> Integer -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
+modExpPow2Script b pow =
+    getPlcNoAnn $ $$(compile [|| modExp ||])
         `unsafeApplyCode` liftCodeDef b
         `unsafeApplyCode` liftCodeDef pow
