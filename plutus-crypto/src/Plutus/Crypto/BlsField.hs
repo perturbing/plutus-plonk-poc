@@ -12,6 +12,7 @@ module Plutus.Crypto.BlsField
 , MultiplicativeGroup (..)
 , modularExponentiationScalar
 , powerOfTwoExponentiation
+, reverseByteString
 ) where
 
 import qualified Prelude as Haskell
@@ -29,7 +30,7 @@ import PlutusTx.Prelude
       Module(..),
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..),
-      Ord((<), (<=)) )
+      Ord((<), (<=)), rotateByteString, integerToByteString, dropByteString, (<>) )
 import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
 import PlutusTx.Numeric
     ( AdditiveGroup(..),
@@ -38,7 +39,7 @@ import PlutusTx.Numeric
       Module(..),
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..) )
-import Plutus.Crypto.Number.ModArithmetic ( exponentiateMod )
+-- import Plutus.Crypto.Number.ModArithmetic ( exponentiateMod )
 import PlutusTx.Builtins
     ( popCountByteString,
       bls12_381_G1_equals,
@@ -55,7 +56,11 @@ import PlutusTx.Builtins
       BuiltinByteString,
       shiftByteString,
       testBitByteString,
-      lengthOfByteString )
+      lengthOfByteString,
+      xorByteString,
+      consByteString,
+      emptyByteString,
+      indexByteString )
 
 
 
@@ -114,21 +119,27 @@ class MultiplicativeMonoid a => MultiplicativeGroup a where
     div :: a -> a -> a
     recip :: a -> a
 
--- this function is broken as this assumes big endian and shifts have
 -- the behavior of shifting bit across bytes.
-{-# NOINLINE modularExponentiationScalar #-}
+{-# INLINABLE modularExponentiationScalar #-}
 modularExponentiationScalar :: Scalar -> BuiltinByteString -> Scalar
 modularExponentiationScalar b e
     | popCountByteString e == 0  = one
-    | otherwise = t * modularExponentiationScalar (b*b) (shiftByteString e 1)
+    | otherwise = t * modularExponentiationScalar (b*b) (shiftByteString e (-1))
                 where t = if testBitByteString e 0 then b else one
+
+{-# INLINABLE reverseByteString #-}
+-- | Reverse a builtin byte string of arbitrary length
+reverseByteString :: BuiltinByteString -> BuiltinByteString
+reverseByteString bs
+    | bs == emptyByteString = bs
+    | otherwise             = reverseByteString (dropByteString 1 bs) <> consByteString (indexByteString bs 0) emptyByteString
 
 -- this is just a wrapped exponentiateMod for the field elements
 -- In math this is b^a mod p, where b is of type scalar and a any integer
 instance Module Integer Scalar where
     {-# INLINABLE scale #-}
     scale :: Integer -> Scalar -> Scalar
-    scale a (Scalar b) = Scalar (exponentiateMod b a bls12_381_field_prime)
+    scale a b = modularExponentiationScalar b (reverseByteString (integerToByteString a))  --Scalar (exponentiateMod b a bls12_381_field_prime)
 
 instance MultiplicativeGroup Scalar where
     {-# INLINABLE div #-}
