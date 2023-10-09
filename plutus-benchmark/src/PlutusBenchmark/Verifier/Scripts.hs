@@ -6,8 +6,9 @@ module PlutusBenchmark.Verifier.Scripts
 ( verifyPlonkFastScript
 ) where
 
-import PlutusTx 
-import PlutusTx.Prelude
+import PlutusTx
+    ( getPlcNoAnn, unsafeApplyCode, liftCodeDef, compile ) 
+import PlutusTx.Prelude ( Integer, ($) )
 
 import PlutusCore (DefaultFun, DefaultUni)
 import UntypedPlutusCore qualified as UPLC

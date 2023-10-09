@@ -7,12 +7,11 @@ module PlutusBenchmark.BlsField.Scripts
 , blsFieldMulScalarsScript
 , listOfSizedByteStrings
 , modularExponentiationScalarScript
-, modularExponentiationScalarScript2
 , modExpPow2Script
 ) where
 
 import PlutusTx (compile, unsafeApplyCode, liftCodeDef, getPlcNoAnn)
-import PlutusTx.Prelude (Integer, ($), (-), (.), foldr, (*), BuiltinByteString, popCountByteString, (==), otherwise, byteStringToInteger, integerToByteString, (<>), modulo, divide, (<))
+import PlutusTx.Prelude (Integer, ($), (-), (.), foldr, (*), BuiltinByteString, popCountByteString, (==), otherwise, (<))
 import PlutusTx.Numeric ((+), zero, one)
 
 import PlutusCore (DefaultFun, DefaultUni)
@@ -24,8 +23,7 @@ import Hedgehog.Internal.Range qualified as R
 import System.IO.Unsafe (unsafePerformIO)
 import Data.ByteString (ByteString)
 import PlutusTx.Builtins ( testBitByteString, shiftByteString, error )
-import Plutus.Crypto.BlsField (Scalar (unScalar), mkScalar)
-import Plutus.Crypto.Number.Serialize (nullPadding)
+import Plutus.Crypto.BlsField (Scalar)
 
 {-# INLINABLE addScalars #-}
 addScalars :: [Scalar] -> Scalar
@@ -63,18 +61,6 @@ modularExponentiationScalarScript b e =
     getPlcNoAnn $ $$(compile [|| modularExponentiationScalar ||])
         `unsafeApplyCode` liftCodeDef b
         `unsafeApplyCode` liftCodeDef e
-
-{-# NOINLINE modularExponentiationScalar2 #-}
-modularExponentiationScalar2 :: Scalar -> Integer -> Scalar
-modularExponentiationScalar2 b power
-    | power == 0  = b
-    | otherwise = mkScalar (byteStringToInteger ((\x -> nullPadding power <> x) (integerToByteString (unScalar b ))) `modulo` 52435875175126190479447740508185965837690552500527637822603658699938581184513)
-
-modularExponentiationScalarScript2 :: Scalar -> Integer -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
-modularExponentiationScalarScript2 b pow =
-    getPlcNoAnn $ $$(compile [|| modularExponentiationScalar2 ||])
-        `unsafeApplyCode` liftCodeDef b
-        `unsafeApplyCode` liftCodeDef pow
 
 {-# NOINLINE powerOfTwoExponentiation #-}
 powerOfTwoExponentiation :: Scalar -> Integer -> Scalar

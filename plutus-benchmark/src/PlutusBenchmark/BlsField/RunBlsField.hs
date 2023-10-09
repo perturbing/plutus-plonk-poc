@@ -4,7 +4,7 @@ module PlutusBenchmark.BlsField.RunBlsField
 ( runBlsField
 ) where
 
-import PlutusBenchmark.BlsField.Scripts (blsFieldAddScalarsScript, blsFieldMulScalarsScript, listOfSizedByteStrings, modularExponentiationScalarScript, modularExponentiationScalarScript2, modExpPow2Script)
+import PlutusBenchmark.BlsField.Scripts (blsFieldAddScalarsScript, blsFieldMulScalarsScript, listOfSizedByteStrings, modularExponentiationScalarScript, modExpPow2Script)
 import PlutusTx.Prelude (byteStringToInteger, toBuiltin)
 import Plutus.Crypto.BlsField (mkScalar)
 
@@ -30,11 +30,6 @@ printCostsModExpScalar h n =
 
 printCostsModExpScalar2 :: Handle -> Integer -> IO ()
 printCostsModExpScalar2 h n =
-    let script = modularExponentiationScalarScript2 (mkScalar 52435875175126190479447740508185965837690552500527637822603658699938581184510) n
-    in printSizeStatistics h (TestSize n) script
-
-printCostsModExpScalar3 :: Handle -> Integer -> IO ()
-printCostsModExpScalar3 h n =
     let script = modExpPow2Script (mkScalar 52435875175126190479447740508185965837690552500527637822603658699938581184510) n
     in printSizeStatistics h (TestSize n) script
 
@@ -57,12 +52,7 @@ runBlsField h = do
     mapM_ (printCostsModExpScalar h) [0, 4..32]
     hPrintf h "\n\n"
 
-    hPrintf h "mod exp scalar with full byte shifts\n\n"
-    printHeader h
-    mapM_ (printCostsModExpScalar2 h) [0, 4..32]
-    hPrintf h "\n\n"
-
     hPrintf h "mod exp scalar if n = 2^k \n\n"
     printHeader h
-    mapM_ (printCostsModExpScalar3 h) [0, 4..32]
+    mapM_ (printCostsModExpScalar2 h) [0, 4..32]
     hPrintf h "\n\n"

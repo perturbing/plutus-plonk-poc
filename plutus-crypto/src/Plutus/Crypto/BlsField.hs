@@ -114,6 +114,8 @@ class MultiplicativeMonoid a => MultiplicativeGroup a where
     div :: a -> a -> a
     recip :: a -> a
 
+-- this function is broken as this assumes big endian and shifts have
+-- the behavior of shifting bit across bytes.
 {-# NOINLINE modularExponentiationScalar #-}
 modularExponentiationScalar :: Scalar -> BuiltinByteString -> Scalar
 modularExponentiationScalar b e
