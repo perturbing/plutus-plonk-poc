@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" width="1200" height="230" onload="init(evt)" viewBox="0 0 1200 230" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg version="1.1" width="1200" height="198" onload="init(evt)" viewBox="0 0 1200 198" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
 <!-- NOTES:  -->
 <defs>
@@ -334,288 +334,116 @@
 	}
 ]]>
 </script>
-<rect x="0.0" y="0" width="1200.0" height="230.0" fill="url(#background)"  />
+<rect x="0.0" y="0" width="1200.0" height="198.0" fill="url(#background)"  />
 <text id="title" x="600.00" y="24" >Flame Graph</text>
-<text id="details" x="10.00" y="213" > </text>
+<text id="details" x="10.00" y="181" > </text>
 <text id="unzoom" x="10.00" y="24" class="hide">Reset Zoom</text>
 <text id="search" x="1090.00" y="24" >Search</text>
-<text id="matched" x="1090.00" y="213" > </text>
+<text id="matched" x="1090.00" y="181" > </text>
 <g id="frames">
 <g >
-<title> exponentiate (62,478,462 samples, 0.77%)</title><rect x="1166.9" y="85" width="9.0" height="15.0" fill="rgb(205,85,20)" rx="2" ry="2" />
-<text  x="1169.85" y="95.5" ></text>
+<title> mkScalar (18,677,492 samples, 0.25%)</title><rect x="1181.7" y="53" width="2.9" height="15.0" fill="rgb(220,227,30)" rx="2" ry="2" />
+<text  x="1184.72" y="63.5" ></text>
 </g>
 <g >
-<title> even (10,331,746 samples, 0.13%)</title><rect x="1025.4" y="85" width="1.5" height="15.0" fill="rgb(243,97,22)" rx="2" ry="2" />
-<text  x="1028.40" y="95.5" ></text>
+<title> go (849,368 samples, 0.01%)</title><rect x="1078.3" y="101" width="0.2" height="15.0" fill="rgb(243,228,45)" rx="2" ry="2" />
+<text  x="1081.35" y="111.5" ></text>
 </g>
 <g >
-<title> exponentiate (49,811,460 samples, 0.61%)</title><rect x="1156.9" y="85" width="7.2" height="15.0" fill="rgb(231,80,2)" rx="2" ry="2" />
-<text  x="1159.90" y="95.5" ></text>
+<title> takeByteString (5,731,920 samples, 0.08%)</title><rect x="1184.6" y="53" width="0.9" height="15.0" fill="rgb(254,115,50)" rx="2" ry="2" />
+<text  x="1187.64" y="63.5" ></text>
 </g>
 <g >
-<title> go (849,368 samples, 0.01%)</title><rect x="1057.8" y="133" width="0.2" height="15.0" fill="rgb(235,16,24)" rx="2" ry="2" />
-<text  x="1060.84" y="143.5" ></text>
+<title> mkScalar (5,388,258 samples, 0.07%)</title><rect x="1185.6" y="85" width="0.9" height="15.0" fill="rgb(242,130,48)" rx="2" ry="2" />
+<text  x="1188.64" y="95.5" ></text>
 </g>
 <g >
-<title> exponentiate (77,017,190 samples, 0.94%)</title><rect x="1000.6" y="117" width="11.2" height="15.0" fill="rgb(252,91,8)" rx="2" ry="2" />
-<text  x="1003.61" y="127.5" ></text>
+<title> zipWith (541,050,670 samples, 7.19%)</title><rect x="1105.2" y="117" width="84.8" height="15.0" fill="rgb(225,122,9)" rx="2" ry="2" />
+<text  x="1108.21" y="127.5" > zipWith</text>
 </g>
 <g >
-<title> even (6,510,582 samples, 0.08%)</title><rect x="1156.0" y="85" width="0.9" height="15.0" fill="rgb(220,167,52)" rx="2" ry="2" />
-<text  x="1158.96" y="95.5" ></text>
+<title> challengeScalar (59,188,718 samples, 0.79%)</title><rect x="1176.3" y="85" width="9.2" height="15.0" fill="rgb(215,210,7)" rx="2" ry="2" />
+<text  x="1179.27" y="95.5" ></text>
 </g>
 <g >
-<title> exponentiateMod (4,814,916 samples, 0.06%)</title><rect x="1189.0" y="69" width="0.7" height="15.0" fill="rgb(230,29,9)" rx="2" ry="2" />
-<text  x="1192.01" y="79.5" ></text>
+<title> powerOfTwoExponentiation (1,583,588 samples, 0.02%)</title><rect x="1189.7" y="37" width="0.2" height="15.0" fill="rgb(234,179,15)" rx="2" ry="2" />
+<text  x="1192.65" y="47.5" ></text>
 </g>
 <g >
-<title> even (7,465,873 samples, 0.09%)</title><rect x="1014.1" y="117" width="1.1" height="15.0" fill="rgb(221,120,38)" rx="2" ry="2" />
-<text  x="1017.13" y="127.5" ></text>
+<title> mkScalar (122,193,489 samples, 1.62%)</title><rect x="1079.0" y="117" width="19.1" height="15.0" fill="rgb(210,123,43)" rx="2" ry="2" />
+<text  x="1081.98" y="127.5" ></text>
 </g>
 <g >
-<title> exponentiate (102,917,693 samples, 1.26%)</title><rect x="1015.2" y="117" width="14.9" height="15.0" fill="rgb(235,169,17)" rx="2" ry="2" />
-<text  x="1018.21" y="127.5" ></text>
+<title> transcriptNew (9,908,550 samples, 0.13%)</title><rect x="1103.7" y="117" width="1.5" height="15.0" fill="rgb(236,48,48)" rx="2" ry="2" />
+<text  x="1106.66" y="127.5" ></text>
 </g>
 <g >
-<title> even (2,865,873 samples, 0.04%)</title><rect x="1019.2" y="101" width="0.4" height="15.0" fill="rgb(230,8,47)" rx="2" ry="2" />
-<text  x="1022.21" y="111.5" ></text>
+<title> go (539,351,934 samples, 7.16%)</title><rect x="1105.5" y="101" width="84.5" height="15.0" fill="rgb(254,166,30)" rx="2" ry="2" />
+<text  x="1108.48" y="111.5" > go</text>
 </g>
 <g >
-<title> exponentiateMod (179,433,358 samples, 2.20%)</title><rect x="1030.1" y="117" width="25.9" height="15.0" fill="rgb(212,122,47)" rx="2" ry="2" />
-<text  x="1033.10" y="127.5" > ..</text>
+<title> mkScalar (3,157,631 samples, 0.04%)</title><rect x="1078.5" y="101" width="0.5" height="15.0" fill="rgb(231,36,47)" rx="2" ry="2" />
+<text  x="1081.48" y="111.5" ></text>
 </g>
 <g >
-<title> even (1,910,582 samples, 0.02%)</title><rect x="1167.7" y="69" width="0.3" height="15.0" fill="rgb(222,56,50)" rx="2" ry="2" />
-<text  x="1170.74" y="79.5" ></text>
+<title> mkScalar (177,019,936 samples, 2.35%)</title><rect x="1037.2" y="85" width="27.7" height="15.0" fill="rgb(214,77,8)" rx="2" ry="2" />
+<text  x="1040.16" y="95.5" > ..</text>
 </g>
 <g >
-<title> even (1,910,582 samples, 0.02%)</title><rect x="1154.1" y="101" width="0.3" height="15.0" fill="rgb(209,61,1)" rx="2" ry="2" />
-<text  x="1157.12" y="111.5" ></text>
+<title> `$wchallengeScalar` (54,092,510 samples, 0.72%)</title><rect x="1177.1" y="69" width="8.4" height="15.0" fill="rgb(223,192,9)" rx="2" ry="2" />
+<text  x="1180.06" y="79.5" ></text>
 </g>
 <g >
-<title> mkScalar (788,258 samples, 0.01%)</title><rect x="1189.8" y="117" width="0.1" height="15.0" fill="rgb(235,68,42)" rx="2" ry="2" />
-<text  x="1192.79" y="127.5" ></text>
+<title>all (7,529,682,987 samples, 100%)</title><rect x="10.0" y="149" width="1180.0" height="15.0" fill="rgb(236,15,10)" rx="2" ry="2" />
+<text  x="13.00" y="159.5" ></text>
 </g>
 <g >
-<title> `$wchallengeScalar` (49,492,510 samples, 0.61%)</title><rect x="1144.5" y="101" width="7.1" height="15.0" fill="rgb(212,14,16)" rx="2" ry="2" />
-<text  x="1147.49" y="111.5" ></text>
+<title> powerOfTwoExponentiation (23,370,642 samples, 0.31%)</title><rect x="1100.0" y="101" width="3.7" height="15.0" fill="rgb(246,7,34)" rx="2" ry="2" />
+<text  x="1102.99" y="111.5" ></text>
 </g>
 <g >
-<title> even (5,555,291 samples, 0.07%)</title><rect x="1051.6" y="69" width="0.8" height="15.0" fill="rgb(218,220,49)" rx="2" ry="2" />
-<text  x="1054.63" y="79.5" ></text>
+<title> powerOfTwoExponentiation (12,477,115 samples, 0.17%)</title><rect x="1101.7" y="85" width="2.0" height="15.0" fill="rgb(249,68,45)" rx="2" ry="2" />
+<text  x="1104.70" y="95.5" ></text>
 </g>
 <g >
-<title> exponentiateMod (433,149,834 samples, 5.31%)</title><rect x="993.4" y="149" width="62.6" height="15.0" fill="rgb(209,186,37)" rx="2" ry="2" />
-<text  x="996.41" y="159.5" > expon..</text>
+<title> takeByteString (78,055,360 samples, 1.04%)</title><rect x="1064.9" y="85" width="12.2" height="15.0" fill="rgb(219,14,51)" rx="2" ry="2" />
+<text  x="1067.90" y="95.5" ></text>
 </g>
 <g >
-<title> even (2,865,873 samples, 0.04%)</title><rect x="1000.2" y="117" width="0.4" height="15.0" fill="rgb(225,213,29)" rx="2" ry="2" />
-<text  x="1003.20" y="127.5" ></text>
+<title> powerOfTwoExponentiation (2,375,382 samples, 0.03%)</title><rect x="1103.3" y="69" width="0.4" height="15.0" fill="rgb(240,175,11)" rx="2" ry="2" />
+<text  x="1106.29" y="79.5" ></text>
 </g>
 <g >
-<title> even (3,821,164 samples, 0.05%)</title><rect x="1171.4" y="53" width="0.6" height="15.0" fill="rgb(229,210,22)" rx="2" ry="2" />
-<text  x="1174.42" y="63.5" ></text>
+<title> `$wchallengeScalar` (459,553,072 samples, 6.10%)</title><rect x="1005.1" y="101" width="72.0" height="15.0" fill="rgb(243,92,5)" rx="2" ry="2" />
+<text  x="1008.11" y="111.5" > `$wchal..</text>
 </g>
 <g >
-<title> exponentiate (54,411,460 samples, 0.67%)</title><rect x="1168.0" y="69" width="7.9" height="15.0" fill="rgb(211,33,45)" rx="2" ry="2" />
-<text  x="1171.02" y="79.5" ></text>
+<title> powerOfTwoExponentiation (21,787,054 samples, 0.29%)</title><rect x="1186.5" y="85" width="3.4" height="15.0" fill="rgb(244,20,49)" rx="2" ry="2" />
+<text  x="1189.49" y="95.5" ></text>
 </g>
 <g >
-<title> exponentiate (67,078,462 samples, 0.82%)</title><rect x="1154.4" y="101" width="9.7" height="15.0" fill="rgb(221,109,37)" rx="2" ry="2" />
-<text  x="1157.40" y="111.5" ></text>
+<title> powerOfTwoExponentiation (9,851,410 samples, 0.13%)</title><rect x="1188.4" y="53" width="1.5" height="15.0" fill="rgb(242,24,39)" rx="2" ry="2" />
+<text  x="1191.36" y="63.5" ></text>
 </g>
 <g >
-<title> exponentiate (27,054,056 samples, 0.33%)</title><rect x="1172.0" y="53" width="3.9" height="15.0" fill="rgb(223,136,44)" rx="2" ry="2" />
-<text  x="1174.98" y="63.5" ></text>
+<title> challengeScalar (541,722,736 samples, 7.19%)</title><rect x="992.2" y="117" width="84.9" height="15.0" fill="rgb(243,181,38)" rx="2" ry="2" />
+<text  x="995.24" y="127.5" > challeng..</text>
 </g>
 <g >
-<title> mkScalar (117,593,489 samples, 1.44%)</title><rect x="1059.1" y="149" width="17.0" height="15.0" fill="rgb(212,75,23)" rx="2" ry="2" />
-<text  x="1062.08" y="159.5" ></text>
+<title> go (11,770,422 samples, 0.16%)</title><rect x="1077.1" y="117" width="1.9" height="15.0" fill="rgb(205,12,36)" rx="2" ry="2" />
+<text  x="1080.13" y="127.5" ></text>
 </g>
 <g >
-<title> even (6,510,582 samples, 0.08%)</title><rect x="1053.5" y="53" width="0.9" height="15.0" fill="rgb(241,173,30)" rx="2" ry="2" />
-<text  x="1056.47" y="63.5" ></text>
+<title> powerOfTwoExponentiation (13,519,232 samples, 0.18%)</title><rect x="1187.8" y="69" width="2.1" height="15.0" fill="rgb(237,163,14)" rx="2" ry="2" />
+<text  x="1190.78" y="79.5" ></text>
 </g>
 <g >
-<title> exponentiate (98,317,693 samples, 1.20%)</title><rect x="997.5" y="133" width="14.3" height="15.0" fill="rgb(215,30,12)" rx="2" ry="2" />
-<text  x="1000.53" y="143.5" ></text>
+<title> powerOfTwoExponentiation (35,306,286 samples, 0.47%)</title><rect x="1098.1" y="117" width="5.6" height="15.0" fill="rgb(246,141,49)" rx="2" ry="2" />
+<text  x="1101.12" y="127.5" ></text>
 </g>
 <g >
-<title> even (5,731,746 samples, 0.07%)</title><rect x="1007.7" y="101" width="0.8" height="15.0" fill="rgb(212,90,6)" rx="2" ry="2" />
-<text  x="1010.72" y="111.5" ></text>
-</g>
-<g >
-<title>verifyPlonkFast (8,159,551,427 samples, 100.00%)</title><rect x="10.0" y="165" width="1180.0" height="15.0" fill="rgb(251,55,6)" rx="2" ry="2" />
-<text  x="13.00" y="175.5" >verifyPlonkFast</text>
-</g>
-<g >
-<title> exponentiate (22,454,056 samples, 0.28%)</title><rect x="1160.9" y="69" width="3.2" height="15.0" fill="rgb(226,99,10)" rx="2" ry="2" />
-<text  x="1163.85" y="79.5" ></text>
-</g>
-<g >
-<title> exponentiate (26,781,084 samples, 0.33%)</title><rect x="1043.9" y="69" width="3.9" height="15.0" fill="rgb(211,180,15)" rx="2" ry="2" />
-<text  x="1046.91" y="79.5" ></text>
-</g>
-<g >
-<title> exponentiate (71,678,462 samples, 0.88%)</title><rect x="1178.6" y="69" width="10.4" height="15.0" fill="rgb(206,219,18)" rx="2" ry="2" />
-<text  x="1181.64" y="79.5" ></text>
-</g>
-<g >
-<title> transcriptNew (9,908,550 samples, 0.12%)</title><rect x="1076.1" y="149" width="1.4" height="15.0" fill="rgb(218,95,47)" rx="2" ry="2" />
-<text  x="1079.09" y="159.5" ></text>
-</g>
-<g >
-<title> exponentiateMod (263,131,392 samples, 3.22%)</title><rect x="1151.6" y="117" width="38.1" height="15.0" fill="rgb(231,142,21)" rx="2" ry="2" />
-<text  x="1154.65" y="127.5" > ex..</text>
-</g>
-<g >
-<title> even (1,910,582 samples, 0.02%)</title><rect x="1180.9" y="53" width="0.2" height="15.0" fill="rgb(206,184,18)" rx="2" ry="2" />
-<text  x="1183.86" y="63.5" ></text>
-</g>
-<g >
-<title> exponentiate (31,239,231 samples, 0.38%)</title><rect x="1051.2" y="85" width="4.5" height="15.0" fill="rgb(222,26,27)" rx="2" ry="2" />
-<text  x="1054.18" y="95.5" ></text>
-</g>
-<g >
-<title> exponentiate (22,605,730 samples, 0.28%)</title><rect x="1052.4" y="69" width="3.3" height="15.0" fill="rgb(205,187,52)" rx="2" ry="2" />
-<text  x="1055.43" y="79.5" ></text>
-</g>
-<g >
-<title> exponentiate (54,411,460 samples, 0.67%)</title><rect x="1181.1" y="53" width="7.9" height="15.0" fill="rgb(221,21,40)" rx="2" ry="2" />
-<text  x="1184.14" y="63.5" ></text>
-</g>
-<g >
-<title> challengeScalar (514,122,736 samples, 6.30%)</title><rect x="919.1" y="149" width="74.3" height="15.0" fill="rgb(249,182,38)" rx="2" ry="2" />
-<text  x="922.06" y="159.5" > challen..</text>
-</g>
-<g >
-<title> even (14,931,746 samples, 0.18%)</title><rect x="1041.7" y="69" width="2.2" height="15.0" fill="rgb(249,228,52)" rx="2" ry="2" />
-<text  x="1044.75" y="79.5" ></text>
-</g>
-<g >
-<title> even (2,865,873 samples, 0.04%)</title><rect x="997.1" y="133" width="0.4" height="15.0" fill="rgb(254,36,15)" rx="2" ry="2" />
-<text  x="1000.12" y="143.5" ></text>
-</g>
-<g >
-<title> mkScalar (7,757,631 samples, 0.10%)</title><rect x="1058.0" y="133" width="1.1" height="15.0" fill="rgb(225,135,16)" rx="2" ry="2" />
-<text  x="1060.96" y="143.5" ></text>
-</g>
-<g >
-<title> `$wchallengeScalar` (445,753,072 samples, 5.46%)</title><rect x="928.9" y="133" width="64.5" height="15.0" fill="rgb(240,193,15)" rx="2" ry="2" />
-<text  x="931.94" y="143.5" > `$wcha..</text>
-</g>
-<g >
-<title> exponentiateMod (2,407,458 samples, 0.03%)</title><rect x="1055.7" y="85" width="0.3" height="15.0" fill="rgb(232,63,32)" rx="2" ry="2" />
-<text  x="1058.70" y="95.5" ></text>
-</g>
-<g >
-<title> exponentiate (22,181,084 samples, 0.27%)</title><rect x="1026.9" y="85" width="3.2" height="15.0" fill="rgb(225,159,2)" rx="2" ry="2" />
-<text  x="1029.89" y="95.5" ></text>
-</g>
-<g >
-<title> exponentiateMod (95,520,408 samples, 1.17%)</title><rect x="1175.9" y="85" width="13.8" height="15.0" fill="rgb(223,182,3)" rx="2" ry="2" />
-<text  x="1178.89" y="95.5" ></text>
-</g>
-<g >
-<title> go (20,970,422 samples, 0.26%)</title><rect x="1056.0" y="149" width="3.1" height="15.0" fill="rgb(230,118,38)" rx="2" ry="2" />
-<text  x="1059.05" y="159.5" ></text>
-</g>
-<g >
-<title> mkScalar (14,077,492 samples, 0.17%)</title><rect x="1148.8" y="85" width="2.0" height="15.0" fill="rgb(215,217,38)" rx="2" ry="2" />
-<text  x="1151.78" y="95.5" ></text>
-</g>
-<g >
-<title> exponentiate (22,454,056 samples, 0.28%)</title><rect x="1185.8" y="37" width="3.2" height="15.0" fill="rgb(229,40,5)" rx="2" ry="2" />
-<text  x="1188.76" y="47.5" ></text>
-</g>
-<g >
-<title> go (776,096,272 samples, 9.51%)</title><rect x="1077.8" y="133" width="112.2" height="15.0" fill="rgb(205,69,46)" rx="2" ry="2" />
-<text  x="1080.76" y="143.5" > go</text>
-</g>
-<g >
-<title>all (8,159,551,427 samples, 100%)</title><rect x="10.0" y="181" width="1180.0" height="15.0" fill="rgb(242,109,14)" rx="2" ry="2" />
-<text  x="13.00" y="191.5" ></text>
-</g>
-<g >
-<title> even (955,291 samples, 0.01%)</title><rect x="1051.0" y="85" width="0.2" height="15.0" fill="rgb(230,92,19)" rx="2" ry="2" />
-<text  x="1054.04" y="95.5" ></text>
-</g>
-<g >
-<title> even (7,465,873 samples, 0.09%)</title><rect x="1033.1" y="101" width="1.1" height="15.0" fill="rgb(247,193,50)" rx="2" ry="2" />
-<text  x="1036.15" y="111.5" ></text>
-</g>
-<g >
-<title> exponentiateMod (306,291,596 samples, 3.75%)</title><rect x="1011.8" y="133" width="44.2" height="15.0" fill="rgb(232,128,17)" rx="2" ry="2" />
-<text  x="1014.75" y="143.5" > exp..</text>
-</g>
-<g >
-<title> exponentiateMod (177,025,900 samples, 2.17%)</title><rect x="1164.1" y="101" width="25.6" height="15.0" fill="rgb(243,110,23)" rx="2" ry="2" />
-<text  x="1167.10" y="111.5" > ..</text>
-</g>
-<g >
-<title> takeByteString (73,455,360 samples, 0.90%)</title><rect x="982.8" y="117" width="10.6" height="15.0" fill="rgb(236,201,41)" rx="2" ry="2" />
-<text  x="985.78" y="127.5" ></text>
-</g>
-<g >
-<title> challengeScalar (59,188,718 samples, 0.73%)</title><rect x="1143.1" y="117" width="8.5" height="15.0" fill="rgb(217,45,34)" rx="2" ry="2" />
-<text  x="1146.09" y="127.5" ></text>
-</g>
-<g >
-<title> even (3,821,164 samples, 0.05%)</title><rect x="1185.2" y="37" width="0.6" height="15.0" fill="rgb(241,100,22)" rx="2" ry="2" />
-<text  x="1188.21" y="47.5" ></text>
-</g>
-<g >
-<title> even (8,421,164 samples, 0.10%)</title><rect x="1159.6" y="69" width="1.3" height="15.0" fill="rgb(206,222,31)" rx="2" ry="2" />
-<text  x="1162.64" y="79.5" ></text>
-</g>
-<g >
-<title> takeByteString (5,731,920 samples, 0.07%)</title><rect x="1150.8" y="85" width="0.8" height="15.0" fill="rgb(218,173,8)" rx="2" ry="2" />
-<text  x="1153.82" y="95.5" ></text>
-</g>
-<g >
-<title> even (6,510,582 samples, 0.08%)</title><rect x="1177.7" y="69" width="0.9" height="15.0" fill="rgb(227,120,9)" rx="2" ry="2" />
-<text  x="1180.70" y="79.5" ></text>
-</g>
-<g >
-<title> exponentiateMod (57,175,120 samples, 0.70%)</title><rect x="1047.8" y="101" width="8.2" height="15.0" fill="rgb(236,55,26)" rx="2" ry="2" />
-<text  x="1050.78" y="111.5" ></text>
-</g>
-<g >
-<title> mkScalar (163,219,936 samples, 2.00%)</title><rect x="959.2" y="117" width="23.6" height="15.0" fill="rgb(211,207,14)" rx="2" ry="2" />
-<text  x="962.18" y="127.5" > ..</text>
-</g>
-<g >
-<title> zipWith (777,795,008 samples, 9.53%)</title><rect x="1077.5" y="149" width="112.5" height="15.0" fill="rgb(251,73,21)" rx="2" ry="2" />
-<text  x="1080.52" y="159.5" > zipWith</text>
-</g>
-<g >
-<title> exponentiate (72,417,190 samples, 0.89%)</title><rect x="1037.3" y="85" width="10.5" height="15.0" fill="rgb(227,218,9)" rx="2" ry="2" />
-<text  x="1040.31" y="95.5" ></text>
-</g>
-<g >
-<title> exponentiate (22,181,084 samples, 0.27%)</title><rect x="1008.5" y="101" width="3.3" height="15.0" fill="rgb(250,44,21)" rx="2" ry="2" />
-<text  x="1011.54" y="111.5" ></text>
-</g>
-<g >
-<title> even (2,865,873 samples, 0.04%)</title><rect x="1036.9" y="85" width="0.4" height="15.0" fill="rgb(225,102,50)" rx="2" ry="2" />
-<text  x="1039.89" y="95.5" ></text>
-</g>
-<g >
-<title> exponentiate (93,717,693 samples, 1.15%)</title><rect x="1034.2" y="101" width="13.6" height="15.0" fill="rgb(216,2,46)" rx="2" ry="2" />
-<text  x="1037.23" y="111.5" ></text>
-</g>
-<g >
-<title> even (1,910,582 samples, 0.02%)</title><rect x="1166.6" y="85" width="0.3" height="15.0" fill="rgb(250,130,4)" rx="2" ry="2" />
-<text  x="1169.58" y="95.5" ></text>
-</g>
-<g >
-<title> exponentiate (8,927,028 samples, 0.11%)</title><rect x="1054.4" y="53" width="1.3" height="15.0" fill="rgb(221,96,29)" rx="2" ry="2" />
-<text  x="1057.41" y="63.5" ></text>
-</g>
-<g >
-<title> exponentiate (72,417,190 samples, 0.89%)</title><rect x="1019.6" y="101" width="10.5" height="15.0" fill="rgb(234,199,26)" rx="2" ry="2" />
-<text  x="1022.63" y="111.5" ></text>
+<title>verifyPlonkFast (7,529,682,987 samples, 100.00%)</title><rect x="10.0" y="133" width="1180.0" height="15.0" fill="rgb(230,164,18)" rx="2" ry="2" />
+<text  x="13.00" y="143.5" >verifyPlonkFast</text>
 </g>
 </g>
 </svg>

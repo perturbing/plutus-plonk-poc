@@ -8,7 +8,7 @@ module Plutus.Crypto.Plonk.Verifier
 ) where
 
 import Plutus.Crypto.Plonk.Inputs (PreInputs (..), Proof (..), PreInputsFast (..), ProofFast (..))
-import Plutus.Crypto.BlsField (mkScalar, Scalar (unScalar), MultiplicativeGroup (..))
+import Plutus.Crypto.BlsField (mkScalar, Scalar (unScalar), MultiplicativeGroup (..), powerOfTwoExponentiation)
 import Plutus.Crypto.Plonk.Transcript (challengeScalar, transcriptPoint, transcriptScalar, transcriptNew, getTranscript)
 import Plutus.Crypto.Number.ModArithmetic (exponentiate)
 import PlutusTx.Prelude (Integer, Bool (..), bls12_381_G1_uncompress, bls12_381_G1_scalarMul, bls12_381_G1_generator
@@ -84,7 +84,7 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x
 -- a general vanilla plonk verifier optimised. 
 {-# INLINEABLE verifyPlonkFast #-}
 verifyPlonkFast :: PreInputsFast -> [Integer] -> ProofFast -> Bool
-verifyPlonkFast preInputsFast@(PreInputsFast n k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x2 gens)
+verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x2 gens)
             pubInputs
             proofFast@(ProofFast ca cb cc cz ctl ctm cth cwo cwz ea eb ec es1 es2 ez lagInv)
     | (bls12_381_G1_uncompress -> commA) <- ca
@@ -110,7 +110,7 @@ verifyPlonkFast preInputsFast@(PreInputsFast n k1 k2 qM qL qR qO qC sSig1 sSig2 
           (zeta, transcript4) = challengeScalar (transcriptPoint (transcriptPoint (transcriptPoint transcript3 "Quotient low polynomial" commTLow) "Quotient mid polynomial" commTMid) "Quotient high polynomial" commTHigh) "zeta"
           (v, transcript5) = challengeScalar (transcriptScalar (transcriptScalar (transcriptScalar (transcriptScalar (transcriptScalar (transcriptScalar transcript4 "Append a_eval." evalA) "Append b_eval." evalB) "Append c_eval." evalC) "Append s_sig1." evalS1) "Append s_sig2." evalS2) "Append z_omega." evalZOmega) "v"
           (u, _) = challengeScalar (transcriptPoint (transcriptPoint transcript5 "w_omega comm" commWOmega) "w_omega_zeta comm" commWOmegaZeta) "u"
-          (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * (scale n zeta - one) * y) gens lagsInv -- this scale n zeta ~ 3.22 cpu budget
+          (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * (powerOfTwoExponentiation zeta p - one) * y) gens lagsInv -- this scale n zeta ~ 3.22 cpu budget
           piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
           r0 = piZeta - lagrangePoly1*alpha*alpha - alpha*(evalA + beta*evalS1 + gamma)*(evalB + beta*evalS2 + gamma)*(evalC + gamma)*evalZOmega
           batchPolyCommitG1 = scale (evalA*evalB) qM
@@ -120,7 +120,7 @@ verifyPlonkFast preInputsFast@(PreInputsFast n k1 k2 qM qL qR qO qC sSig1 sSig2 
                             + qC
                             + scale ((evalA + beta*zeta + gamma)*(evalB +beta*k1*zeta + gamma)*(evalC + beta*k2*zeta + gamma)*alpha + lagrangePoly1*alpha*alpha + u) commZ
                             - scale ((evalA +beta*evalS1+gamma)*(evalB + beta*evalS2 + gamma)*alpha*beta*evalZOmega) sSig3
-                            - scale (scale n zeta - one) (commTLow + scale (scale n zeta) commTMid + scale (scale (2*n) zeta) commTHigh)
+                            - scale (powerOfTwoExponentiation zeta p - one) (commTLow + scale (powerOfTwoExponentiation zeta p) commTMid + scale (powerOfTwoExponentiation (powerOfTwoExponentiation zeta p) 1) commTHigh)
           batchPolyCommitFull = batchPolyCommitG1 + scale v (commA + scale v (commB + scale v (commC + scale v (sSig1 + scale v sSig2))))
           groupEncodedBatchEval = scale (negate r0 + v * (evalA + v * (evalB + v * (evalC + v * (evalS1 + v * evalS2)))) + u*evalZOmega ) bls12_381_G1_generator
     in bls12_381_finalVerify (bls12_381_millerLoop (commWOmega + scale u commWOmegaZeta) x2) (bls12_381_millerLoop (scale zeta commWOmega + scale (u*zeta*head gens) commWOmegaZeta + batchPolyCommitFull - groupEncodedBatchEval) bls12_381_G2_generator)

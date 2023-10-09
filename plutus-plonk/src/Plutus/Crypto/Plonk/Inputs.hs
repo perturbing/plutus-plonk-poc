@@ -75,6 +75,7 @@ makeIsDataIndexed ''PreInputs [('PreInputs,0)]
 -- generation.
 data PreInputsFast = PreInputsFast 
     { n'               :: Integer                     -- n number of constraints (upper bound) used
+    , pow'             :: Integer                     -- n = 2^pow
     , k1'              :: Scalar                      -- The first field elements that creates a disjoint left coset of H
     , k2'              :: Scalar                      -- The second field element that creates a disjoint left coset of H 
     , qM'              :: BuiltinBLS12_381_G1_Element -- the commited polynomial of the multiplication gates 
@@ -122,6 +123,7 @@ convertToFastPreInputs :: PreInputs -> PreInputsFast
 convertToFastPreInputs preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x2 gen ) 
     = PreInputsFast
     { n'            = exponentiate 2 p
+    , pow'          = p
     , k1'           = k1
     , k2'           = k2
     , qM'           = qM

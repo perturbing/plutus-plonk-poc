@@ -11,6 +11,7 @@ module Plutus.Crypto.BlsField
 , unScalar
 , MultiplicativeGroup (..)
 , modularExponentiationScalar
+, powerOfTwoExponentiation
 ) where
 
 import qualified Prelude as Haskell
@@ -167,3 +168,10 @@ instance AdditiveGroup BuiltinBLS12_381_G2_Element where
 instance Module Scalar BuiltinBLS12_381_G2_Element where
     {-# INLINABLE scale #-}
     scale (Scalar a) = bls12_381_G2_scalarMul a
+
+{-# INLINABLE powerOfTwoExponentiation #-}
+powerOfTwoExponentiation :: Scalar -> Integer -> Scalar
+powerOfTwoExponentiation x k = if k < 0 then error () else go x k
+    where go x' k'
+            | k' == 0    = x'
+            | otherwise = powerOfTwoExponentiation (x'*x') (k' - 1)

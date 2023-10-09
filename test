@@ -1,0 +1,7 @@
+Build profile: -w ghc-9.2.8 -O1
+In order, the following will be built (use -v for more details):
+ - plutus-benchmark-0.1.0.0 (lib:bench-lib) (file /home/thomas/IOHK/git/plutus-plonk-poc/dist-newstyle/build/x86_64-linux/ghc-9.2.8/plutus-benchmark-0.1.0.0/l/plutus-benchmark-common/cache/build changed)
+ - plutus-benchmark-0.1.0.0 (exe:bench-exe) (dependency rebuilt)
+Preprocessing library 'bench-lib' for plutus-benchmark-0.1.0.0..
+Building library 'bench-lib' for plutus-benchmark-0.1.0.0..
+[3 of 4] Compiling PlutusBenchmark.Verifier.Scripts ( src/PlutusBenchmark/Verifier/Scripts.hs, /home/thomas/IOHK/git/plutus-plonk-poc/dist-newstyle/build/x86_64-linux/ghc-9.2.8/plutus-benchmark-0.1.0.0/l/bench-lib/build/bench-lib/PlutusBenchmark/Verifier/Scripts.o, /home/thomas/IOHK/git/plutus-plonk-poc/dist-newstyle/build/x86_64-linux/ghc-9.2.8/plutus-benchmark-0.1.0.0/l/bench-lib/build/bench-lib/PlutusBenchmark/Verifier/Scripts.dyn_o ) [Plutus.Crypto.Plonk.Verifier changed]
