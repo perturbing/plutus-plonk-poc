@@ -62,7 +62,7 @@ runBlsField h = do
     mapM_ (printCostsModExpScalar2 h) [0, 4..32]
     hPrintf h "\n\n"
 
-    hPrintf h "mod exp scalar with full byte shifts\n\n"
+    hPrintf h "mod exp scalar if n = 2^k \n\n"
     printHeader h
     mapM_ (printCostsModExpScalar3 h) [0, 4..32]
     hPrintf h "\n\n"

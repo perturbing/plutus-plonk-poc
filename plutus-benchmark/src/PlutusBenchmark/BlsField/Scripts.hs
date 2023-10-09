@@ -9,11 +9,10 @@ module PlutusBenchmark.BlsField.Scripts
 , modularExponentiationScalarScript
 , modularExponentiationScalarScript2
 , modExpPow2Script
-, modExp
 ) where
 
 import PlutusTx (compile, unsafeApplyCode, liftCodeDef, getPlcNoAnn)
-import PlutusTx.Prelude (Integer, ($), (.), foldr, (*), BuiltinByteString, popCountByteString, (==), otherwise, byteStringToInteger, integerToByteString, (<>), modulo, divide)
+import PlutusTx.Prelude (Integer, ($), (-), (.), foldr, (*), BuiltinByteString, popCountByteString, (==), otherwise, byteStringToInteger, integerToByteString, (<>), modulo, divide, (<))
 import PlutusTx.Numeric ((+), zero, one)
 
 import PlutusCore (DefaultFun, DefaultUni)
@@ -77,22 +76,15 @@ modularExponentiationScalarScript2 b pow =
         `unsafeApplyCode` liftCodeDef b
         `unsafeApplyCode` liftCodeDef pow
 
--- calc a^n mod p where n = 2^power
-{-# NOINLINE modExp #-}
-modExp :: Scalar -> Integer -> Scalar
-modExp a power
-    | i == 0 = mkScalar b
-    | i == 1 = mkScalar (b*b `modulo` prime)
-    | i == 2 = mkScalar (b*b*b*b `modulo` prime)
-    | otherwise = error ()
-    where prime = 52435875175126190479447740508185965837690552500527637822603658699938581184513
-          k = power `divide` 3
-          i = power `modulo` 3
-          b = byteStringToInteger (nullPadding k <> integerToByteString (unScalar a)) `modulo` prime
-
+{-# NOINLINE powerOfTwoExponentiation #-}
+powerOfTwoExponentiation :: Scalar -> Integer -> Scalar
+powerOfTwoExponentiation x k = if k < 0 then error () else go x k
+    where go x' k'
+            | k' == 0    = x'
+            | otherwise = powerOfTwoExponentiation (x'*x') (k' - 1)
 
 modExpPow2Script :: Scalar -> Integer -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
 modExpPow2Script b pow =
-    getPlcNoAnn $ $$(compile [|| modExp ||])
+    getPlcNoAnn $ $$(compile [|| powerOfTwoExponentiation ||])
         `unsafeApplyCode` liftCodeDef b
         `unsafeApplyCode` liftCodeDef pow
