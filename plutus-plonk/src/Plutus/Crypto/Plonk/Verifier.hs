@@ -110,7 +110,7 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
           (zeta, transcript4) = challengeScalar (transcriptPoint (transcriptPoint (transcriptPoint transcript3 "Quotient low polynomial" commTLow) "Quotient mid polynomial" commTMid) "Quotient high polynomial" commTHigh) "zeta"
           (v, transcript5) = challengeScalar (transcriptScalar (transcriptScalar (transcriptScalar (transcriptScalar (transcriptScalar (transcriptScalar transcript4 "Append a_eval." evalA) "Append b_eval." evalB) "Append c_eval." evalC) "Append s_sig1." evalS1) "Append s_sig2." evalS2) "Append z_omega." evalZOmega) "v"
           (u, _) = challengeScalar (transcriptPoint (transcriptPoint transcript5 "w_omega comm" commWOmega) "w_omega_zeta comm" commWOmegaZeta) "u"
-          (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * (powerOfTwoExponentiation zeta p - one) * y) gens lagsInv -- this scale n zeta ~ 3.22 cpu budget
+          (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * (powerOfTwoExponentiation zeta p - one) * y) gens lagsInv 
           piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
           r0 = piZeta - lagrangePoly1*alpha*alpha - alpha*(evalA + beta*evalS1 + gamma)*(evalB + beta*evalS2 + gamma)*(evalC + gamma)*evalZOmega
           batchPolyCommitG1 = scale (evalA*evalB) qM
