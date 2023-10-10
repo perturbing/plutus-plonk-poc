@@ -9,7 +9,6 @@ module Plutus.Crypto.BlsField
 ( bls12_381_field_prime
 , Scalar (..)
 , mkScalar
--- , unScalar
 , MultiplicativeGroup (..)
 , modularExponentiationScalar
 , powerOfTwoExponentiation

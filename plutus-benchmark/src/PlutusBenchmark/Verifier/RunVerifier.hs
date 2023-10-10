@@ -5,7 +5,7 @@ module PlutusBenchmark.Verifier.RunVerifier
 ( runVerifier
 ) where
 
-import PlutusBenchmark.Verifier.Scripts (verifyPlonkFastScript)
+import PlutusBenchmark.Verifier.Scripts (verifyPlonkFastScript, verifyPlonkScript)
 import Plutus.Crypto.Plonk (PreInputsFast, ProofFast, Proof (..), PreInputs (..)
                            , convertToFastProof, convertToFastPreInputs)
 import Plutus.Crypto.BlsField (mkScalar)
@@ -29,6 +29,11 @@ printCostsVerifierPlonkFast h preIn pub proof =
     let script = verifyPlonkFastScript preIn pub proof
     in printSizeStatistics h NoSize script
 
+printCostsVerifierPlonk :: Handle -> PreInputs -> [Integer] -> Proof -> IO ()
+printCostsVerifierPlonk h preIn pub proof =
+    let script = verifyPlonkScript preIn pub proof
+    in printSizeStatistics h NoSize script
+
 runVerifier :: Handle -> IO ()
 runVerifier h = do
     jsonDataProof <- BL.readFile "test-vectors/proof-test-vector.json"
@@ -39,6 +44,11 @@ runVerifier h = do
         Just proof  -> case maybePreIn of
             Just preIn -> do let p = convertProof proof
                              let i = convertPreInputs preIn
+                             hPrintf h "\n\n"
+                             hPrintf h "Run slow vanilla plonk verifier\n\n"
+                             printHeader h
+                             printCostsVerifierPlonk h i [9] p
+                             hPrintf h "\n\n"
                              let iFast = convertToFastPreInputs i
                              let pFast = convertToFastProof iFast p
                              hPrintf h "\n\n"
