@@ -8,7 +8,7 @@ module Plutus.Crypto.Plonk.Verifier
 ) where
 
 import Plutus.Crypto.Plonk.Inputs (PreInputs (..), Proof (..), PreInputsFast (..), ProofFast (..))
-import Plutus.Crypto.BlsField (mkScalar, Scalar (unScalar), MultiplicativeGroup (..), powerOfTwoExponentiation)
+import Plutus.Crypto.BlsField (mkScalar, Scalar (..), MultiplicativeGroup (..), powerOfTwoExponentiation)
 import Plutus.Crypto.Plonk.Transcript (challengeScalar, transcriptPoint, transcriptScalar, transcriptNew, getTranscript)
 import PlutusTx.Prelude (Integer, Bool (..), bls12_381_G1_uncompress, bls12_381_G1_scalarMul, bls12_381_G1_generator
                         ,BuiltinBLS12_381_G1_Element, sum, BuiltinBLS12_381_G2_Element, bls12_381_finalVerify
@@ -117,16 +117,16 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
     = let transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b" 
                                                                              <> cb <> "commitment c" 
                                                                              <> cc <> "beta"
-          beta = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript0
+          beta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript0
           transcript1 = transcript0 <> "gamma"
-          gamma = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript1
+          gamma = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript1
           transcript2 = transcript1 <> "Permutation polynomial" <> cz <> "alpha"
-          alpha = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript2
+          alpha = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript2
           transcript3 = transcript2 <> "Quotient low polynomial" <> ctl 
                                     <> "Quotient mid polynomial" <> ctm 
                                     <> "Quotient high polynomial" <> cth 
                                     <> "zeta"
-          zeta = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript3
+          zeta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript3
           transcript4 = transcript3 <> "Append a_eval." <> integerToByteString ea 
                                     <> "Append b_eval." <> integerToByteString eb 
                                     <> "Append c_eval." <> integerToByteString ec 
@@ -134,11 +134,11 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
                                     <> "Append s_sig2." <> integerToByteString es2 
                                     <> "Append z_omega." <> integerToByteString ez 
                                     <> "v"
-          v = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript4
+          v = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript4
           transcript5 = transcript4 <> "w_omega comm" <> cwo 
                                     <> "w_omega_zeta comm" <> cwz 
                                     <> "u"
-          u = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript5
+          u = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript5
           (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * (powerOfTwoExponentiation zeta p - one) * y) gens lagsInv 
           piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
           r0 = piZeta - lagrangePoly1*alpha*alpha - alpha*(evalA + beta*evalS1 + gamma)*(evalB + beta*evalS2 + gamma)*(evalC + gamma)*evalZOmega
@@ -155,4 +155,4 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
     in bls12_381_finalVerify 
         (bls12_381_millerLoop (commWOmega + scale u commWOmegaZeta) x2) 
         (bls12_381_millerLoop (scale zeta commWOmega + scale (u*zeta*head gens) commWOmegaZeta + batchPolyCommitFull - groupEncodedBatchEval) bls12_381_G2_generator)
-       && and (zipWith (\x y -> x * mkScalar n * (zeta - y) == one) lagsInv gens)
+       && and (zipWith (\x y -> x * Scalar n * (zeta - y) == one) lagsInv gens)
