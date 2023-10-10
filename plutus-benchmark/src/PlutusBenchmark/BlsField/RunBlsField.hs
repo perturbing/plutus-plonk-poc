@@ -6,7 +6,7 @@ module PlutusBenchmark.BlsField.RunBlsField
 
 import PlutusBenchmark.BlsField.Scripts (blsFieldAddScalarsScript, blsFieldMulScalarsScript 
         , listOfSizedByteStrings, modularExponentiationScalarScript, modExpPow2Script, invertScalarsScript)
-import PlutusTx.Prelude (byteStringToInteger, toBuiltin)
+import PlutusTx.Prelude (byteStringToInteger, toBuiltin, integerToByteString)
 import Plutus.Crypto.BlsField (mkScalar)
 
 import PlutusBenchmark.Common ( printHeader, printSizeStatistics, TestSize(TestSize) )
@@ -26,7 +26,7 @@ printCostsBlsMulScalarsField h n =
 
 printCostsModExpScalar :: Handle -> Integer -> IO ()
 printCostsModExpScalar h n =
-    let script = modularExponentiationScalarScript (mkScalar 52435875175126190479447740508185965837690552500527637822603658699938581184510) $ toBuiltin (head (listOfSizedByteStrings 1 n))
+    let script = modularExponentiationScalarScript (map (mkScalar . byteStringToInteger . toBuiltin) $ listOfSizedByteStrings n 31) (integerToByteString 52435875175126190479447740508185965837690552500527637822603658699938581184510)
     in printSizeStatistics h (TestSize n) script
 
 printCostsModExpScalar2 :: Handle -> Integer -> IO ()
@@ -53,14 +53,14 @@ runBlsField h = do
     mapM_ (printCostsBlsMulScalarsField h) [0, 400..4000]
     hPrintf h "\n\n"
 
-    hPrintf h "n scalar exponentiation with random exponents\n\n"
+    hPrintf h "n scalar exponentiation with exponent of size 32 bytes \n\n"
     printHeader h
-    mapM_ (printCostsModExpScalar h) [0, 50..300]
+    mapM_ (printCostsModExpScalar h) [0..8]
     hPrintf h "\n\n"
 
-    hPrintf h "n scalar exponents a^e if e = 2^n \n\n"
+    hPrintf h "scalar exponent for a^e if e = 2^n \n\n"
     printHeader h
-    mapM_ (printCostsModExpScalar2 h) [0, 400..2000]
+    mapM_ (printCostsModExpScalar2 h) [0, 4..32]
     hPrintf h "\n\n"
 
     hPrintf h "n scalar inversion \n\n"

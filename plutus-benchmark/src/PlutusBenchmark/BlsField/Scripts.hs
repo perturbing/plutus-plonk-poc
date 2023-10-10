@@ -12,7 +12,7 @@ module PlutusBenchmark.BlsField.Scripts
 ) where
 
 import PlutusTx (compile, unsafeApplyCode, liftCodeDef, getPlcNoAnn)
-import PlutusTx.Prelude (Integer, ($), (-), (.), foldr, (*), BuiltinByteString, popCountByteString, (==), otherwise, (<))
+import PlutusTx.Prelude (Integer, ($), (.), foldr, (*), BuiltinByteString, map)
 import PlutusTx.Numeric ((+), zero, one)
 
 import PlutusCore (DefaultFun, DefaultUni)
@@ -23,9 +23,7 @@ import Hedgehog.Internal.Gen qualified as G
 import Hedgehog.Internal.Range qualified as R
 import System.IO.Unsafe (unsafePerformIO)
 import Data.ByteString (ByteString)
-import PlutusTx.Builtins
-    ( testBitByteString, shiftByteString, error)
-import Plutus.Crypto.BlsField (Scalar, MultiplicativeGroup (..))
+import Plutus.Crypto.BlsField (Scalar, MultiplicativeGroup (..), modularExponentiationScalar, powerOfTwoExponentiation)
 
 {-# INLINABLE addScalars #-}
 addScalars :: [Scalar] -> Scalar
@@ -51,25 +49,15 @@ listOfSizedByteStrings n l = unsafePerformIO . G.sample $
                              G.list (R.singleton $ Haskell.fromIntegral n)
                                   (G.bytes (R.singleton $ Haskell.fromIntegral l))
 
-{-# INLINABLE modularExponentiationScalar #-}
-modularExponentiationScalar :: Scalar -> BuiltinByteString -> Scalar
-modularExponentiationScalar b e
-    | popCountByteString e == 0  = one
-    | otherwise = t * modularExponentiationScalar (b*b) (shiftByteString e 1)
-        where t = if testBitByteString e 0 then b else one
+{-# INLINABLE modularExponentiationList #-}
+modularExponentiationList :: [Scalar] -> BuiltinByteString -> [Scalar]
+modularExponentiationList xs bs = map (`modularExponentiationScalar` bs) xs
 
-modularExponentiationScalarScript :: Scalar -> BuiltinByteString -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
-modularExponentiationScalarScript b e =
-    getPlcNoAnn $ $$(compile [|| modularExponentiationScalar ||])
-        `unsafeApplyCode` liftCodeDef b
+modularExponentiationScalarScript :: [Scalar] -> BuiltinByteString -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
+modularExponentiationScalarScript xs e =
+    getPlcNoAnn $ $$(compile [|| modularExponentiationList ||])
+        `unsafeApplyCode` liftCodeDef xs
         `unsafeApplyCode` liftCodeDef e
-
-{-# INLINABLE powerOfTwoExponentiation #-}
-powerOfTwoExponentiation :: Scalar -> Integer -> Scalar
-powerOfTwoExponentiation x k = if k < 0 then error () else go x k
-    where go x' k'
-            | k' == 0    = x'
-            | otherwise = powerOfTwoExponentiation (x'*x') (k' - 1)
 
 modExpPow2Script :: Scalar -> Integer -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
 modExpPow2Script b pow =
