@@ -155,4 +155,4 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
     in bls12_381_finalVerify 
         (bls12_381_millerLoop (commWOmega + scale u commWOmegaZeta) x2) 
         (bls12_381_millerLoop (scale zeta commWOmega + scale (u*zeta*head gens) commWOmegaZeta + batchPolyCommitFull - groupEncodedBatchEval) bls12_381_G2_generator)
-       && and (zipWith (\x y -> x * mkScalar n * (zeta - y) == one) lagsInv gens) -- this accounts for some 5% of the calc
+       && and (zipWith (\x y -> x * mkScalar n * (zeta - y) == one) lagsInv gens)
