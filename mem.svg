@@ -342,92 +342,88 @@
 <text id="matched" x="1090.00" y="165" > </text>
 <g id="frames">
 <g >
-<title> challengeScalar (1,092,316 samples, 46.48%)</title><rect x="313.8" y="101" width="548.5" height="15.0" fill="rgb(251,194,20)" rx="2" ry="2" />
-<text  x="316.82" y="111.5" > challengeScalar</text>
+<title> takeByteString (108 samples, 0.01%)</title><rect x="1189.9" y="69" width="0.1" height="15.0" fill="rgb(223,212,6)" rx="2" ry="2" />
+<text  x="1192.87" y="79.5" ></text>
 </g>
 <g >
-<title> go (287,024 samples, 12.21%)</title><rect x="1045.9" y="85" width="144.1" height="15.0" fill="rgb(241,206,28)" rx="2" ry="2" />
-<text  x="1048.87" y="95.5" > go</text>
+<title> powerOfTwoExponentiation (40,636 samples, 4.04%)</title><rect x="927.0" y="85" width="47.6" height="15.0" fill="rgb(232,48,14)" rx="2" ry="2" />
+<text  x="929.96" y="95.5" > pow..</text>
 </g>
 <g >
-<title>all (2,349,952 samples, 100%)</title><rect x="10.0" y="133" width="1180.0" height="15.0" fill="rgb(229,32,38)" rx="2" ry="2" />
-<text  x="13.00" y="143.5" ></text>
+<title> go (128 samples, 0.01%)</title><rect x="640.5" y="85" width="0.2" height="15.0" fill="rgb(210,53,38)" rx="2" ry="2" />
+<text  x="643.52" y="95.5" ></text>
 </g>
 <g >
-<title>verifyPlonkFast (2,349,952 samples, 100.00%)</title><rect x="10.0" y="117" width="1180.0" height="15.0" fill="rgb(231,180,0)" rx="2" ry="2" />
+<title> powerOfTwoExponentiation (40,400 samples, 4.01%)</title><rect x="1142.5" y="53" width="47.4" height="15.0" fill="rgb(236,158,4)" rx="2" ry="2" />
+<text  x="1145.51" y="63.5" > pow..</text>
+</g>
+<g >
+<title> powerOfTwoExponentiation (108 samples, 0.01%)</title><rect x="974.5" y="53" width="0.1" height="15.0" fill="rgb(230,42,22)" rx="2" ry="2" />
+<text  x="977.47" y="63.5" ></text>
+</g>
+<g >
+<title> takeByteString (40,900 samples, 4.06%)</title><rect x="974.6" y="101" width="47.9" height="15.0" fill="rgb(251,162,48)" rx="2" ry="2" />
+<text  x="977.59" y="111.5" > tak..</text>
+</g>
+<g >
+<title> go (40,691 samples, 4.04%)</title><rect x="593.1" y="101" width="47.7" height="15.0" fill="rgb(215,164,49)" rx="2" ry="2" />
+<text  x="596.14" y="111.5" > go</text>
+</g>
+<g >
+<title> powerOfTwoExponentiation (40,236 samples, 4.00%)</title><rect x="1142.7" y="37" width="47.2" height="15.0" fill="rgb(214,215,54)" rx="2" ry="2" />
+<text  x="1145.71" y="47.5" > pow..</text>
+</g>
+<g >
+<title> powerOfTwoExponentiation (354 samples, 0.04%)</title><rect x="974.2" y="69" width="0.4" height="15.0" fill="rgb(217,22,47)" rx="2" ry="2" />
+<text  x="977.18" y="79.5" ></text>
+</g>
+<g >
+<title> mkScalar (141,584 samples, 14.07%)</title><rect x="713.7" y="101" width="166.0" height="15.0" fill="rgb(225,128,15)" rx="2" ry="2" />
+<text  x="716.71" y="111.5" > mkScalar</text>
+</g>
+<g >
+<title> powerOfTwoExponentiation (80,964 samples, 8.04%)</title><rect x="879.7" y="101" width="94.9" height="15.0" fill="rgb(230,61,25)" rx="2" ry="2" />
+<text  x="882.68" y="111.5" > powerOfTwo..</text>
+</g>
+<g >
+<title> zipWith (142,849 samples, 14.19%)</title><rect x="1022.5" y="101" width="167.5" height="15.0" fill="rgb(248,225,13)" rx="2" ry="2" />
+<text  x="1025.54" y="111.5" > zipWith</text>
+</g>
+<g >
+<title>verifyPlonkFast (1,006,585 samples, 100.00%)</title><rect x="10.0" y="117" width="1180.0" height="15.0" fill="rgb(223,195,48)" rx="2" ry="2" />
 <text  x="13.00" y="127.5" >verifyPlonkFast</text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (20,354 samples, 0.87%)</title><rect x="1025.1" y="69" width="10.2" height="15.0" fill="rgb(227,49,30)" rx="2" ry="2" />
-<text  x="1028.08" y="79.5" ></text>
+<title> powerOfTwoExponentiation (40,564 samples, 4.03%)</title><rect x="1142.3" y="69" width="47.6" height="15.0" fill="rgb(251,34,50)" rx="2" ry="2" />
+<text  x="1145.32" y="79.5" > pow..</text>
 </g>
 <g >
-<title> mkScalar (20,036 samples, 0.85%)</title><rect x="1159.5" y="69" width="10.1" height="15.0" fill="rgb(237,82,8)" rx="2" ry="2" />
-<text  x="1162.52" y="79.5" ></text>
+<title> and (20,096 samples, 2.00%)</title><rect x="569.6" y="101" width="23.5" height="15.0" fill="rgb(231,125,37)" rx="2" ry="2" />
+<text  x="572.58" y="111.5" > ..</text>
 </g>
 <g >
-<title> takeByteString (143,456 samples, 6.10%)</title><rect x="790.3" y="69" width="72.0" height="15.0" fill="rgb(221,145,42)" rx="2" ry="2" />
-<text  x="793.28" y="79.5" > takeByt..</text>
+<title> mkScalar (144 samples, 0.01%)</title><rect x="640.7" y="85" width="0.1" height="15.0" fill="rgb(245,186,9)" rx="2" ry="2" />
+<text  x="643.67" y="95.5" ></text>
 </g>
 <g >
-<title> `$wchallengeScalar` (906,172 samples, 38.56%)</title><rect x="407.3" y="85" width="455.0" height="15.0" fill="rgb(211,228,38)" rx="2" ry="2" />
-<text  x="410.29" y="95.5" > `$wchallengeScalar`</text>
+<title>all (1,006,585 samples, 100%)</title><rect x="10.0" y="133" width="1180.0" height="15.0" fill="rgb(223,221,42)" rx="2" ry="2" />
+<text  x="13.00" y="143.5" ></text>
 </g>
 <g >
-<title> takeByteString (432 samples, 0.02%)</title><rect x="1159.3" y="37" width="0.2" height="15.0" fill="rgb(250,224,39)" rx="2" ry="2" />
-<text  x="1162.26" y="47.5" ></text>
+<title> go (122,593 samples, 12.18%)</title><rect x="1046.3" y="85" width="143.7" height="15.0" fill="rgb(207,16,14)" rx="2" ry="2" />
+<text  x="1049.29" y="95.5" > go</text>
 </g>
 <g >
-<title> `$wchallengeScalar` (103,090 samples, 4.39%)</title><rect x="1107.7" y="53" width="51.8" height="15.0" fill="rgb(224,171,38)" rx="2" ry="2" />
-<text  x="1110.71" y="63.5" > `$wc..</text>
+<title> mkScalar (20,144 samples, 2.00%)</title><rect x="1118.7" y="69" width="23.6" height="15.0" fill="rgb(229,88,39)" rx="2" ry="2" />
+<text  x="1121.71" y="79.5" > ..</text>
 </g>
 <g >
-<title> challengeScalar (103,858 samples, 4.42%)</title><rect x="1107.3" y="69" width="52.2" height="15.0" fill="rgb(239,102,32)" rx="2" ry="2" />
-<text  x="1110.32" y="79.5" > chal..</text>
+<title> go (96 samples, 0.01%)</title><rect x="1118.6" y="69" width="0.1" height="15.0" fill="rgb(225,196,13)" rx="2" ry="2" />
+<text  x="1121.59" y="79.5" ></text>
 </g>
 <g >
-<title> mkScalar (443,456 samples, 18.87%)</title><rect x="567.6" y="69" width="222.7" height="15.0" fill="rgb(251,121,48)" rx="2" ry="2" />
-<text  x="570.60" y="79.5" > mkScalar</text>
-</g>
-<g >
-<title> powerOfTwoExponentiation (60,964 samples, 2.59%)</title><rect x="1004.7" y="101" width="30.6" height="15.0" fill="rgb(222,136,16)" rx="2" ry="2" />
-<text  x="1007.69" y="111.5" > p..</text>
-</g>
-<g >
-<title> zipWith (287,280 samples, 12.22%)</title><rect x="1045.7" y="101" width="144.3" height="15.0" fill="rgb(226,88,5)" rx="2" ry="2" />
-<text  x="1048.75" y="111.5" > zipWith</text>
-</g>
-<g >
-<title> go (20,691 samples, 0.88%)</title><rect x="862.3" y="101" width="10.4" height="15.0" fill="rgb(226,55,4)" rx="2" ry="2" />
-<text  x="865.32" y="111.5" ></text>
-</g>
-<g >
-<title> powerOfTwoExponentiation (20,236 samples, 0.86%)</title><rect x="1179.8" y="37" width="10.2" height="15.0" fill="rgb(225,153,22)" rx="2" ry="2" />
-<text  x="1182.79" y="47.5" ></text>
-</g>
-<g >
-<title> powerOfTwoExponentiation (20,400 samples, 0.87%)</title><rect x="1179.7" y="53" width="10.3" height="15.0" fill="rgb(211,203,39)" rx="2" ry="2" />
-<text  x="1182.71" y="63.5" ></text>
-</g>
-<g >
-<title> mkScalar (40,432 samples, 1.72%)</title><rect x="1139.0" y="37" width="20.3" height="15.0" fill="rgb(211,169,54)" rx="2" ry="2" />
-<text  x="1141.95" y="47.5" ></text>
-</g>
-<g >
-<title> transcriptNew (20,800 samples, 0.89%)</title><rect x="1035.3" y="101" width="10.4" height="15.0" fill="rgb(244,133,49)" rx="2" ry="2" />
-<text  x="1038.30" y="111.5" ></text>
-</g>
-<g >
-<title> powerOfTwoExponentiation (40,636 samples, 1.73%)</title><rect x="1014.9" y="85" width="20.4" height="15.0" fill="rgb(206,58,33)" rx="2" ry="2" />
-<text  x="1017.90" y="95.5" ></text>
-</g>
-<g >
-<title> powerOfTwoExponentiation (40,564 samples, 1.73%)</title><rect x="1169.6" y="69" width="20.4" height="15.0" fill="rgb(215,61,4)" rx="2" ry="2" />
-<text  x="1172.58" y="79.5" ></text>
-</g>
-<g >
-<title> mkScalar (262,844 samples, 11.19%)</title><rect x="872.7" y="101" width="132.0" height="15.0" fill="rgb(205,103,26)" rx="2" ry="2" />
-<text  x="875.71" y="111.5" > mkScalar</text>
+<title> integerToByteString (62,160 samples, 6.18%)</title><rect x="640.8" y="101" width="72.9" height="15.0" fill="rgb(237,129,41)" rx="2" ry="2" />
+<text  x="643.84" y="111.5" > integer..</text>
 </g>
 </g>
 </svg>

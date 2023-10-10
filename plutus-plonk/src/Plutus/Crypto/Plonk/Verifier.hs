@@ -12,7 +12,7 @@ import Plutus.Crypto.BlsField (mkScalar, Scalar (unScalar), MultiplicativeGroup 
 import Plutus.Crypto.Plonk.Transcript (challengeScalar, transcriptPoint, transcriptScalar, transcriptNew, getTranscript)
 import PlutusTx.Prelude (Integer, Bool (..), bls12_381_G1_uncompress, bls12_381_G1_scalarMul, bls12_381_G1_generator
                         ,BuiltinBLS12_381_G1_Element, sum, BuiltinBLS12_381_G2_Element, bls12_381_finalVerify
-                        ,bls12_381_G2_generator, bls12_381_millerLoop, (>), otherwise, enumFromTo, (.), (&&), divide, error, (<), (||), even)
+                        ,bls12_381_G2_generator, bls12_381_millerLoop, (>), otherwise, enumFromTo, (.), (&&), divide, error, (<), (||), even, (<>), takeByteString, ($), integerToByteString)
 import PlutusTx.Eq (Eq (..))
 import PlutusTx.List (map, zipWith, foldr, head, and)
 import PlutusTx.Numeric
@@ -23,6 +23,8 @@ import PlutusTx.Numeric
       MultiplicativeMonoid(one),
       MultiplicativeSemigroup((*)),
       negate )
+import PlutusTx.Builtins (blake2b_256, byteStringToInteger)
+import PlutusCore (DefaultFun(IntegerToByteString))
 
 {-# INLINABLE exponentiate #-}
 exponentiate :: Integer -> Integer -> Integer
@@ -112,12 +114,31 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
     , (mkScalar -> evalZOmega) <- ez
     , let (w1 : wxs) = map (negate . mkScalar) pubInputs
     , let lagsInv = map mkScalar lagInv
-    = let (beta, transcript1) = challengeScalar (transcriptPoint (transcriptPoint (transcriptPoint (transcriptNew "testing the prover") "commitment a" commA) "commitment b" commB) "commitment c" commC) "beta"
-          (gamma, transcript2) = challengeScalar transcript1 "gamma"
-          (alpha,transcript3) = challengeScalar (transcriptPoint transcript2 "Permutation polynomial" commZ) "alpha"
-          (zeta, transcript4) = challengeScalar (transcriptPoint (transcriptPoint (transcriptPoint transcript3 "Quotient low polynomial" commTLow) "Quotient mid polynomial" commTMid) "Quotient high polynomial" commTHigh) "zeta"
-          (v, transcript5) = challengeScalar (transcriptScalar (transcriptScalar (transcriptScalar (transcriptScalar (transcriptScalar (transcriptScalar transcript4 "Append a_eval." evalA) "Append b_eval." evalB) "Append c_eval." evalC) "Append s_sig1." evalS1) "Append s_sig2." evalS2) "Append z_omega." evalZOmega) "v"
-          (u, _) = challengeScalar (transcriptPoint (transcriptPoint transcript5 "w_omega comm" commWOmega) "w_omega_zeta comm" commWOmegaZeta) "u"
+    = let transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b" 
+                                                                             <> cb <> "commitment c" 
+                                                                             <> cc <> "beta"
+          beta = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript0
+          transcript1 = transcript0 <> "gamma"
+          gamma = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript1
+          transcript2 = transcript1 <> "Permutation polynomial" <> cz <> "alpha"
+          alpha = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript2
+          transcript3 = transcript2 <> "Quotient low polynomial" <> ctl 
+                                    <> "Quotient mid polynomial" <> ctm 
+                                    <> "Quotient high polynomial" <> cth 
+                                    <> "zeta"
+          zeta = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript3
+          transcript4 = transcript3 <> "Append a_eval." <> integerToByteString ea 
+                                    <> "Append b_eval." <> integerToByteString eb 
+                                    <> "Append c_eval." <> integerToByteString ec 
+                                    <> "Append s_sig1." <> integerToByteString es1 
+                                    <> "Append s_sig2." <> integerToByteString es2 
+                                    <> "Append z_omega." <> integerToByteString ez 
+                                    <> "v"
+          v = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript4
+          transcript5 = transcript4 <> "w_omega comm" <> cwo 
+                                    <> "w_omega_zeta comm" <> cwz 
+                                    <> "u"
+          u = mkScalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript5
           (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * (powerOfTwoExponentiation zeta p - one) * y) gens lagsInv 
           piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
           r0 = piZeta - lagrangePoly1*alpha*alpha - alpha*(evalA + beta*evalS1 + gamma)*(evalB + beta*evalS2 + gamma)*(evalC + gamma)*evalZOmega
@@ -131,5 +152,7 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
                             - scale (powerOfTwoExponentiation zeta p - one) (commTLow + scale (powerOfTwoExponentiation zeta p) commTMid + scale (powerOfTwoExponentiation (powerOfTwoExponentiation zeta p) 1) commTHigh)
           batchPolyCommitFull = batchPolyCommitG1 + scale v (commA + scale v (commB + scale v (commC + scale v (sSig1 + scale v sSig2))))
           groupEncodedBatchEval = scale (negate r0 + v * (evalA + v * (evalB + v * (evalC + v * (evalS1 + v * evalS2)))) + u*evalZOmega ) bls12_381_G1_generator
-    in bls12_381_finalVerify (bls12_381_millerLoop (commWOmega + scale u commWOmegaZeta) x2) (bls12_381_millerLoop (scale zeta commWOmega + scale (u*zeta*head gens) commWOmegaZeta + batchPolyCommitFull - groupEncodedBatchEval) bls12_381_G2_generator)
+    in bls12_381_finalVerify 
+        (bls12_381_millerLoop (commWOmega + scale u commWOmegaZeta) x2) 
+        (bls12_381_millerLoop (scale zeta commWOmega + scale (u*zeta*head gens) commWOmegaZeta + batchPolyCommitFull - groupEncodedBatchEval) bls12_381_G2_generator)
        && and (zipWith (\x y -> x * mkScalar n * (zeta - y) == one) lagsInv gens) -- this accounts for some 5% of the calc
