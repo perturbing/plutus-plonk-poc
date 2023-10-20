@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" width="1200" height="182" onload="init(evt)" viewBox="0 0 1200 182" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg version="1.1" width="1200" height="166" onload="init(evt)" viewBox="0 0 1200 166" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
 <!-- NOTES:  -->
 <defs>
@@ -334,92 +334,76 @@
 	}
 ]]>
 </script>
-<rect x="0.0" y="0" width="1200.0" height="182.0" fill="url(#background)"  />
+<rect x="0.0" y="0" width="1200.0" height="166.0" fill="url(#background)"  />
 <text id="title" x="600.00" y="24" >Flame Graph</text>
-<text id="details" x="10.00" y="165" > </text>
+<text id="details" x="10.00" y="149" > </text>
 <text id="unzoom" x="10.00" y="24" class="hide">Reset Zoom</text>
 <text id="search" x="1090.00" y="24" >Search</text>
-<text id="matched" x="1090.00" y="165" > </text>
+<text id="matched" x="1090.00" y="149" > </text>
 <g id="frames">
 <g >
-<title> integerToByteString (62,160 samples, 7.19%)</title><rect x="743.3" y="101" width="84.9" height="15.0" fill="rgb(206,21,22)" rx="2" ry="2" />
-<text  x="746.33" y="111.5" > integerT..</text>
+<title> powerOfTwoExponentiation (118 samples, 0.05%)</title><rect x="897.0" y="53" width="0.6" height="15.0" fill="rgb(216,220,28)" rx="2" ry="2" />
+<text  x="900.05" y="63.5" ></text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (108 samples, 0.01%)</title><rect x="1048.6" y="53" width="0.2" height="15.0" fill="rgb(217,172,8)" rx="2" ry="2" />
-<text  x="1051.63" y="63.5" ></text>
+<title> go (64 samples, 0.03%)</title><rect x="508.5" y="69" width="0.3" height="15.0" fill="rgb(207,4,46)" rx="2" ry="2" />
+<text  x="511.53" y="79.5" ></text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (20,354 samples, 2.35%)</title><rect x="1021.0" y="69" width="27.8" height="15.0" fill="rgb(242,31,34)" rx="2" ry="2" />
-<text  x="1024.00" y="79.5" > ..</text>
+<title>verifyPlonkFast (244,899 samples, 100.00%)</title><rect x="10.0" y="101" width="1180.0" height="15.0" fill="rgb(243,212,48)" rx="2" ry="2" />
+<text  x="13.00" y="111.5" >verifyPlonkFast</text>
 </g>
 <g >
-<title> go (40,691 samples, 4.71%)</title><rect x="687.8" y="101" width="55.5" height="15.0" fill="rgb(210,53,25)" rx="2" ry="2" />
-<text  x="690.80" y="111.5" > go</text>
+<title> and (32 samples, 0.01%)</title><rect x="507.3" y="69" width="0.1" height="15.0" fill="rgb(243,147,24)" rx="2" ry="2" />
+<text  x="510.28" y="79.5" ></text>
 </g>
 <g >
-<title>verifyPlonkFast (864,613 samples, 100.00%)</title><rect x="10.0" y="117" width="1180.0" height="15.0" fill="rgb(213,67,40)" rx="2" ry="2" />
-<text  x="13.00" y="127.5" >verifyPlonkFast</text>
+<title> powerOfTwoExponentiation (36 samples, 0.01%)</title><rect x="897.4" y="37" width="0.2" height="15.0" fill="rgb(237,174,3)" rx="2" ry="2" />
+<text  x="900.44" y="47.5" ></text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (80,964 samples, 9.36%)</title><rect x="938.3" y="101" width="110.5" height="15.0" fill="rgb(230,19,18)" rx="2" ry="2" />
-<text  x="941.28" y="111.5" > powerOfTwoEx..</text>
+<title> and (96 samples, 0.04%)</title><rect x="507.0" y="85" width="0.4" height="15.0" fill="rgb(251,27,11)" rx="2" ry="2" />
+<text  x="509.97" y="95.5" ></text>
 </g>
 <g >
-<title> mkScalar (80,684 samples, 9.33%)</title><rect x="828.2" y="101" width="110.1" height="15.0" fill="rgb(210,56,27)" rx="2" ry="2" />
-<text  x="831.16" y="111.5" > mkScalar</text>
+<title> mkScalar (20,072 samples, 8.20%)</title><rect x="508.8" y="69" width="96.7" height="15.0" fill="rgb(239,227,17)" rx="2" ry="2" />
+<text  x="511.84" y="79.5" > mkScalar</text>
 </g>
 <g >
-<title> and (96 samples, 0.01%)</title><rect x="687.7" y="101" width="0.1" height="15.0" fill="rgb(208,206,36)" rx="2" ry="2" />
-<text  x="690.67" y="111.5" ></text>
+<title> zipWith (40,466 samples, 16.52%)</title><rect x="995.0" y="85" width="195.0" height="15.0" fill="rgb(207,127,25)" rx="2" ry="2" />
+<text  x="998.02" y="95.5" > zipWith</text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (80,636 samples, 9.33%)</title><rect x="938.7" y="85" width="110.1" height="15.0" fill="rgb(241,151,33)" rx="2" ry="2" />
-<text  x="941.73" y="95.5" > powerOfTwoEx..</text>
+<title> powerOfTwoExponentiation (40,400 samples, 16.50%)</title><rect x="703.0" y="85" width="194.6" height="15.0" fill="rgb(245,31,20)" rx="2" ry="2" />
+<text  x="705.96" y="95.5" > powerOfTwoExponentiation</text>
 </g>
 <g >
-<title> go (128 samples, 0.01%)</title><rect x="715.7" y="85" width="0.1" height="15.0" fill="rgb(228,10,5)" rx="2" ry="2" />
-<text  x="718.66" y="95.5" ></text>
+<title> go (20,274 samples, 8.28%)</title><rect x="1092.3" y="69" width="97.7" height="15.0" fill="rgb(209,163,6)" rx="2" ry="2" />
+<text  x="1095.31" y="79.5" > go</text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (20,236 samples, 2.34%)</title><rect x="1162.2" y="37" width="27.7" height="15.0" fill="rgb(249,185,53)" rx="2" ry="2" />
-<text  x="1165.24" y="47.5" > ..</text>
+<title>all (244,899 samples, 100%)</title><rect x="10.0" y="117" width="1180.0" height="15.0" fill="rgb(239,97,37)" rx="2" ry="2" />
+<text  x="13.00" y="127.5" ></text>
 </g>
 <g >
-<title>all (864,613 samples, 100%)</title><rect x="10.0" y="133" width="1180.0" height="15.0" fill="rgb(239,62,46)" rx="2" ry="2" />
-<text  x="13.00" y="143.5" ></text>
+<title> go (20,363 samples, 8.31%)</title><rect x="507.4" y="85" width="98.1" height="15.0" fill="rgb(222,27,42)" rx="2" ry="2" />
+<text  x="510.43" y="95.5" > go</text>
 </g>
 <g >
-<title> go (102,321 samples, 11.83%)</title><rect x="1050.4" y="85" width="139.6" height="15.0" fill="rgb(249,25,4)" rx="2" ry="2" />
-<text  x="1053.36" y="95.5" > go</text>
+<title> mkScalar (20,216 samples, 8.25%)</title><rect x="605.5" y="85" width="97.5" height="15.0" fill="rgb(246,202,24)" rx="2" ry="2" />
+<text  x="608.55" y="95.5" > mkScalar</text>
 </g>
 <g >
-<title> takeByteString (108 samples, 0.01%)</title><rect x="1189.9" y="69" width="0.1" height="15.0" fill="rgb(206,141,35)" rx="2" ry="2" />
-<text  x="1192.85" y="79.5" ></text>
+<title> go (20,064 samples, 8.19%)</title><rect x="1093.3" y="53" width="96.7" height="15.0" fill="rgb(211,82,4)" rx="2" ry="2" />
+<text  x="1096.33" y="63.5" > go</text>
 </g>
 <g >
-<title> takeByteString (900 samples, 0.10%)</title><rect x="1048.8" y="101" width="1.2" height="15.0" fill="rgb(216,170,4)" rx="2" ry="2" />
-<text  x="1051.78" y="111.5" ></text>
+<title> takeByteString (20,216 samples, 8.25%)</title><rect x="897.6" y="85" width="97.4" height="15.0" fill="rgb(235,169,19)" rx="2" ry="2" />
+<text  x="900.62" y="95.5" > takeByteSt..</text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (40,400 samples, 4.67%)</title><rect x="1134.7" y="53" width="55.2" height="15.0" fill="rgb(237,97,51)" rx="2" ry="2" />
-<text  x="1137.72" y="63.5" > powe..</text>
-</g>
-<g >
-<title> go (96 samples, 0.01%)</title><rect x="1134.4" y="69" width="0.1" height="15.0" fill="rgb(230,91,1)" rx="2" ry="2" />
-<text  x="1137.36" y="79.5" ></text>
-</g>
-<g >
-<title> mkScalar (20,144 samples, 2.33%)</title><rect x="715.8" y="85" width="27.5" height="15.0" fill="rgb(236,167,8)" rx="2" ry="2" />
-<text  x="718.84" y="95.5" > ..</text>
-</g>
-<g >
-<title> zipWith (102,577 samples, 11.86%)</title><rect x="1050.0" y="101" width="140.0" height="15.0" fill="rgb(225,164,51)" rx="2" ry="2" />
-<text  x="1053.01" y="111.5" > zipWith</text>
-</g>
-<g >
-<title> powerOfTwoExponentiation (40,564 samples, 4.69%)</title><rect x="1134.5" y="69" width="55.4" height="15.0" fill="rgb(237,2,28)" rx="2" ry="2" />
-<text  x="1137.49" y="79.5" > powe..</text>
+<title> powerOfTwoExponentiation (20,236 samples, 8.26%)</title><rect x="800.1" y="69" width="97.5" height="15.0" fill="rgb(251,48,42)" rx="2" ry="2" />
+<text  x="803.11" y="79.5" > powerOfTwo..</text>
 </g>
 </g>
 </svg>
