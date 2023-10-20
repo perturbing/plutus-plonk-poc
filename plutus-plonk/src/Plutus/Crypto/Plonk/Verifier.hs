@@ -1,6 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
-{-# LANGUAGE BangPatterns       #-}
+{-# LANGUAGE Strict             #-}
 {-# LANGUAGE ViewPatterns       #-}
 
 module Plutus.Crypto.Plonk.Verifier
@@ -64,14 +64,14 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x
     , let (w1 : wxs) = map (negate . mkScalar) pubInputs
     =
         -- this step could be done offchain?
-    let !n = exponentiate 2 p
+    let n = exponentiate 2 p
         -- get the transcript variables
-        (!beta, !gamma, !alpha, !zeta, !v, !u) = getTranscript commA commB commC commZ commTLow commTMid commTHigh evalA evalB evalC evalS1 evalS2 evalZOmega commWOmega commWOmegaZeta
+        (beta, gamma, alpha, zeta, v, u) = getTranscript commA commB commC commZ commTLow commTMid commTHigh evalA evalB evalC evalS1 evalS2 evalZOmega commWOmega commWOmegaZeta
         -- this is Z_H(zeta) in the plonk paper
-        !zetaN = scale n zeta
-        !zeroPoly = zetaN - one
+        zetaN = scale n zeta
+        zeroPoly = zetaN - one
         -- this is L_1(zeta) and the higher order L_i 
-        (!lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i gen * zeroPoly) * recip (mkScalar n * (zeta - scale i gen))) (enumFromTo 1 nPub)
+        (lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i gen * zeroPoly) * recip (mkScalar n * (zeta - scale i gen))) (enumFromTo 1 nPub)
         -- this is PI(zeta) in the plonk paper
         piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
         -- this is r_0 in the plonk paper
@@ -116,43 +116,43 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
     , (mkScalar -> evalZOmega) <- ez
     , let (w1 : wxs) = map (negate . mkScalar) pubInputs
     , let lagsInv = map mkScalar lagInv
-    = let transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b" 
+    = let ~transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b" 
                                                                              <> cb <> "commitment c" 
                                                                              <> cc <> "beta"
           beta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript0
-          transcript1 = transcript0 <> "gamma"
+          ~transcript1 = transcript0 <> "gamma"
           gamma = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript1
-          transcript2 = transcript1 <> "Permutation polynomial" <> cz <> "alpha"
+          ~transcript2 = transcript1 <> "Permutation polynomial" <> cz <> "alpha"
           alpha = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript2
-          transcript3 = transcript2 <> "Quotient low polynomial" <> ctl 
+          ~transcript3 = transcript2 <> "Quotient low polynomial" <> ctl 
                                     <> "Quotient mid polynomial" <> ctm 
                                     <> "Quotient high polynomial" <> cth 
                                     <> "zeta"
-          !zeta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript3
-          transcript4 = transcript3 <> "Append a_eval." <> integerToByteString ea 
+          zeta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript3
+          ~transcript4 = transcript3 <> "Append a_eval." <> integerToByteString ea 
                                     <> "Append b_eval." <> integerToByteString eb 
                                     <> "Append c_eval." <> integerToByteString ec 
                                     <> "Append s_sig1." <> integerToByteString es1 
                                     <> "Append s_sig2." <> integerToByteString es2 
                                     <> "Append z_omega." <> integerToByteString ez 
                                     <> "v"
-          !v = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript4
-          transcript5 = transcript4 <> "w_omega comm" <> cwo 
+          v = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript4
+          ~transcript5 = transcript4 <> "w_omega comm" <> cwo 
                                     <> "w_omega_zeta comm" <> cwz 
                                     <> "u"
-          !u = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript5
+          u = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript5
           powOfTwoZetaP = powerOfTwoExponentiation zeta p
-          !powOfTwoZetaPMinOne = powOfTwoZetaP - one
+          powOfTwoZetaPMinOne = powOfTwoZetaP - one
           (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * powOfTwoZetaPMinOne * y) gens lagsInv 
-          !piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
-          !alphaSquare = alpha * alpha
-          !alphaEvalZOmega = alpha * evalZOmega
+          piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
+          alphaSquare = alpha * alpha
+          alphaEvalZOmega = alpha * evalZOmega
           betaZeta = beta * zeta
-          !evalAPlusGamma = evalA + gamma
-          !evalBPlusGamma = evalB + gamma
-          !evalCPlusGamma = evalC + gamma
-          !betaEvalS1 = beta * evalS1
-          !betaEvalS2 = beta * evalS2
+          evalAPlusGamma = evalA + gamma
+          evalBPlusGamma = evalB + gamma
+          evalCPlusGamma = evalC + gamma
+          betaEvalS1 = beta * evalS1
+          betaEvalS2 = beta * evalS2
           r0 = piZeta - lagrangePoly1*alphaSquare - alphaEvalZOmega*(evalAPlusGamma + betaEvalS1)*(evalBPlusGamma + betaEvalS2)*evalCPlusGamma
           batchPolyCommitG1 = scale (evalA*evalB) qM
                             + scale evalA qL
