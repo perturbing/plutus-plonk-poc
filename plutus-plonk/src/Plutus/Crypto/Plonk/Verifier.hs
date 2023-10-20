@@ -1,5 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE BangPatterns       #-}
 {-# LANGUAGE ViewPatterns       #-}
 
 module Plutus.Crypto.Plonk.Verifier
@@ -63,13 +64,14 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x
     , let (w1 : wxs) = map (negate . mkScalar) pubInputs
     =
         -- this step could be done offchain?
-    let n = exponentiate 2 p
+    let !n = exponentiate 2 p
         -- get the transcript variables
-        (beta, gamma, alpha, zeta, v, u) = getTranscript commA commB commC commZ commTLow commTMid commTHigh evalA evalB evalC evalS1 evalS2 evalZOmega commWOmega commWOmegaZeta
+        (!beta, !gamma, !alpha, !zeta, !v, !u) = getTranscript commA commB commC commZ commTLow commTMid commTHigh evalA evalB evalC evalS1 evalS2 evalZOmega commWOmega commWOmegaZeta
         -- this is Z_H(zeta) in the plonk paper
-        zeroPoly = scale n zeta - one
+        !zetaN = scale n zeta
+        !zeroPoly = zetaN - one
         -- this is L_1(zeta) and the higher order L_i 
-        (lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i gen * zeroPoly) * recip (mkScalar n * (zeta - scale i gen))) (enumFromTo 1 nPub)
+        (!lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i gen * zeroPoly) * recip (mkScalar n * (zeta - scale i gen))) (enumFromTo 1 nPub)
         -- this is PI(zeta) in the plonk paper
         piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
         -- this is r_0 in the plonk paper
@@ -82,7 +84,7 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM qL qR qO qC sSig1 sSig2 sSig3 x
                           + qC
                           + scale ((evalA + beta * zeta + gamma)*(evalB +beta*k1*zeta + gamma)*(evalC + beta*k2*zeta + gamma)*alpha + lagrangePoly1*alpha * alpha + u) commZ
                           - scale ((evalA +beta*evalS1+gamma)*(evalB + beta*evalS2+gamma)*alpha*beta*evalZOmega) sSig3
-                          - scale zeroPoly (commTLow + scale (scale n zeta) commTMid + scale (scale (2*n) zeta) commTHigh)
+                          - scale zeroPoly (commTLow + scale zetaN commTMid + scale (scale 2 zetaN) commTHigh)
         -- this is [F]_1 in the plonk paper
         batchPolyCommitFull = batchPolyCommitG1 + scale v (commA + scale v (commB + scale v (commC + scale v (sSig1 + scale v sSig2))))
         -- this is [E]_1 in the plonk paper
@@ -117,16 +119,16 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
     = let transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b" 
                                                                              <> cb <> "commitment c" 
                                                                              <> cc <> "beta"
-          beta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript0
+          !beta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript0
           transcript1 = transcript0 <> "gamma"
-          gamma = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript1
+          !gamma = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript1
           transcript2 = transcript1 <> "Permutation polynomial" <> cz <> "alpha"
-          alpha = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript2
+          !alpha = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript2
           transcript3 = transcript2 <> "Quotient low polynomial" <> ctl 
                                     <> "Quotient mid polynomial" <> ctm 
                                     <> "Quotient high polynomial" <> cth 
                                     <> "zeta"
-          zeta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript3
+          !zeta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript3
           transcript4 = transcript3 <> "Append a_eval." <> integerToByteString ea 
                                     <> "Append b_eval." <> integerToByteString eb 
                                     <> "Append c_eval." <> integerToByteString ec 
@@ -134,22 +136,31 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
                                     <> "Append s_sig2." <> integerToByteString es2 
                                     <> "Append z_omega." <> integerToByteString ez 
                                     <> "v"
-          v = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript4
+          !v = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript4
           transcript5 = transcript4 <> "w_omega comm" <> cwo 
                                     <> "w_omega_zeta comm" <> cwz 
                                     <> "u"
-          u = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript5
-          (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * (powerOfTwoExponentiation zeta p - one) * y) gens lagsInv 
+          !u = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript5
+          !powOfTwoZetaP = powerOfTwoExponentiation zeta p
+          !powOfTwoZetaPMinOne = powOfTwoZetaP - one
+          (!lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * powOfTwoZetaPMinOne * y) gens lagsInv 
           piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
-          r0 = piZeta - lagrangePoly1*alpha*alpha - alpha*(evalA + beta*evalS1 + gamma)*(evalB + beta*evalS2 + gamma)*(evalC + gamma)*evalZOmega
+          !alphaSquare = alpha * alpha
+          !betaZeta = beta * zeta
+          !evalAPlusGamma = evalA + gamma
+          !evalBPlusGamma = evalB + gamma
+          !evalCPlusGamma = evalC + gamma
+          !betaEvalS1 = beta * evalS1
+          !betaEvalS2 = beta * evalS2
+          r0 = piZeta - lagrangePoly1*alphaSquare - alpha*(evalAPlusGamma + betaEvalS1)*(evalBPlusGamma + betaEvalS2)*evalCPlusGamma*evalZOmega
           batchPolyCommitG1 = scale (evalA*evalB) qM
                             + scale evalA qL
                             + scale evalB qR
                             + scale evalC qO
                             + qC
-                            + scale ((evalA + beta*zeta + gamma)*(evalB +beta*k1*zeta + gamma)*(evalC + beta*k2*zeta + gamma)*alpha + lagrangePoly1*alpha*alpha + u) commZ
-                            - scale ((evalA +beta*evalS1+gamma)*(evalB + beta*evalS2 + gamma)*alpha*beta*evalZOmega) sSig3
-                            - scale (powerOfTwoExponentiation zeta p - one) (commTLow + scale (powerOfTwoExponentiation zeta p) commTMid + scale (powerOfTwoExponentiation (powerOfTwoExponentiation zeta p) 1) commTHigh)
+                            + scale ((evalAPlusGamma + betaZeta)*(evalBPlusGamma +betaZeta*k1)*(evalCPlusGamma + betaZeta*k2)*alpha + lagrangePoly1*alphaSquare + u) commZ
+                            - scale ((evalAPlusGamma +betaEvalS1)*(evalBPlusGamma + betaEvalS2)*alpha*beta*evalZOmega) sSig3
+                            - scale powOfTwoZetaPMinOne (commTLow + scale powOfTwoZetaP commTMid + scale (powerOfTwoExponentiation powOfTwoZetaP 1) commTHigh)
           batchPolyCommitFull = batchPolyCommitG1 + scale v (commA + scale v (commB + scale v (commC + scale v (sSig1 + scale v sSig2))))
           groupEncodedBatchEval = scale (negate r0 + v * (evalA + v * (evalB + v * (evalC + v * (evalS1 + v * evalS2)))) + u*evalZOmega ) bls12_381_G1_generator
     in bls12_381_finalVerify 
