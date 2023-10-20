@@ -30,7 +30,7 @@ import PlutusTx.Prelude
       Module(..),
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..),
-      Ord((<), (<=)), rotateByteString, integerToByteString, dropByteString, (<>) )
+      Ord((<), (<=)), rotateByteString, integerToByteString, dropByteString, (<>), even, divide )
 import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
 import PlutusTx.Numeric
     ( AdditiveGroup(..),
@@ -133,6 +133,16 @@ reverseByteString bs
     | bs == emptyByteString = bs
     | otherwise             = reverseByteString (dropByteString 1 bs) <> consByteString (indexByteString bs 0) emptyByteString
 
+-- this one costs around 12.1% of cpu budget
+-- while bitshifts modExp cost around 9.6%
+{-# INLINABLE powMod #-}
+powMod :: Scalar -> Integer -> Scalar
+powMod b e
+    | e < 0     = zero
+    | e == 0    = one
+    | even e   = powMod (b*b) (e `divide` 2)
+    | otherwise = b * powMod (b*b) ((e - 1) `divide` 2)
+
 -- In math this is b^a mod p, where b is of type scalar and a any integer
 -- note that there is still some overhead here due to the conversion from
 -- little endian to big endian (and bs <-> integer). This can be
@@ -140,7 +150,7 @@ reverseByteString bs
 instance Module Integer Scalar where
     {-# INLINABLE scale #-}
     scale :: Integer -> Scalar -> Scalar
-    scale a b = modularExponentiationScalar b (reverseByteString (integerToByteString a))
+    scale a b = modularExponentiationScalar b (reverseByteString (integerToByteString a)) -- powMod b a is also a correct implementation
 
 instance MultiplicativeGroup Scalar where
     {-# INLINABLE div #-}

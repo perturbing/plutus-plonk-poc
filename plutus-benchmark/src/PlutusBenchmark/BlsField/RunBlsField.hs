@@ -6,7 +6,7 @@ module PlutusBenchmark.BlsField.RunBlsField
 
 import PlutusBenchmark.BlsField.Scripts (blsFieldAddScalarsScript, blsFieldMulScalarsScript 
         , listOfSizedByteStrings, modularExponentiationScalarScript, modExpPow2Script, invertScalarsScript)
-import PlutusTx.Prelude (byteStringToInteger, toBuiltin, integerToByteString)
+import PlutusTx.Prelude (byteStringToInteger, toBuiltin )
 import Plutus.Crypto.BlsField (mkScalar)
 
 import PlutusBenchmark.Common ( printHeader, printSizeStatistics, TestSize(TestSize) )
@@ -26,7 +26,7 @@ printCostsBlsMulScalarsField h n =
 
 printCostsModExpScalar :: Handle -> Integer -> IO ()
 printCostsModExpScalar h n =
-    let script = modularExponentiationScalarScript (map (mkScalar . byteStringToInteger . toBuiltin) $ listOfSizedByteStrings n 31) (integerToByteString 52435875175126190479447740508185965837690552500527637822603658699938581184510)
+    let script = modularExponentiationScalarScript (map (mkScalar . byteStringToInteger . toBuiltin) $ listOfSizedByteStrings n 31) 52435875175126190479447740508185965837690552500527637822603658699938581184510
     in printSizeStatistics h (TestSize n) script
 
 printCostsModExpScalar2 :: Handle -> Integer -> IO ()

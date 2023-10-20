@@ -12,8 +12,8 @@ module PlutusBenchmark.BlsField.Scripts
 ) where
 
 import PlutusTx (compile, unsafeApplyCode, liftCodeDef, getPlcNoAnn)
-import PlutusTx.Prelude (Integer, ($), (.), foldr, (*), BuiltinByteString, map)
-import PlutusTx.Numeric ((+), zero, one)
+import PlutusTx.Prelude (Integer, ($), (.), foldr, (*), map)
+import PlutusTx.Numeric ((+), zero, one, scale)
 
 import PlutusCore (DefaultFun, DefaultUni)
 import UntypedPlutusCore qualified as UPLC
@@ -23,7 +23,7 @@ import Hedgehog.Internal.Gen qualified as G
 import Hedgehog.Internal.Range qualified as R
 import System.IO.Unsafe (unsafePerformIO)
 import Data.ByteString (ByteString)
-import Plutus.Crypto.BlsField (Scalar, MultiplicativeGroup (..), modularExponentiationScalar, powerOfTwoExponentiation)
+import Plutus.Crypto.BlsField (Scalar, MultiplicativeGroup (..), powerOfTwoExponentiation)
 
 {-# INLINABLE addScalars #-}
 addScalars :: [Scalar] -> Scalar
@@ -50,10 +50,10 @@ listOfSizedByteStrings n l = unsafePerformIO . G.sample $
                                   (G.bytes (R.singleton $ Haskell.fromIntegral l))
 
 {-# INLINABLE modularExponentiationList #-}
-modularExponentiationList :: [Scalar] -> BuiltinByteString -> [Scalar]
-modularExponentiationList xs bs = map (`modularExponentiationScalar` bs) xs
+modularExponentiationList :: [Scalar] -> Integer -> [Scalar]
+modularExponentiationList xs e = map (scale e) xs
 
-modularExponentiationScalarScript :: [Scalar] -> BuiltinByteString -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
+modularExponentiationScalarScript :: [Scalar] -> Integer -> UPLC.Program UPLC.NamedDeBruijn DefaultUni DefaultFun ()
 modularExponentiationScalarScript xs e =
     getPlcNoAnn $ $$(compile [|| modularExponentiationList ||])
         `unsafeApplyCode` liftCodeDef xs
