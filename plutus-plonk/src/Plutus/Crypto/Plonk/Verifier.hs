@@ -119,11 +119,11 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
     = let transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b" 
                                                                              <> cb <> "commitment c" 
                                                                              <> cc <> "beta"
-          !beta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript0
+          beta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript0
           transcript1 = transcript0 <> "gamma"
-          !gamma = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript1
+          gamma = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript1
           transcript2 = transcript1 <> "Permutation polynomial" <> cz <> "alpha"
-          !alpha = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript2
+          alpha = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript2
           transcript3 = transcript2 <> "Quotient low polynomial" <> ctl 
                                     <> "Quotient mid polynomial" <> ctm 
                                     <> "Quotient high polynomial" <> cth 
@@ -141,25 +141,26 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
                                     <> "w_omega_zeta comm" <> cwz 
                                     <> "u"
           !u = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript5
-          !powOfTwoZetaP = powerOfTwoExponentiation zeta p
+          powOfTwoZetaP = powerOfTwoExponentiation zeta p
           !powOfTwoZetaPMinOne = powOfTwoZetaP - one
-          (!lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * powOfTwoZetaPMinOne * y) gens lagsInv 
-          piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
+          (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * powOfTwoZetaPMinOne * y) gens lagsInv 
+          !piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
           !alphaSquare = alpha * alpha
-          !betaZeta = beta * zeta
+          !alphaEvalZOmega = alpha * evalZOmega
+          betaZeta = beta * zeta
           !evalAPlusGamma = evalA + gamma
           !evalBPlusGamma = evalB + gamma
           !evalCPlusGamma = evalC + gamma
           !betaEvalS1 = beta * evalS1
           !betaEvalS2 = beta * evalS2
-          r0 = piZeta - lagrangePoly1*alphaSquare - alpha*(evalAPlusGamma + betaEvalS1)*(evalBPlusGamma + betaEvalS2)*evalCPlusGamma*evalZOmega
+          r0 = piZeta - lagrangePoly1*alphaSquare - alphaEvalZOmega*(evalAPlusGamma + betaEvalS1)*(evalBPlusGamma + betaEvalS2)*evalCPlusGamma
           batchPolyCommitG1 = scale (evalA*evalB) qM
                             + scale evalA qL
                             + scale evalB qR
                             + scale evalC qO
                             + qC
                             + scale ((evalAPlusGamma + betaZeta)*(evalBPlusGamma +betaZeta*k1)*(evalCPlusGamma + betaZeta*k2)*alpha + lagrangePoly1*alphaSquare + u) commZ
-                            - scale ((evalAPlusGamma +betaEvalS1)*(evalBPlusGamma + betaEvalS2)*alpha*beta*evalZOmega) sSig3
+                            - scale ((evalAPlusGamma +betaEvalS1)*(evalBPlusGamma + betaEvalS2)*alphaEvalZOmega*beta) sSig3
                             - scale powOfTwoZetaPMinOne (commTLow + scale powOfTwoZetaP commTMid + scale (powerOfTwoExponentiation powOfTwoZetaP 1) commTHigh)
           batchPolyCommitFull = batchPolyCommitG1 + scale v (commA + scale v (commB + scale v (commC + scale v (sSig1 + scale v sSig2))))
           groupEncodedBatchEval = scale (negate r0 + v * (evalA + v * (evalB + v * (evalC + v * (evalS1 + v * evalS2)))) + u*evalZOmega ) bls12_381_G1_generator
