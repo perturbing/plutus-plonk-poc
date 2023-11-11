@@ -2,6 +2,9 @@
 {-# LANGUAGE OverloadedStrings  #-}
 {-# LANGUAGE Strict             #-}
 {-# LANGUAGE ViewPatterns       #-}
+{-# OPTIONS_GHC -O0 #-}
+{-# OPTIONS_GHC -fno-ignore-interface-pragmas #-}
+{-# OPTIONS_GHC -fno-omit-interface-pragmas #-}
 
 module Plutus.Crypto.Plonk.Verifier
 ( verifyPlonk
@@ -116,20 +119,20 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
     , (mkScalar -> evalZOmega) <- ez
     , let (w1 : wxs) = map (negate . mkScalar) pubInputs
     , let lagsInv = map mkScalar lagInv
-    = let ~transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b" 
+    = let transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b" 
                                                                              <> cb <> "commitment c" 
                                                                              <> cc <> "beta"
           beta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript0
-          ~transcript1 = transcript0 <> "gamma"
+          transcript1 = transcript0 <> "gamma"
           gamma = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript1
-          ~transcript2 = transcript1 <> "Permutation polynomial" <> cz <> "alpha"
+          transcript2 = transcript1 <> "Permutation polynomial" <> cz <> "alpha"
           alpha = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript2
-          ~transcript3 = transcript2 <> "Quotient low polynomial" <> ctl 
+          transcript3 = transcript2 <> "Quotient low polynomial" <> ctl 
                                     <> "Quotient mid polynomial" <> ctm 
                                     <> "Quotient high polynomial" <> cth 
                                     <> "zeta"
           zeta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript3
-          ~transcript4 = transcript3 <> "Append a_eval." <> integerToByteString ea 
+          transcript4 = transcript3 <> "Append a_eval." <> integerToByteString ea 
                                     <> "Append b_eval." <> integerToByteString eb 
                                     <> "Append c_eval." <> integerToByteString ec 
                                     <> "Append s_sig1." <> integerToByteString es1 
@@ -137,7 +140,7 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM qL qR qO qC sSig1 sSig
                                     <> "Append z_omega." <> integerToByteString ez 
                                     <> "v"
           v = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript4
-          ~transcript5 = transcript4 <> "w_omega comm" <> cwo 
+          transcript5 = transcript4 <> "w_omega comm" <> cwo 
                                     <> "w_omega_zeta comm" <> cwz 
                                     <> "u"
           u = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript5
