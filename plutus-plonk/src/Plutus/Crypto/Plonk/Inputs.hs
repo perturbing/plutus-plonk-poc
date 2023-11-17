@@ -26,15 +26,15 @@ import qualified Prelude as Haskell
 -- The field elements are represented as integers as they are provided 
 -- by the prover and need to be checked to be in the field.
 data Proof = Proof 
-    { commitmentA     :: BuiltinByteString -- a serialized G1 element
-    , commitmentB     :: BuiltinByteString -- a serialized G1 element
-    , commitmentC     :: BuiltinByteString -- a serialized G1 element
-    , commitmentZ     :: BuiltinByteString -- a serialized G1 element
-    , tLow            :: BuiltinByteString -- a serialized G1 element
-    , tMid            :: BuiltinByteString -- a serialized G1 element
-    , tHigh           :: BuiltinByteString -- a serialized G1 element
-    , wOmega          :: BuiltinByteString -- a serialized G1 element
-    , wOmegaZeta      :: BuiltinByteString -- a serialized G1 element
+    { commitmentA     :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , commitmentB     :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , commitmentC     :: BuiltinBLS12_381_G1_Element -- a serialized G1 element 
+    , commitmentZ     :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , tLow            :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , tMid            :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , tHigh           :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , wOmega          :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , wOmegaZeta      :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
     , aEval           :: Integer           -- Field element
     , bEval           :: Integer           -- Field element
     , cEval           :: Integer           -- Field element
@@ -97,15 +97,15 @@ makeIsDataIndexed ''PreInputsFast [('PreInputsFast,0)]
 -- The field elements are represented as integers as they are provided 
 -- by the prover and need to be checked to be in the field.
 data ProofFast = ProofFast 
-    { commitmentA'       :: BuiltinByteString -- a serialized G1 element
-    , commitmentB'       :: BuiltinByteString -- a serialized G1 element
-    , commitmentC'       :: BuiltinByteString -- a serialized G1 element
-    , commitmentZ'       :: BuiltinByteString -- a serialized G1 element
-    , tLow'              :: BuiltinByteString -- a serialized G1 element
-    , tMid'              :: BuiltinByteString -- a serialized G1 element
-    , tHigh'             :: BuiltinByteString -- a serialized G1 element
-    , wOmega'            :: BuiltinByteString -- a serialized G1 element
-    , wOmegaZeta'        :: BuiltinByteString -- a serialized G1 element
+    { commitmentA'       :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , commitmentB'       :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , commitmentC'       :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , commitmentZ'       :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , tLow'              :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , tMid'              :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , tHigh'             :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , wOmega'            :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
+    , wOmegaZeta'        :: BuiltinBLS12_381_G1_Element -- a serialized G1 element
     , aEval'             :: Integer           -- Field element
     , bEval'             :: Integer           -- Field element
     , cEval'             :: Integer           -- Field element
@@ -156,20 +156,20 @@ convertToFastProof preInputsFast proof@(Proof ca cb cc cz ctl ctm cth cwo cwz ea
     , sSig2P'      = es2
     , zOmega'      = ez
     , lagrangeInverses = let (_, _, _, zeta, _, _) = getTranscript 
-                                    (bls12_381_G1_uncompress ca)
-                                    (bls12_381_G1_uncompress cb)
-                                    (bls12_381_G1_uncompress cc)
-                                    (bls12_381_G1_uncompress cz)
-                                    (bls12_381_G1_uncompress ctl)
-                                    (bls12_381_G1_uncompress ctm)
-                                    (bls12_381_G1_uncompress cth)
+                                    ca
+                                    cb
+                                    cc
+                                    cz
+                                    ctl
+                                    ctm
+                                    cth
                                     (mkScalar ea)
                                     (mkScalar eb)
                                     (mkScalar ec)
                                     (mkScalar es1)
                                     (mkScalar es2)
                                     (mkScalar ez)
-                                    (bls12_381_G1_uncompress cwo)
-                                    (bls12_381_G1_uncompress cwz)
+                                    cwo
+                                    cwz
                          in map (unScalar . recip . (\x -> mkScalar (n' preInputsFast) * (zeta - x))) $ generators preInputsFast 
     }

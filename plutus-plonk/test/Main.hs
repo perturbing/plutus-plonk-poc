@@ -60,8 +60,11 @@ data PreInputsJSON = PreInputsJSON
 instance FromJSON PreInputsJSON 
 instance ToJSON PreInputsJSON
 
-convertIntegersByteString :: [Integer] -> P.BuiltinByteString
-convertIntegersByteString n =  P.toBuiltin . pack $ Prelude.map fromIntegral n
+convertIntegersByteString :: [Integer] -> P.BuiltinBLS12_381_G1_Element
+convertIntegersByteString n = P.bls12_381_G1_uncompress .  P.toBuiltin . pack $ Prelude.map fromIntegral n
+
+convertIntegersByteStringG2 :: [Integer] -> P.BuiltinBLS12_381_G2_Element
+convertIntegersByteStringG2 n = P.bls12_381_G2_uncompress .  P.toBuiltin . pack $ Prelude.map fromIntegral n
 
 convertMontgomery :: [Integer] -> Integer
 convertMontgomery [a, b, c, d] = a + b * 2^64 + c * 2^128 + d * 2^192
@@ -92,15 +95,15 @@ convertPreInputs preIn = PreInputs
     , power     = pow preIn
     , k1        = mkScalar . convertMontgomery $ k_1 preIn
     , k2        = mkScalar . convertMontgomery $ k_2 preIn
-    , qM        = P.bls12_381_G1_uncompress . convertIntegersByteString $ q_m preIn
-    , qL        = P.bls12_381_G1_uncompress . convertIntegersByteString $ q_l preIn 
-    , qR        = P.bls12_381_G1_uncompress . convertIntegersByteString $ q_r preIn
-    , qO        = P.bls12_381_G1_uncompress . convertIntegersByteString $ q_o preIn
-    , qC        = P.bls12_381_G1_uncompress . convertIntegersByteString $ q_c preIn
-    , sSig1     = P.bls12_381_G1_uncompress . convertIntegersByteString $ s_sig1_pre_in preIn
-    , sSig2     = P.bls12_381_G1_uncompress . convertIntegersByteString $ s_sig2_pre_in preIn
-    , sSig3     = P.bls12_381_G1_uncompress . convertIntegersByteString $ s_sig3_pre_in preIn
-    , x2        = P.bls12_381_G2_uncompress . convertIntegersByteString $ x_2 preIn 
+    , qM        = convertIntegersByteString $ q_m preIn
+    , qL        = convertIntegersByteString $ q_l preIn 
+    , qR        = convertIntegersByteString $ q_r preIn
+    , qO        = convertIntegersByteString $ q_o preIn
+    , qC        = convertIntegersByteString $ q_c preIn
+    , sSig1     = convertIntegersByteString $ s_sig1_pre_in preIn
+    , sSig2     = convertIntegersByteString $ s_sig2_pre_in preIn
+    , sSig3     = convertIntegersByteString $ s_sig3_pre_in preIn
+    , x2        = convertIntegersByteStringG2 $ x_2 preIn 
     , generator = mkScalar . convertMontgomery $ gen preIn
     }
 
