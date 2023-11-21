@@ -342,64 +342,64 @@
 <text id="matched" x="1090.00" y="149" > </text>
 <g id="frames">
 <g >
-<title>all (3,067,687,862 samples, 100%)</title><rect x="10.0" y="117" width="1180.0" height="15.0" fill="rgb(211,30,38)" rx="2" ry="2" />
+<title> powerOfTwoExponentiation (2,625,705 samples, 0.07%)</title><rect x="1183.0" y="53" width="0.9" height="15.0" fill="rgb(216,144,50)" rx="2" ry="2" />
+<text  x="1185.99" y="63.5" ></text>
+</g>
+<g >
+<title> go (424,684 samples, 0.01%)</title><rect x="1189.9" y="53" width="0.1" height="15.0" fill="rgb(229,107,17)" rx="2" ry="2" />
+<text  x="1192.86" y="63.5" ></text>
+</g>
+<g >
+<title> powerOfTwoExponentiation (791,794 samples, 0.02%)</title><rect x="1183.6" y="37" width="0.3" height="15.0" fill="rgb(224,130,8)" rx="2" ry="2" />
+<text  x="1186.60" y="47.5" ></text>
+</g>
+<g >
+<title> powerOfTwoExponentiation (5,251,410 samples, 0.15%)</title><rect x="1182.1" y="69" width="1.8" height="15.0" fill="rgb(229,196,35)" rx="2" ry="2" />
+<text  x="1185.10" y="79.5" ></text>
+</g>
+<g >
+<title> go (424,684 samples, 0.01%)</title><rect x="1172.4" y="69" width="0.2" height="15.0" fill="rgb(232,132,2)" rx="2" ry="2" />
+<text  x="1175.42" y="79.5" ></text>
+</g>
+<g >
+<title>all (3,509,811,572 samples, 100%)</title><rect x="10.0" y="117" width="1180.0" height="15.0" fill="rgb(219,42,39)" rx="2" ry="2" />
 <text  x="13.00" y="127.5" ></text>
 </g>
 <g >
-<title>verifyPlonkFast (3,067,687,862 samples, 100.00%)</title><rect x="10.0" y="101" width="1180.0" height="15.0" fill="rgb(238,192,43)" rx="2" ry="2" />
+<title> go (9,497,047 samples, 0.27%)</title><rect x="1186.8" y="69" width="3.2" height="15.0" fill="rgb(231,150,2)" rx="2" ry="2" />
+<text  x="1189.81" y="79.5" ></text>
+</g>
+<g >
+<title>verifyPlonkFast (3,509,811,572 samples, 100.00%)</title><rect x="10.0" y="101" width="1180.0" height="15.0" fill="rgb(241,0,18)" rx="2" ry="2" />
 <text  x="13.00" y="111.5" >verifyPlonkFast</text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (2,625,705 samples, 0.09%)</title><rect x="1182.0" y="53" width="1.0" height="15.0" fill="rgb(206,27,1)" rx="2" ry="2" />
-<text  x="1184.98" y="63.5" ></text>
+<title> mkScalar (6,178,049 samples, 0.18%)</title><rect x="1172.6" y="69" width="2.0" height="15.0" fill="rgb(209,143,45)" rx="2" ry="2" />
+<text  x="1175.56" y="79.5" ></text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (5,251,410 samples, 0.17%)</title><rect x="1181.0" y="69" width="2.0" height="15.0" fill="rgb(238,131,16)" rx="2" ry="2" />
-<text  x="1183.97" y="79.5" ></text>
+<title> go (8,492,104 samples, 0.24%)</title><rect x="1171.8" y="85" width="2.8" height="15.0" fill="rgb(236,161,47)" rx="2" ry="2" />
+<text  x="1174.78" y="95.5" ></text>
 </g>
 <g >
-<title> go (9,497,047 samples, 0.31%)</title><rect x="1186.3" y="69" width="3.7" height="15.0" fill="rgb(229,28,19)" rx="2" ry="2" />
-<text  x="1189.35" y="79.5" ></text>
+<title> mkScalar (9,338,746 samples, 0.27%)</title><rect x="1174.6" y="85" width="3.2" height="15.0" fill="rgb(231,21,20)" rx="2" ry="2" />
+<text  x="1177.64" y="95.5" ></text>
 </g>
 <g >
-<title> takeByteString (2,865,960 samples, 0.09%)</title><rect x="1183.0" y="85" width="1.1" height="15.0" fill="rgb(225,20,34)" rx="2" ry="2" />
-<text  x="1185.99" y="95.5" ></text>
+<title> and (637,026 samples, 0.02%)</title><rect x="1171.6" y="85" width="0.2" height="15.0" fill="rgb(220,59,13)" rx="2" ry="2" />
+<text  x="1174.57" y="95.5" ></text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (18,119,232 samples, 0.59%)</title><rect x="1176.0" y="85" width="7.0" height="15.0" fill="rgb(228,19,20)" rx="2" ry="2" />
-<text  x="1179.02" y="95.5" ></text>
+<title> powerOfTwoExponentiation (18,119,232 samples, 0.52%)</title><rect x="1177.8" y="85" width="6.1" height="15.0" fill="rgb(225,199,6)" rx="2" ry="2" />
+<text  x="1180.78" y="95.5" ></text>
 </g>
 <g >
-<title> and (637,026 samples, 0.02%)</title><rect x="1168.9" y="85" width="0.3" height="15.0" fill="rgb(226,160,34)" rx="2" ry="2" />
-<text  x="1171.91" y="95.5" ></text>
+<title> zipWith (15,371,099 samples, 0.44%)</title><rect x="1184.8" y="85" width="5.2" height="15.0" fill="rgb(208,204,47)" rx="2" ry="2" />
+<text  x="1187.83" y="95.5" ></text>
 </g>
 <g >
-<title> powerOfTwoExponentiation (791,794 samples, 0.03%)</title><rect x="1182.7" y="37" width="0.3" height="15.0" fill="rgb(253,135,44)" rx="2" ry="2" />
-<text  x="1185.68" y="47.5" ></text>
-</g>
-<g >
-<title> go (424,684 samples, 0.01%)</title><rect x="1189.8" y="53" width="0.2" height="15.0" fill="rgb(217,217,18)" rx="2" ry="2" />
-<text  x="1192.84" y="63.5" ></text>
-</g>
-<g >
-<title> go (424,684 samples, 0.01%)</title><rect x="1169.9" y="69" width="0.1" height="15.0" fill="rgb(217,40,35)" rx="2" ry="2" />
-<text  x="1172.88" y="79.5" ></text>
-</g>
-<g >
-<title> mkScalar (6,178,049 samples, 0.20%)</title><rect x="1170.0" y="69" width="2.4" height="15.0" fill="rgb(209,98,53)" rx="2" ry="2" />
-<text  x="1173.05" y="79.5" ></text>
-</g>
-<g >
-<title> zipWith (15,371,099 samples, 0.50%)</title><rect x="1184.1" y="85" width="5.9" height="15.0" fill="rgb(247,168,40)" rx="2" ry="2" />
-<text  x="1187.09" y="95.5" ></text>
-</g>
-<g >
-<title> mkScalar (9,338,746 samples, 0.30%)</title><rect x="1172.4" y="85" width="3.6" height="15.0" fill="rgb(244,20,6)" rx="2" ry="2" />
-<text  x="1175.42" y="95.5" ></text>
-</g>
-<g >
-<title> go (8,492,104 samples, 0.28%)</title><rect x="1169.2" y="85" width="3.2" height="15.0" fill="rgb(246,7,1)" rx="2" ry="2" />
-<text  x="1172.16" y="95.5" ></text>
+<title> takeByteString (2,865,960 samples, 0.08%)</title><rect x="1183.9" y="85" width="0.9" height="15.0" fill="rgb(212,154,9)" rx="2" ry="2" />
+<text  x="1186.87" y="95.5" ></text>
 </g>
 </g>
 </svg>

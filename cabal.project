@@ -23,9 +23,9 @@ benchmarks: True
 -- with the snarkjs ecosystem and the bitwise primitives
 source-repository-package
   type: git
-  location: https://github.com/input-output-hk/plutus
-  tag: b87462e53899fca594d99d7b273780b9597e452a
-  --sha256: 07kfw9hyp8rm7w7xca5mcih26hvaj1n8fyk4vdxfhx044k896482
+  location: https://github.com/perturbing/plutus
+  tag: 8152f746f07c2097ef18bd649e55a6269d6cb47b
+  --sha256: 07fa2spbrn2wm4qln76ca250hfyj16hyn8l0czkf3qaqyrxkwdvj
   subdir:
     plutus-tx
     plutus-core

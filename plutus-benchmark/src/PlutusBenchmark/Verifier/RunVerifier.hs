@@ -102,11 +102,11 @@ data PreInputsJSON = PreInputsJSON
 instance FromJSON PreInputsJSON 
 instance ToJSON PreInputsJSON
 
-convertIntegersByteString :: [Integer] -> P.BuiltinBLS12_381_G1_Element
-convertIntegersByteString n = P.bls12_381_G1_uncompress .  P.toBuiltin . pack $ Prelude.map fromIntegral n
+convertIntegersByteString :: [Integer] -> P.BuiltinByteString
+convertIntegersByteString n = P.toBuiltin . pack $ Prelude.map fromIntegral n
 
-convertIntegersByteStringG2 :: [Integer] -> P.BuiltinBLS12_381_G2_Element
-convertIntegersByteStringG2 n = P.bls12_381_G2_uncompress .  P.toBuiltin . pack $ Prelude.map fromIntegral n
+convertIntegersByteStringG2 :: [Integer] -> P.BuiltinByteString
+convertIntegersByteStringG2 n = P.toBuiltin . pack $ Prelude.map fromIntegral n
 
 convertMontgomery :: [Integer] -> Integer
 convertMontgomery [a, b, c, d] = a + b * 2^64 + c * 2^128 + d * 2^192

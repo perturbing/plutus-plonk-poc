@@ -62,11 +62,11 @@ data PreInputsJSON = PreInputsJSON
 instance FromJSON PreInputsJSON 
 instance ToJSON PreInputsJSON
 
-convertIntegersByteString :: [Integer] -> P.BuiltinBLS12_381_G1_Element
-convertIntegersByteString n = P.bls12_381_G1_uncompress . P.toBuiltin . BS.pack $ Prelude.map fromIntegral n
+convertIntegersByteString :: [Integer] -> P.BuiltinByteString
+convertIntegersByteString n = P.toBuiltin . BS.pack $ Prelude.map fromIntegral n
 
-convertIntegersByteStringG2 :: [Integer] -> P.BuiltinBLS12_381_G2_Element
-convertIntegersByteStringG2 n = P.bls12_381_G2_uncompress . P.toBuiltin . BS.pack $ Prelude.map fromIntegral n
+convertIntegersByteStringG2 :: [Integer] -> P.BuiltinByteString
+convertIntegersByteStringG2 n = P.toBuiltin . BS.pack $ Prelude.map fromIntegral n
 
 convertMontgomery :: [Integer] -> Integer
 convertMontgomery [a, b, c, d] = a + b * 2^64 + c * 2^128 + d * 2^192
@@ -112,7 +112,7 @@ convertPreInputs preIn = PreInputs
 -- This reads the test vectors and applies them to the compiled plonk verifier script.
 -- This applied verifier is written to disk in the flat format.
 -- use: nix shell nixpkgs#flamegraph github:input-output-hk/plutus#x86_64-linux.plutus.library.plutus-project-92.hsPkgs.plutus-core.components.exes.traceToStacks github:input-output-hk/plutus#x86_64-linux.plutus.library.plutus-project-92.hsPkgs.plutus-core.components.exes.uplc
--- use: nix shell nixpkgs#flamegraph github:input-output-hk/plutus/b87462e53899fca594d99d7b273780b9597e452a#x86_64-linux.plutus.library.plutus-project-92.hsPkgs.plutus-core.components.exes.traceToStacks github:input-output-hk/plutus/b87462e53899fca594d99d7b273780b9597e452a#x86_64-linux.plutus.library.plutus-project-92.hsPkgs.plutus-core.components.exes.uplc
+-- use: nix shell nixpkgs#flamegraph github:perturbing/plutus/8152f746f07c2097ef18bd649e55a6269d6cb47b#x86_64-linux.plutus.library.plutus-project-92.hsPkgs.plutus-core.components.exes.traceToStacks github:perturbing/plutus/8152f746f07c2097ef18bd649e55a6269d6cb47b#x86_64-linux.plutus.library.plutus-project-92.hsPkgs.plutus-core.components.exes.uplc
 -- and: uplc evaluate -t -i appliedPlonkScript.flat --if flat-namedDeBruijn --trace-mode LogsWithBudgets -o logs
 -- to log the CPU/MEM consumption
 -- for more info see https://hydra.family/head-protocol/benchmarks/profiling/
