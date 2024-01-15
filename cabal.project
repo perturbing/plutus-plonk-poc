@@ -30,3 +30,4 @@ source-repository-package
     plutus-tx
     plutus-core
     plutus-tx-plugin
+    plutus-ledger-api
