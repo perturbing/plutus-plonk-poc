@@ -41,7 +41,7 @@
         flake = (nixpkgs.haskell-nix.cabalProject' rec {
           src = ./.;
           name = "plutus-plonk";
-          compiler-nix-name = "ghc928";
+          compiler-nix-name = "ghc96";
 
           # CHaP input map, so we can find CHaP packages (needs to be more
           # recent than the index-state we set!). Can be updated with
@@ -58,7 +58,7 @@
             ghcid = "0.8.8";
             haskell-language-server = "latest";
             hlint = {};
-            weeder = "2.4.1";
+            # weeder = "2.4.1";
           };
           # Now we use pkgsBuildBuild, to make sure that even in the cross
           # compilation setting, we don't run into issues where we pick tools

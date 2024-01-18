@@ -6,7 +6,8 @@ module PlutusBenchmark.BlsField.RunBlsField
 
 import PlutusBenchmark.BlsField.Scripts (blsFieldAddScalarsScript, blsFieldMulScalarsScript 
         , listOfSizedByteStrings, modularExponentiationScalarScript, modExpPow2Script, invertScalarsScript)
-import PlutusTx.Prelude (byteStringToInteger, toBuiltin )
+import PlutusTx.Prelude ( toBuiltin )
+import PlutusTx.Builtins (byteStringToInteger)
 import Plutus.Crypto.BlsField (mkScalar)
 
 import PlutusBenchmark.Common ( printHeader, printSizeStatistics, TestSize(TestSize) )
@@ -16,17 +17,17 @@ import Text.Printf (hPrintf)
 
 printCostsBlsAddScalarsField :: Handle -> Integer -> IO ()
 printCostsBlsAddScalarsField h n =
-    let script = blsFieldAddScalarsScript . map (mkScalar . byteStringToInteger . toBuiltin) $ listOfSizedByteStrings n 31
+    let script = blsFieldAddScalarsScript . map (mkScalar . byteStringToInteger False . toBuiltin) $ listOfSizedByteStrings n 31
     in printSizeStatistics h (TestSize n) script
 
 printCostsBlsMulScalarsField :: Handle -> Integer -> IO ()
 printCostsBlsMulScalarsField h n =
-    let script = blsFieldMulScalarsScript . map (mkScalar . byteStringToInteger . toBuiltin) $ listOfSizedByteStrings n 31
+    let script = blsFieldMulScalarsScript . map (mkScalar . byteStringToInteger False . toBuiltin) $ listOfSizedByteStrings n 31
     in printSizeStatistics h (TestSize n) script
 
 printCostsModExpScalar :: Handle -> Integer -> IO ()
 printCostsModExpScalar h n =
-    let script = modularExponentiationScalarScript (map (mkScalar . byteStringToInteger . toBuiltin) $ listOfSizedByteStrings n 31) 52435875175126190479447740508185965837690552500527637822603658699938581184510
+    let script = modularExponentiationScalarScript (map (mkScalar . byteStringToInteger False . toBuiltin) $ listOfSizedByteStrings n 31) 52435875175126190479447740508185965837690552500527637822603658699938581184510
     in printSizeStatistics h (TestSize n) script
 
 printCostsModExpScalar2 :: Handle -> Integer -> IO ()
@@ -36,7 +37,7 @@ printCostsModExpScalar2 h n =
 
 printCostsBlsInvertAndAdd :: Handle -> Integer -> IO ()
 printCostsBlsInvertAndAdd h n =
-    let script = invertScalarsScript . map (mkScalar . byteStringToInteger . toBuiltin) $ listOfSizedByteStrings n 31
+    let script = invertScalarsScript . map (mkScalar . byteStringToInteger False . toBuiltin) $ listOfSizedByteStrings n 31
     in printSizeStatistics h (TestSize n) script
 
 runBlsField :: Handle -> IO ()

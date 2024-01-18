@@ -1,5 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE InstanceSigs #-}
@@ -10,7 +11,6 @@ module Plutus.Crypto.BlsField
 , Scalar (..)
 , mkScalar
 , MultiplicativeGroup (..)
-, modularExponentiationScalar
 , powerOfTwoExponentiation
 , reverseByteString
 ) where
@@ -30,7 +30,11 @@ import PlutusTx.Prelude
       Module(..),
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..),
-      Ord((<), (<=)), rotateByteString, integerToByteString, dropByteString, (<>), even, divide )
+      Ord((<), (<=)),
+      dropByteString,
+      (<>),
+      even,
+      divide )
 import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
 import PlutusTx.Numeric
     ( AdditiveGroup(..),
@@ -40,26 +44,25 @@ import PlutusTx.Numeric
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..) )
 import PlutusTx.Builtins
-    ( popCountByteString,
-      bls12_381_G1_equals,
+    ( bls12_381_G1_equals,
       BuiltinBLS12_381_G1_Element,
       bls12_381_G1_add,
-      bls12_381_G1_zero,
+      bls12_381_G1_uncompress,
+      bls12_381_G1_compressed_zero,
       bls12_381_G1_neg,
       bls12_381_G1_scalarMul,
       BuiltinBLS12_381_G2_Element,
       bls12_381_G2_add,
+      bls12_381_G2_uncompress,
       bls12_381_G2_scalarMul,
       bls12_381_G2_neg,
-      bls12_381_G2_zero,
+      bls12_381_G2_compressed_zero,
       BuiltinByteString,
-      shiftByteString,
-      testBitByteString,
       lengthOfByteString,
-      xorByteString,
       consByteString,
       emptyByteString,
-      indexByteString )
+      indexByteString,
+      integerToByteString )
 
 -- In this module, we create a prime order field for BLS12-381
 -- as the type Scalar. Note that for safety, the Scalar constructors
@@ -116,15 +119,6 @@ class MultiplicativeMonoid a => MultiplicativeGroup a where
     div :: a -> a -> a
     recip :: a -> a
 
--- Modular exponentiation by squaring. This assumes that the exponent is
--- a big endian bytestring. Note that integegerToByteString is little endian.
-{-# INLINABLE modularExponentiationScalar #-}
-modularExponentiationScalar :: Scalar -> BuiltinByteString -> Scalar
-modularExponentiationScalar b e
-    | popCountByteString e == 0  = one
-    | otherwise = t * modularExponentiationScalar (b*b) (shiftByteString e (-1))
-                where t = if testBitByteString e 0 then b else one
-
 -- Reverse a builtin byte string of arbitrary length
 -- This can convert between little and big endian.
 {-# INLINABLE reverseByteString #-}
@@ -150,7 +144,7 @@ powMod b e
 instance Module Integer Scalar where
     {-# INLINABLE scale #-}
     scale :: Integer -> Scalar -> Scalar
-    scale a b = modularExponentiationScalar b (reverseByteString (integerToByteString a)) -- powMod b a is also a correct implementation
+    scale a b = powMod b a
 
 instance MultiplicativeGroup Scalar where
     {-# INLINABLE div #-}
@@ -176,7 +170,7 @@ instance AdditiveSemigroup BuiltinBLS12_381_G1_Element where
 
 instance AdditiveMonoid BuiltinBLS12_381_G1_Element where
     {-# INLINABLE zero #-}
-    zero = bls12_381_G1_zero
+    zero = bls12_381_G1_uncompress bls12_381_G1_compressed_zero
 
 instance AdditiveGroup BuiltinBLS12_381_G1_Element where
     {-# INLINABLE (-) #-}
@@ -192,7 +186,7 @@ instance AdditiveSemigroup BuiltinBLS12_381_G2_Element where
 
 instance AdditiveMonoid BuiltinBLS12_381_G2_Element where
     {-# INLINABLE zero #-}
-    zero = bls12_381_G2_zero
+    zero = bls12_381_G2_uncompress bls12_381_G2_compressed_zero
 
 instance AdditiveGroup BuiltinBLS12_381_G2_Element where
     {-# INLINABLE (-) #-}

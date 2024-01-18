@@ -10,24 +10,11 @@ repository cardano-haskell-packages
     d4a35cd3121aa00d18544bb0ac01c3e1691d618f462c46129271bccf39f7e8ee
 
 index-state:
-  , hackage.haskell.org 2023-09-27T00:00:00Z
-  , cardano-haskell-packages 2023-09-27T00:00:00Z
+  , hackage.haskell.org 2024-01-18T00:00:00Z
+  , cardano-haskell-packages 2024-01-18T00:00:00Z
 
 packages: plutus-plonk
           plutus-benchmark
 
 tests: True
 benchmarks: True
-
--- this is the a plutus version that has Keccak256 hash function for interopability
--- with the snarkjs ecosystem and the bitwise primitives
-source-repository-package
-  type: git
-  location: https://github.com/perturbing/plutus
-  tag: 8152f746f07c2097ef18bd649e55a6269d6cb47b
-  --sha256: 07fa2spbrn2wm4qln76ca250hfyj16hyn8l0czkf3qaqyrxkwdvj
-  subdir:
-    plutus-tx
-    plutus-core
-    plutus-tx-plugin
-    plutus-ledger-api
