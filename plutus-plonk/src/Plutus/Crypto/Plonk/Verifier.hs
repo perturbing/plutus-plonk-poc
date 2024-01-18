@@ -19,12 +19,12 @@ import PlutusTx.Prelude
     , Bool (..)
     , bls12_381_G1_uncompress
     , bls12_381_G1_scalarMul
-    , bls12_381_G1_generator
+    , bls12_381_G1_compressed_generator
     , BuiltinBLS12_381_G1_Element
     , sum
     , BuiltinBLS12_381_G2_Element
     , bls12_381_finalVerify
-    , bls12_381_G2_generator
+    , bls12_381_G2_compressed_generator
     , bls12_381_millerLoop
     , (>)
     , otherwise
@@ -39,7 +39,6 @@ import PlutusTx.Prelude
     , (<>)
     , takeByteString
     , ($)
-    , integerToByteString
     , bls12_381_G1_compress)
 import PlutusTx.Eq (Eq (..))
 import PlutusTx.List (map, zipWith, foldr, head, and)
@@ -51,8 +50,7 @@ import PlutusTx.Numeric
       MultiplicativeMonoid(one),
       MultiplicativeSemigroup((*)),
       negate )
-import PlutusTx.Builtins (blake2b_256, byteStringToInteger, bls12_381_G2_uncompress)
-import PlutusCore (DefaultFun(IntegerToByteString))
+import PlutusTx.Builtins (blake2b_256, byteStringToInteger, bls12_381_G2_uncompress, integerToByteString)
 
 {-# INLINABLE exponentiate #-}
 exponentiate :: Integer -> Integer -> Integer
@@ -91,6 +89,8 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM' qL' qR' qO' qC' sSig1' sSig2' 
     , (bls12_381_G1_uncompress -> commTHigh) <- cth
     , (bls12_381_G1_uncompress -> commWOmega) <- cwo
     , (bls12_381_G1_uncompress -> commWOmegaZeta) <- cwz
+    , (bls12_381_G1_uncompress -> bls12_381_G1_generator) <- bls12_381_G1_compressed_generator
+    , (bls12_381_G2_uncompress -> bls12_381_G2_generator) <- bls12_381_G2_compressed_generator
     , (mkScalar -> evalA) <- ea
     , (mkScalar -> evalB) <- eb
     , (mkScalar -> evalC) <- ec
@@ -153,6 +153,8 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM' qL' qR' qO' qC' sSig1
     , (bls12_381_G1_uncompress -> commTHigh) <- cth
     , (bls12_381_G1_uncompress -> commWOmega) <- cwo
     , (bls12_381_G1_uncompress -> commWOmegaZeta) <- cwz
+    , (bls12_381_G1_uncompress -> bls12_381_G1_generator) <- bls12_381_G1_compressed_generator
+    , (bls12_381_G2_uncompress -> bls12_381_G2_generator) <- bls12_381_G2_compressed_generator
     , (mkScalar -> evalA) <- ea
     , (mkScalar -> evalB) <- eb
     , (mkScalar -> evalC) <- ec
@@ -164,28 +166,28 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM' qL' qR' qO' qC' sSig1
     = let transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b" 
                                                                              <> cb <> "commitment c" 
                                                                              <> cc <> "beta"
-          beta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript0
+          beta = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript0
           transcript1 = transcript0 <> "gamma"
-          gamma = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript1
+          gamma = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript1
           transcript2 = transcript1 <> "Permutation polynomial" <> cz <> "alpha"
-          alpha = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript2
+          alpha = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript2
           transcript3 = transcript2 <> "Quotient low polynomial" <> ctl 
                                     <> "Quotient mid polynomial" <> ctm 
                                     <> "Quotient high polynomial" <> cth 
                                     <> "zeta"
-          zeta = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript3
-          transcript4 = transcript3 <> "Append a_eval." <> integerToByteString ea 
-                                    <> "Append b_eval." <> integerToByteString eb 
-                                    <> "Append c_eval." <> integerToByteString ec 
-                                    <> "Append s_sig1." <> integerToByteString es1 
-                                    <> "Append s_sig2." <> integerToByteString es2 
-                                    <> "Append z_omega." <> integerToByteString ez 
+          zeta = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript3
+          transcript4 = transcript3 <> "Append a_eval." <> integerToByteString False 32 ea 
+                                    <> "Append b_eval." <> integerToByteString False 32 eb 
+                                    <> "Append c_eval." <> integerToByteString False 32 ec 
+                                    <> "Append s_sig1." <> integerToByteString False 32 es1 
+                                    <> "Append s_sig2." <> integerToByteString False 32 es2 
+                                    <> "Append z_omega." <> integerToByteString False 32 ez 
                                     <> "v"
-          v = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript4
+          v = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript4
           transcript5 = transcript4 <> "w_omega comm" <> cwo 
                                     <> "w_omega_zeta comm" <> cwz 
                                     <> "u"
-          u = Scalar . byteStringToInteger . takeByteString 31 . blake2b_256 $ transcript5
+          u = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript5
           powOfTwoZetaP = powerOfTwoExponentiation zeta p
           powOfTwoZetaPMinOne = powOfTwoZetaP - one
           (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * powOfTwoZetaPMinOne * y) gens lagsInv 

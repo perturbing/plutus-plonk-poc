@@ -1,5 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE InstanceSigs #-}
@@ -29,7 +30,11 @@ import PlutusTx.Prelude
       Module(..),
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..),
-      Ord((<), (<=)), rotateByteString, integerToByteString, dropByteString, (<>), even, divide )
+      Ord((<), (<=)),
+      dropByteString,
+      (<>),
+      even,
+      divide )
 import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
 import PlutusTx.Numeric
     ( AdditiveGroup(..),
@@ -42,19 +47,22 @@ import PlutusTx.Builtins
     ( bls12_381_G1_equals,
       BuiltinBLS12_381_G1_Element,
       bls12_381_G1_add,
-      bls12_381_G1_zero,
+      bls12_381_G1_uncompress,
+      bls12_381_G1_compressed_zero,
       bls12_381_G1_neg,
       bls12_381_G1_scalarMul,
       BuiltinBLS12_381_G2_Element,
       bls12_381_G2_add,
+      bls12_381_G2_uncompress,
       bls12_381_G2_scalarMul,
       bls12_381_G2_neg,
-      bls12_381_G2_zero,
+      bls12_381_G2_compressed_zero,
       BuiltinByteString,
       lengthOfByteString,
       consByteString,
       emptyByteString,
-      indexByteString )
+      indexByteString,
+      integerToByteString )
 
 -- In this module, we create a prime order field for BLS12-381
 -- as the type Scalar. Note that for safety, the Scalar constructors
@@ -162,7 +170,7 @@ instance AdditiveSemigroup BuiltinBLS12_381_G1_Element where
 
 instance AdditiveMonoid BuiltinBLS12_381_G1_Element where
     {-# INLINABLE zero #-}
-    zero = bls12_381_G1_zero
+    zero = bls12_381_G1_uncompress bls12_381_G1_compressed_zero
 
 instance AdditiveGroup BuiltinBLS12_381_G1_Element where
     {-# INLINABLE (-) #-}
@@ -178,7 +186,7 @@ instance AdditiveSemigroup BuiltinBLS12_381_G2_Element where
 
 instance AdditiveMonoid BuiltinBLS12_381_G2_Element where
     {-# INLINABLE zero #-}
-    zero = bls12_381_G2_zero
+    zero = bls12_381_G2_uncompress bls12_381_G2_compressed_zero
 
 instance AdditiveGroup BuiltinBLS12_381_G2_Element where
     {-# INLINABLE (-) #-}
