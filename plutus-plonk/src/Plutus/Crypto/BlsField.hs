@@ -10,7 +10,6 @@ module Plutus.Crypto.BlsField
 , Scalar (..)
 , mkScalar
 , MultiplicativeGroup (..)
-, modularExponentiationScalar
 , powerOfTwoExponentiation
 , reverseByteString
 ) where
@@ -40,8 +39,7 @@ import PlutusTx.Numeric
       MultiplicativeMonoid(..),
       MultiplicativeSemigroup(..) )
 import PlutusTx.Builtins
-    ( popCountByteString,
-      bls12_381_G1_equals,
+    ( bls12_381_G1_equals,
       BuiltinBLS12_381_G1_Element,
       bls12_381_G1_add,
       bls12_381_G1_zero,
@@ -53,10 +51,7 @@ import PlutusTx.Builtins
       bls12_381_G2_neg,
       bls12_381_G2_zero,
       BuiltinByteString,
-      shiftByteString,
-      testBitByteString,
       lengthOfByteString,
-      xorByteString,
       consByteString,
       emptyByteString,
       indexByteString )
@@ -116,15 +111,6 @@ class MultiplicativeMonoid a => MultiplicativeGroup a where
     div :: a -> a -> a
     recip :: a -> a
 
--- Modular exponentiation by squaring. This assumes that the exponent is
--- a big endian bytestring. Note that integegerToByteString is little endian.
-{-# INLINABLE modularExponentiationScalar #-}
-modularExponentiationScalar :: Scalar -> BuiltinByteString -> Scalar
-modularExponentiationScalar b e
-    | popCountByteString e == 0  = one
-    | otherwise = t * modularExponentiationScalar (b*b) (shiftByteString e (-1))
-                where t = if testBitByteString e 0 then b else one
-
 -- Reverse a builtin byte string of arbitrary length
 -- This can convert between little and big endian.
 {-# INLINABLE reverseByteString #-}
@@ -150,7 +136,7 @@ powMod b e
 instance Module Integer Scalar where
     {-# INLINABLE scale #-}
     scale :: Integer -> Scalar -> Scalar
-    scale a b = modularExponentiationScalar b (reverseByteString (integerToByteString a)) -- powMod b a is also a correct implementation
+    scale a b = powMod b a
 
 instance MultiplicativeGroup Scalar where
     {-# INLINABLE div #-}
