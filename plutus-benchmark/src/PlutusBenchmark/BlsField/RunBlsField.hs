@@ -4,13 +4,14 @@ module PlutusBenchmark.BlsField.RunBlsField
 ( runBlsField
 ) where
 
-import PlutusBenchmark.BlsField.Scripts (blsFieldAddScalarsScript, blsFieldMulScalarsScript 
-        , listOfSizedByteStrings, modularExponentiationScalarScript, modExpPow2Script, invertScalarsScript)
-import PlutusTx.Prelude ( toBuiltin )
-import PlutusTx.Builtins (byteStringToInteger)
 import Plutus.Crypto.BlsField (mkScalar)
+import PlutusBenchmark.BlsField.Scripts (blsFieldAddScalarsScript, blsFieldMulScalarsScript,
+                                         invertScalarsScript, listOfSizedByteStrings,
+                                         modExpPow2Script, modularExponentiationScalarScript)
+import PlutusTx.Builtins (byteStringToInteger)
+import PlutusTx.Prelude (toBuiltin)
 
-import PlutusBenchmark.Common ( printHeader, printSizeStatistics, TestSize(TestSize) )
+import PlutusBenchmark.Common (TestSize (TestSize), printHeader, printSizeStatistics)
 
 import System.IO (Handle)
 import Text.Printf (hPrintf)

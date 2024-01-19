@@ -1,27 +1,27 @@
-{-# LANGUAGE DeriveGeneric      #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -Wno-missing-deriving-strategies #-}
 {-# OPTIONS_GHC -Wno-type-defaults #-}
 module PlutusBenchmark.Verifier.RunVerifier
 ( runVerifier
 ) where
 
-import PlutusBenchmark.Verifier.Scripts (verifyPlonkFastScript, verifyPlonkScript)
-import Plutus.Crypto.Plonk (PreInputsFast, ProofFast, Proof (..), PreInputs (..)
-                           , convertToFastProof, convertToFastPreInputs)
 import Plutus.Crypto.BlsField (mkScalar)
+import Plutus.Crypto.Plonk (PreInputs (..), PreInputsFast, Proof (..), ProofFast,
+                            convertToFastPreInputs, convertToFastProof)
+import PlutusBenchmark.Verifier.Scripts (verifyPlonkFastScript, verifyPlonkScript)
 
-import PlutusBenchmark.Common ( printHeader, printSizeStatistics, TestSize(NoSize) )
+import PlutusBenchmark.Common (TestSize (NoSize), printHeader, printSizeStatistics)
 
-import qualified PlutusTx.Prelude as P
+import PlutusTx.Prelude qualified as P
 
 import System.IO (Handle)
 import Text.Printf (hPrintf)
 
-import Data.Aeson ( FromJSON, ToJSON, decode )
-import GHC.Generics ( Generic )
+import Data.Aeson (FromJSON, ToJSON, decode)
+import GHC.Generics (Generic)
 
-import qualified Data.ByteString.Lazy as BL
-import Data.ByteString ( pack )
+import Data.ByteString (pack)
+import Data.ByteString.Lazy qualified as BL
 import Data.Word ()
 
 printCostsVerifierPlonkFast :: Handle -> PreInputsFast -> [Integer] -> ProofFast -> IO ()
@@ -60,7 +60,7 @@ runVerifier h = do
         Nothing -> print "Could not deserialize Proof test vector"
 
 -- Create a quick type for importing a test vector Proof via JSON.
-data ProofJSON = ProofJSON 
+data ProofJSON = ProofJSON
     { commitment_a :: [Integer]
     , commitment_b :: [Integer]
     , commitment_c :: [Integer]
@@ -82,24 +82,24 @@ instance FromJSON ProofJSON
 instance ToJSON ProofJSON
 
 -- Create a quick type for importing a test vector PreInputs via JSON.
-data PreInputsJSON = PreInputsJSON 
-    { n_public      :: Integer                     
-    , pow           :: Integer                     
+data PreInputsJSON = PreInputsJSON
+    { n_public      :: Integer
+    , pow           :: Integer
     , k_1           :: [Integer]
     , k_2           :: [Integer]
     , q_m           :: [Integer]
     , q_l           :: [Integer]
-    , q_r           :: [Integer] 
+    , q_r           :: [Integer]
     , q_o           :: [Integer]
     , q_c           :: [Integer]
     , s_sig1_pre_in :: [Integer]
     , s_sig2_pre_in :: [Integer]
     , s_sig3_pre_in :: [Integer]
     , x_2           :: [Integer]
-    , gen           :: [Integer] 
+    , gen           :: [Integer]
 } deriving (Show, Generic)
 
-instance FromJSON PreInputsJSON 
+instance FromJSON PreInputsJSON
 instance ToJSON PreInputsJSON
 
 convertIntegersByteString :: [Integer] -> P.BuiltinByteString
@@ -110,7 +110,7 @@ convertIntegersByteStringG2 n = P.toBuiltin . pack $ Prelude.map fromIntegral n
 
 convertMontgomery :: [Integer] -> Integer
 convertMontgomery [a, b, c, d] = a + b * 2^64 + c * 2^128 + d * 2^192
-convertMontgomery _ = 0
+convertMontgomery _            = 0
 
 convertProof :: ProofJSON -> Proof
 convertProof proof = Proof
@@ -138,13 +138,13 @@ convertPreInputs preIn = PreInputs
     , k1        = mkScalar . convertMontgomery $ k_1 preIn
     , k2        = mkScalar . convertMontgomery $ k_2 preIn
     , qM        = convertIntegersByteString $ q_m preIn
-    , qL        = convertIntegersByteString $ q_l preIn 
+    , qL        = convertIntegersByteString $ q_l preIn
     , qR        = convertIntegersByteString $ q_r preIn
     , qO        = convertIntegersByteString $ q_o preIn
     , qC        = convertIntegersByteString $ q_c preIn
     , sSig1     = convertIntegersByteString $ s_sig1_pre_in preIn
     , sSig2     = convertIntegersByteString $ s_sig2_pre_in preIn
     , sSig3     = convertIntegersByteString $ s_sig3_pre_in preIn
-    , x2        = convertIntegersByteStringG2 $ x_2 preIn 
+    , x2        = convertIntegersByteStringG2 $ x_2 preIn
     , generator = mkScalar . convertMontgomery $ gen preIn
     }

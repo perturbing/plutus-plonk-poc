@@ -1,6 +1,6 @@
-{-# LANGUAGE TemplateHaskell       #-}
-{-# LANGUAGE DataKinds             #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TemplateHaskell   #-}
 
 module PlutusBenchmark.BlsField.Scripts
 ( blsFieldAddScalarsScript
@@ -11,19 +11,19 @@ module PlutusBenchmark.BlsField.Scripts
 , invertScalarsScript
 ) where
 
-import PlutusTx (compile, unsafeApplyCode, liftCodeDef, getPlcNoAnn)
-import PlutusTx.Prelude (Integer, ($), (.), foldr, (*), map)
-import PlutusTx.Numeric ((+), zero, one, scale)
+import PlutusTx (compile, getPlcNoAnn, liftCodeDef, unsafeApplyCode)
+import PlutusTx.Numeric (one, scale, zero, (+))
+import PlutusTx.Prelude (Integer, foldr, map, ($), (*), (.))
 
 import PlutusCore (DefaultFun, DefaultUni)
 import UntypedPlutusCore qualified as UPLC
 
-import Prelude qualified as Haskell
+import Data.ByteString (ByteString)
 import Hedgehog.Internal.Gen qualified as G
 import Hedgehog.Internal.Range qualified as R
+import Plutus.Crypto.BlsField (MultiplicativeGroup (..), Scalar, powerOfTwoExponentiation)
+import Prelude qualified as Haskell
 import System.IO.Unsafe (unsafePerformIO)
-import Data.ByteString (ByteString)
-import Plutus.Crypto.BlsField (Scalar, MultiplicativeGroup (..), powerOfTwoExponentiation)
 
 {-# INLINABLE addScalars #-}
 addScalars :: [Scalar] -> Scalar

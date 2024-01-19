@@ -1,6 +1,9 @@
 {-# LANGUAGE NumericUnderscores #-}
 
-module PlutusBenchmark.ProtocolParameters (max_tx_size, max_tx_ex_steps, max_tx_ex_mem)
+module PlutusBenchmark.ProtocolParameters
+( max_tx_size
+, max_tx_ex_steps
+, max_tx_ex_mem)
 where
 
 -- Protocol parameters (June 2023)

@@ -1,10 +1,13 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE ViewPatterns #-}
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE InstanceSigs          #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE InstanceSigs #-}
-{-# OPTIONS_GHC -fno-specialise -fno-strictness -fno-spec-constr #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE ViewPatterns          #-}
+{-# OPTIONS_GHC -O0 #-}
+{-# OPTIONS_GHC -fno-ignore-interface-pragmas #-}
+{-# OPTIONS_GHC -fno-omit-interface-pragmas #-}
+{-# LANGUAGE ImportQualifiedPost   #-}
 
 module Plutus.Crypto.BlsField
 ( bls12_381_field_prime
@@ -15,58 +18,25 @@ module Plutus.Crypto.BlsField
 , reverseByteString
 ) where
 
-import qualified Prelude as Haskell
-import PlutusTx.Prelude
-    ( otherwise,
-      Integer,
-      ($),
-      (&&),
-      error,
-      modulo,
-      Eq(..),
-      AdditiveGroup(..),
-      AdditiveMonoid(..),
-      AdditiveSemigroup(..),
-      Module(..),
-      MultiplicativeMonoid(..),
-      MultiplicativeSemigroup(..),
-      Ord((<), (<=)),
-      dropByteString,
-      (<>),
-      even,
-      divide )
-import PlutusTx (makeLift, makeIsDataIndexed, unstableMakeIsData)
-import PlutusTx.Numeric
-    ( AdditiveGroup(..),
-      AdditiveMonoid(..),
-      AdditiveSemigroup(..),
-      Module(..),
-      MultiplicativeMonoid(..),
-      MultiplicativeSemigroup(..) )
-import PlutusTx.Builtins
-    ( bls12_381_G1_equals,
-      BuiltinBLS12_381_G1_Element,
-      bls12_381_G1_add,
-      bls12_381_G1_uncompress,
-      bls12_381_G1_compressed_zero,
-      bls12_381_G1_neg,
-      bls12_381_G1_scalarMul,
-      BuiltinBLS12_381_G2_Element,
-      bls12_381_G2_add,
-      bls12_381_G2_uncompress,
-      bls12_381_G2_scalarMul,
-      bls12_381_G2_neg,
-      bls12_381_G2_compressed_zero,
-      BuiltinByteString,
-      lengthOfByteString,
-      consByteString,
-      emptyByteString,
-      indexByteString,
-      integerToByteString )
+import PlutusTx (makeIsDataIndexed, makeLift, unstableMakeIsData)
+import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element, BuiltinBLS12_381_G2_Element,
+                          BuiltinByteString, bls12_381_G1_add, bls12_381_G1_compressed_zero,
+                          bls12_381_G1_equals, bls12_381_G1_neg, bls12_381_G1_scalarMul,
+                          bls12_381_G1_uncompress, bls12_381_G2_add, bls12_381_G2_compressed_zero,
+                          bls12_381_G2_neg, bls12_381_G2_scalarMul, bls12_381_G2_uncompress,
+                          consByteString, emptyByteString, indexByteString, integerToByteString,
+                          lengthOfByteString)
+import PlutusTx.Numeric (AdditiveGroup (..), AdditiveMonoid (..), AdditiveSemigroup (..),
+                         Module (..), MultiplicativeMonoid (..), MultiplicativeSemigroup (..))
+import PlutusTx.Prelude (AdditiveGroup (..), AdditiveMonoid (..), AdditiveSemigroup (..), Eq (..),
+                         Integer, Module (..), MultiplicativeMonoid (..),
+                         MultiplicativeSemigroup (..), Ord (..), divide, dropByteString, error,
+                         even, modulo, otherwise, ($), (&&), (<>))
+import Prelude qualified as Haskell
 
 -- In this module, we create a prime order field for BLS12-381
 -- as the type Scalar. Note that for safety, the Scalar constructors
--- are not exposed. Instead, the mkScalar and unScalar suffice, 
+-- are not exposed. Instead, the mkScalar and unScalar suffice,
 -- which fail in a script if an integer provided that is negative.
 
 -- The prime order of the generator in the field. So, g^order = id,
@@ -80,7 +50,7 @@ makeIsDataIndexed ''Scalar [('Scalar,0)]
 
 -- Exclude for safety negative integers and integers large/equal
 -- to the field prime. This is the primary interface to work with
--- the Scalar type onchain. This is for security reasons 
+-- the Scalar type onchain. This is for security reasons
 -- (to make sure they are field elements).
 {-# INLINABLE mkScalar #-}
 mkScalar :: Integer -> Scalar

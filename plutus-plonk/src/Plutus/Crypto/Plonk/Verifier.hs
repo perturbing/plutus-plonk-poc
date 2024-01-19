@@ -1,7 +1,7 @@
-{-# LANGUAGE NoImplicitPrelude  #-}
-{-# LANGUAGE OverloadedStrings  #-}
-{-# LANGUAGE Strict             #-}
-{-# LANGUAGE ViewPatterns       #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE Strict            #-}
+{-# LANGUAGE ViewPatterns      #-}
 {-# OPTIONS_GHC -O0 #-}
 {-# OPTIONS_GHC -fno-ignore-interface-pragmas #-}
 {-# OPTIONS_GHC -fno-omit-interface-pragmas #-}
@@ -11,46 +11,24 @@ module Plutus.Crypto.Plonk.Verifier
 , verifyPlonkFast
 ) where
 
-import Plutus.Crypto.Plonk.Inputs (PreInputs (..), Proof (..), PreInputsFast (..), ProofFast (..))
-import Plutus.Crypto.BlsField (mkScalar, Scalar (..), MultiplicativeGroup (..), powerOfTwoExponentiation)
-import Plutus.Crypto.Plonk.Transcript (challengeScalar, transcriptPoint, transcriptScalar, transcriptNew, getTranscript)
-import PlutusTx.Prelude 
-    ( Integer
-    , Bool (..)
-    , bls12_381_G1_uncompress
-    , bls12_381_G1_scalarMul
-    , bls12_381_G1_compressed_generator
-    , BuiltinBLS12_381_G1_Element
-    , sum
-    , BuiltinBLS12_381_G2_Element
-    , bls12_381_finalVerify
-    , bls12_381_G2_compressed_generator
-    , bls12_381_millerLoop
-    , (>)
-    , otherwise
-    , enumFromTo
-    , (.)
-    , (&&)
-    , divide
-    , error
-    , (<)
-    , (||)
-    , even
-    , (<>)
-    , takeByteString
-    , ($)
-    , bls12_381_G1_compress)
+import Plutus.Crypto.BlsField (MultiplicativeGroup (..), Scalar (..), mkScalar,
+                               powerOfTwoExponentiation)
+import Plutus.Crypto.Plonk.Inputs (PreInputs (..), PreInputsFast (..), Proof (..), ProofFast (..))
+import Plutus.Crypto.Plonk.Transcript (challengeScalar, getTranscript, transcriptNew,
+                                       transcriptPoint, transcriptScalar)
+import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element, BuiltinBLS12_381_G2_Element, Integer,
+                          blake2b_256, bls12_381_G1_compress, bls12_381_G1_compressed_generator,
+                          bls12_381_G1_scalarMul, bls12_381_G1_uncompress,
+                          bls12_381_G2_compressed_generator, bls12_381_G2_uncompress,
+                          bls12_381_finalVerify, bls12_381_millerLoop, byteStringToInteger, error,
+                          integerToByteString)
 import PlutusTx.Eq (Eq (..))
-import PlutusTx.List (map, zipWith, foldr, head, and)
-import PlutusTx.Numeric
-    ( AdditiveGroup(..),
-      AdditiveMonoid(..),
-      AdditiveSemigroup(..),
-      Module(..),
-      MultiplicativeMonoid(one),
-      MultiplicativeSemigroup((*)),
-      negate )
-import PlutusTx.Builtins (blake2b_256, byteStringToInteger, bls12_381_G2_uncompress, integerToByteString)
+import PlutusTx.List (and, foldr, head, map, zipWith)
+import PlutusTx.Numeric (AdditiveGroup (..), AdditiveMonoid (..), AdditiveSemigroup (..),
+                         Module (..), MultiplicativeMonoid (one), MultiplicativeSemigroup ((*)),
+                         negate)
+import PlutusTx.Prelude (Bool (..), divide, enumFromTo, even, otherwise, sum, takeByteString, ($),
+                         (&&), (.), (<), (<>), (>), (||))
 
 {-# INLINABLE exponentiate #-}
 exponentiate :: Integer -> Integer -> Integer
@@ -61,7 +39,7 @@ exponentiate x n
     | even n            = exponentiate x (n `divide` 2) * exponentiate x (n `divide` 2)
     | otherwise         = x * exponentiate x ((n - 1) `divide` 2) * exponentiate x ((n - 1) `divide` 2)
 
--- a general vanilla plonk verifier. 
+-- a general vanilla plonk verifier.
 -- Note that the viewpattern match in the inputs of this function
 -- is to make sure that only correctly formatted inputs are provided.
 -- That is, all provided inputs have to be parsed, upon
@@ -106,7 +84,7 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM' qL' qR' qO' qC' sSig1' sSig2' 
         -- this is Z_H(zeta) in the plonk paper
         zetaN = scale n zeta
         zeroPoly = zetaN - one
-        -- this is L_1(zeta) and the higher order L_i 
+        -- this is L_1(zeta) and the higher order L_i
         (lagrangePoly1 : lagrangePolyXs) = map (\i -> (scale i gen * zeroPoly) * recip (mkScalar n * (zeta - scale i gen))) (enumFromTo 1 nPub)
         -- this is PI(zeta) in the plonk paper
         piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
@@ -129,7 +107,7 @@ verifyPlonk preInputs@(PreInputs nPub p k1 k2 qM' qL' qR' qO' qC' sSig1' sSig2' 
     -- the final check that under the pairing.
     bls12_381_finalVerify (bls12_381_millerLoop (commWOmega + scale u commWOmegaZeta) x2) (bls12_381_millerLoop (scale zeta commWOmega + scale (u*zeta*gen) commWOmegaZeta + batchPolyCommitFull - groupEncodedBatchEval) bls12_381_G2_generator)
 
--- a general vanilla plonk verifier optimised. 
+-- a general vanilla plonk verifier optimised.
 {-# INLINEABLE verifyPlonkFast #-}
 verifyPlonkFast :: PreInputsFast -> [Integer] -> ProofFast -> Bool
 verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM' qL' qR' qO' qC' sSig1' sSig2' sSig3' x2' gens)
@@ -163,34 +141,34 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM' qL' qR' qO' qC' sSig1
     , (mkScalar -> evalZOmega) <- ez
     , let (w1 : wxs) = map (negate . mkScalar) pubInputs
     , let lagsInv = map mkScalar lagInv
-    = let transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b" 
-                                                                             <> cb <> "commitment c" 
+    = let transcript0 = "FS transcriptdom-septesting the provercommitment a" <> ca <> "commitment b"
+                                                                             <> cb <> "commitment c"
                                                                              <> cc <> "beta"
           beta = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript0
           transcript1 = transcript0 <> "gamma"
           gamma = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript1
           transcript2 = transcript1 <> "Permutation polynomial" <> cz <> "alpha"
           alpha = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript2
-          transcript3 = transcript2 <> "Quotient low polynomial" <> ctl 
-                                    <> "Quotient mid polynomial" <> ctm 
-                                    <> "Quotient high polynomial" <> cth 
+          transcript3 = transcript2 <> "Quotient low polynomial" <> ctl
+                                    <> "Quotient mid polynomial" <> ctm
+                                    <> "Quotient high polynomial" <> cth
                                     <> "zeta"
           zeta = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript3
-          transcript4 = transcript3 <> "Append a_eval." <> integerToByteString False 32 ea 
-                                    <> "Append b_eval." <> integerToByteString False 32 eb 
-                                    <> "Append c_eval." <> integerToByteString False 32 ec 
-                                    <> "Append s_sig1." <> integerToByteString False 32 es1 
-                                    <> "Append s_sig2." <> integerToByteString False 32 es2 
-                                    <> "Append z_omega." <> integerToByteString False 32 ez 
+          transcript4 = transcript3 <> "Append a_eval." <> integerToByteString False 32 ea
+                                    <> "Append b_eval." <> integerToByteString False 32 eb
+                                    <> "Append c_eval." <> integerToByteString False 32 ec
+                                    <> "Append s_sig1." <> integerToByteString False 32 es1
+                                    <> "Append s_sig2." <> integerToByteString False 32 es2
+                                    <> "Append z_omega." <> integerToByteString False 32 ez
                                     <> "v"
           v = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript4
-          transcript5 = transcript4 <> "w_omega comm" <> cwo 
-                                    <> "w_omega_zeta comm" <> cwz 
+          transcript5 = transcript4 <> "w_omega comm" <> cwo
+                                    <> "w_omega_zeta comm" <> cwz
                                     <> "u"
           u = Scalar . byteStringToInteger False . takeByteString 31 . blake2b_256 $ transcript5
           powOfTwoZetaP = powerOfTwoExponentiation zeta p
           powOfTwoZetaPMinOne = powOfTwoZetaP - one
-          (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * powOfTwoZetaPMinOne * y) gens lagsInv 
+          (lagrangePoly1 : lagrangePolyXs) = zipWith (\x y -> x * powOfTwoZetaPMinOne * y) gens lagsInv
           piZeta = w1 * lagrangePoly1 + sum (zipWith (*) wxs lagrangePolyXs)
           alphaSquare = alpha * alpha
           alphaEvalZOmega = alpha * evalZOmega
@@ -211,7 +189,7 @@ verifyPlonkFast preInputsFast@(PreInputsFast n p k1 k2 qM' qL' qR' qO' qC' sSig1
                             - scale powOfTwoZetaPMinOne (commTLow + scale powOfTwoZetaP commTMid + scale (powerOfTwoExponentiation powOfTwoZetaP 1) commTHigh)
           batchPolyCommitFull = batchPolyCommitG1 + scale v (commA + scale v (commB + scale v (commC + scale v (sSig1 + scale v sSig2))))
           groupEncodedBatchEval = scale (negate r0 + v * (evalA + v * (evalB + v * (evalC + v * (evalS1 + v * evalS2)))) + u*evalZOmega ) bls12_381_G1_generator
-    in bls12_381_finalVerify 
-        (bls12_381_millerLoop (commWOmega + scale u commWOmegaZeta) x2) 
+    in bls12_381_finalVerify
+        (bls12_381_millerLoop (commWOmega + scale u commWOmegaZeta) x2)
         (bls12_381_millerLoop (scale zeta commWOmega + scale (u*zeta*head gens) commWOmegaZeta + batchPolyCommitFull - groupEncodedBatchEval) bls12_381_G2_generator)
        && and (zipWith (\x y -> x * Scalar n * (zeta - y) == one) lagsInv gens)

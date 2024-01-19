@@ -1,7 +1,10 @@
-{-# LANGUAGE NoImplicitPrelude  #-}
-{-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_GHC -O0 #-}
+{-# OPTIONS_GHC -fno-ignore-interface-pragmas #-}
+{-# OPTIONS_GHC -fno-omit-interface-pragmas #-}
 
-module Plutus.Crypto.Plonk.Transcript 
+module Plutus.Crypto.Plonk.Transcript
 ( Transcript
 , Label
 , transcriptNew
@@ -12,9 +15,11 @@ module Plutus.Crypto.Plonk.Transcript
 , getTranscript
 ) where
 
-import PlutusTx.Prelude ( Bool (..), BuiltinByteString, id, (<>), lengthOfByteString, takeByteString, Integer, ($), (.) )
-import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element (..), bls12_381_G1_compress, blake2b_256, byteStringToInteger, integerToByteString)
-import Plutus.Crypto.BlsField ( mkScalar, Scalar (unScalar) )
+import Plutus.Crypto.BlsField (Scalar (unScalar), mkScalar)
+import PlutusTx.Builtins (BuiltinBLS12_381_G1_Element, BuiltinByteString, Integer, blake2b_256,
+                          bls12_381_G1_compress, byteStringToInteger, integerToByteString,
+                          lengthOfByteString)
+import PlutusTx.Prelude (Bool (..), id, takeByteString, ($), (.), (<>))
 
 -- For information on the particular chosen salts below,
 -- see https://github.com/iquerejeta/dummy_plonk/blob/main/src/transcript.rs
@@ -40,7 +45,7 @@ transcriptScalar :: Transcript -> Label -> Scalar -> Transcript
 transcriptScalar ts lbl scl = ts <> lbl <> integerToByteString False 32 (unScalar scl)
 
 -- Note that the hash digest maps into the 256 bit domain, while a scalar
--- is bound by the 255 bit field prime. 
+-- is bound by the 255 bit field prime.
 -- That is why we cut of the most significant byte
 -- to make this function well-defined.
 {-# INLINEABLE challengeScalar #-}
@@ -49,9 +54,9 @@ challengeScalar ts lbl = (mkScalar . byteStringToInteger False . takeByteString 
     where newTs = ts <> lbl
 
 -- Given the necesary values of a proof,
--- calcualate the transript values. These values 
+-- calcualate the transript values. These values
 -- make the proof non interactive.
--- 
+--
 -- TODO: Disuss with team how we can chose
 --       these values to be more consice.
 --

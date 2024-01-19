@@ -44,49 +44,50 @@ library plutus-benchmark-common
     PlutusBenchmark.Common
     PlutusBenchmark.NaturalSort
     PlutusBenchmark.ProtocolParameters
-    
-  other-modules: Paths_plutus_benchmark
 
+  other-modules:   Paths_plutus_benchmark
   build-depends:
-    , base          >=4.9   && <5
+    , base          >=4.9  && <5
     , bytestring
     , criterion
     , directory
     , filepath
     , flat          ^>=0.6
-    , plutus-core   
-    , plutus-tx     
+    , plutus-core
+    , plutus-plonk
+    , plutus-tx
     , tasty
     , tasty-golden
     , temporary
     , text
-    , plutus-plonk
 
 library bench-lib
-  import: lang
-  ghc-options: -Wno-unused-packages
-  hs-source-dirs: src
-  exposed-modules: PlutusBenchmark.Verifier.RunVerifier
-                   PlutusBenchmark.Verifier.Scripts
-                   PlutusBenchmark.BlsField.RunBlsField
-                   PlutusBenchmark.BlsField.Scripts
+  import:          lang
+  ghc-options:     -Wno-unused-packages
+  hs-source-dirs:  src
+  exposed-modules:
+    PlutusBenchmark.BlsField.RunBlsField
+    PlutusBenchmark.BlsField.Scripts
+    PlutusBenchmark.Verifier.RunVerifier
+    PlutusBenchmark.Verifier.Scripts
+
   build-depends:
-    , base                     >=4.9     && <5
-    , plutus-tx                
-    , plutus-core             
-    , plutus-tx-plugin
-    , plutus-plonk
-    -- , plutus-crypto
-    , bytestring
     , aeson
+    , base                     >=4.9 && <5
+    , bytestring
     , hedgehog
     , plutus-benchmark-common
+    , plutus-core
+    , plutus-plonk
+    , plutus-tx
+    , plutus-tx-plugin
 
+-- , plutus-crypto
 executable bench-exe
-  import: lang
+  import:           lang
   default-language: Haskell2010
-  main-is: Main.hs
-  hs-source-dirs: exe
+  main-is:          Main.hs
+  hs-source-dirs:   exe
   build-depends:
-    , base                     >=4.9     && <5
+    , base       >=4.9 && <5
     , bench-lib
